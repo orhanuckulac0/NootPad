@@ -1,7 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.di
 
+import android.app.Application
 import androidx.room.Room
-import com.example.jetpackcompose_crudtodoapp.TodoApp
 import com.example.jetpackcompose_crudtodoapp.data.TodoDatabase
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepositoryImpl
@@ -17,7 +17,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoDatabase(app: TodoApp): TodoDatabase{
+    fun provideTodoDatabase(app: Application): TodoDatabase{
         return Room.databaseBuilder(
             app,
             TodoDatabase::class.java,

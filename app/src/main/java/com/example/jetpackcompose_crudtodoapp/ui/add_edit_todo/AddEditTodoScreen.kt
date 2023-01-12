@@ -35,8 +35,7 @@ fun AddEditTodoScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp),
+            .fillMaxSize(),
         floatingActionButton = {
             FloatingActionButton(onClick = {
                 viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
@@ -47,7 +46,7 @@ fun AddEditTodoScreen(
     ) {
         it.calculateBottomPadding()
         it.calculateTopPadding()
-        Column(modifier = modifier.fillMaxSize()) {
+        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
             TextField(
                 value = viewModel.title,
                 onValueChange = {

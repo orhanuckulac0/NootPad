@@ -19,30 +19,24 @@ import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
 @Composable
 fun TodoScreen(
-    modifier: Modifier = Modifier,
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoViewModel = hiltViewModel()
-){
+) {
     val todos = viewModel.todos.collectAsState(initial = emptyList())
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
-
-
-    LaunchedEffect(key1 = true ){
-        viewModel.uiEvent.collect { event->
-            when(event){
+    val scaffoldState = rememberScaffoldState()
+    LaunchedEffect(key1 = true) {
+        viewModel.uiEvent.collect { event ->
+            when(event) {
                 is UiEvent.ShowSnackbar -> {
                     val result = scaffoldState.snackbarHostState.showSnackbar(
-                        event.message,
-                        event.action,
-                        SnackbarDuration.Long
+                        message = event.message,
+                        actionLabel = event.action
                     )
-                    if (result == SnackbarResult.ActionPerformed){
+                    if(result == SnackbarResult.ActionPerformed) {
                         viewModel.onEvent(TodoEvent.OnUndoDeleteClick)
                     }
                 }
-                is UiEvent.Navigate -> {
-                    onNavigate(event)
-                }
+                is UiEvent.Navigate -> onNavigate(event)
                 else -> Unit
             }
         }
@@ -50,23 +44,30 @@ fun TodoScreen(
     Scaffold(
         scaffoldState = scaffoldState,
         floatingActionButton = {
-            FloatingActionButton(onClick = { viewModel.onEvent(TodoEvent.OnAddTodoClick) }) {
-            Icon(imageVector = Icons.Default.Add, contentDescription = "Add")
+            FloatingActionButton(onClick = {
+                viewModel.onEvent(TodoEvent.OnAddTodoClick)
+            }) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add"
+                )
+            }
         }
-    }) {
+    ) {
         it.calculateBottomPadding()
-        it.calculateTopPadding()
-        LazyColumn(modifier = modifier.fillMaxSize()
-        ){
+        LazyColumn(
+            modifier = Modifier.fillMaxSize()
+        ) {
             items(todos.value) { todo ->
                 TodoItem(
                     todo = todo,
                     onEvent = viewModel::onEvent,
-                    modifier = modifier
+                    modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
                             viewModel.onEvent(TodoEvent.OnTodoClick(todo))
-                        }.padding(16.dp)
+                        }
+                        .padding(16.dp)
                 )
             }
         }

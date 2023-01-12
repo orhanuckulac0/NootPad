@@ -45,20 +45,26 @@ class TodoViewModel @Inject constructor(
                     deletedTodo = event.todoEntity
                     repository.deleteTodo(event.todoEntity)
                     sendUiEvent(UiEvent.ShowSnackbar(
-                        "Todo Deleted", "Undo")
+                        "Todo Deleted",
+                        "Undo")
                     )
                 }
             }
             is TodoEvent.OnDoneChange -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    repository.insertTodo(event.todoEntity)
+                    repository.insertTodo(
+                        event.todoEntity
+                            .copy(
+                                isDone = event.isDone
+                            )
+                    )
                 }
             }
         }
     }
 
     private fun sendUiEvent(event: UiEvent) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             _uiEvent.emit(event)
         }
     }

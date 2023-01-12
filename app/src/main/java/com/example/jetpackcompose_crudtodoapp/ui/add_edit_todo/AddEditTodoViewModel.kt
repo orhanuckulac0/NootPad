@@ -1,5 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -34,11 +35,12 @@ class AddEditTodoViewModel @Inject constructor(
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
+
     init {
         val todoId = savedStateHandle.get<Int>("todoId")!!
         if (todoId != -1){
             viewModelScope.launch(Dispatchers.IO) {
-                todoRepository.getTodoByID(todoId)?.let {
+                todoRepository.getTodoByID(0)?.let {
                     title = it.title
                     description = it.description
                     // assign this todoEntity to ViewModel's todoEntity state
@@ -58,7 +60,7 @@ class AddEditTodoViewModel @Inject constructor(
             }
             is AddEditTodoEvent.OnSaveTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    if (title.isNotBlank()){
+                    if (title.isBlank()){
                         sendUiEvent(UiEvent.ShowSnackbar(
                             "The title can not be blank",
                         ))
