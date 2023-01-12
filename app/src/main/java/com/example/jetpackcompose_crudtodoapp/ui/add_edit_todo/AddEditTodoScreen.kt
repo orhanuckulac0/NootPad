@@ -1,5 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -7,6 +8,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
@@ -46,14 +48,20 @@ fun AddEditTodoScreen(
     ) {
         it.calculateBottomPadding()
         it.calculateTopPadding()
-        Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
+        Column(modifier = modifier
+            .fillMaxSize()
+            .padding(16.dp)) {
             TextField(
                 value = viewModel.title,
                 onValueChange = {
                     viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))
                 },
-                placeholder = { Text("Title") },
-                modifier = modifier.fillMaxWidth()
+
+                label = { Text("Title") },
+                modifier = modifier
+                    .fillMaxWidth()
+                    .background(Color.White),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
             )
             Spacer(modifier = modifier.height(8.dp))
             TextField(
@@ -61,8 +69,9 @@ fun AddEditTodoScreen(
                 onValueChange = {
                     viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))
                 },
-                placeholder = { Text("Description") },
+                label = { Text("Description") },
                 modifier = modifier.fillMaxWidth(),
+                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
                 singleLine = false,
                 maxLines = 5
             )

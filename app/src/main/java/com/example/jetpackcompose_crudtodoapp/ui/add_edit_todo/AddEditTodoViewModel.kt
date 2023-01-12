@@ -1,6 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -37,10 +36,11 @@ class AddEditTodoViewModel @Inject constructor(
 
 
     init {
-        val todoId = savedStateHandle.get<Int>("todoId")!!
-        if (todoId != -1){
-            viewModelScope.launch(Dispatchers.IO) {
-                todoRepository.getTodoByID(0)?.let {
+        val todoId = savedStateHandle.get<Int>("todoId")
+        if (todoId != -1 && todoId != null){
+            // remove Dispatchers.IO because it executes before recomposition and causes error
+            viewModelScope.launch {
+                todoRepository.getTodoByID(todoId)?.let {
                     title = it.title
                     description = it.description
                     // assign this todoEntity to ViewModel's todoEntity state
