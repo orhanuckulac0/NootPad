@@ -2,6 +2,7 @@ package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -39,10 +40,19 @@ fun AddEditTodoScreen(
         modifier = modifier
             .fillMaxSize(),
         floatingActionButton = {
-            FloatingActionButton(onClick = {
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = {
                 viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
             }) {
                 Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        isFloatingActionButtonDocked = true,
+        bottomBar = {
+            BottomAppBar(backgroundColor = Color.Cyan, cutoutShape = CircleShape) {
+
             }
         }
     ) {

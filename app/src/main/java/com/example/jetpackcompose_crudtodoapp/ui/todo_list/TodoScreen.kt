@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -52,17 +53,22 @@ fun TodoScreen(
         }
     }
     Scaffold(
-        scaffoldState = scaffoldState,
         floatingActionButton = {
-            FloatingActionButton(onClick = {
-                viewModel.onEvent(TodoEvent.OnAddTodoClick)
-            }) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add"
-                )
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = { viewModel.onEvent(TodoEvent.OnAddTodoClick) },
+            ) {
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "icon")
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        isFloatingActionButtonDocked = true,
+        bottomBar = {
+            BottomAppBar(backgroundColor = Color.Cyan, cutoutShape = CircleShape) {
+
             }
         }
+
     ) {
         it.calculateBottomPadding()
         LazyColumn(
@@ -137,8 +143,9 @@ fun TodoScreen(
                                     }
                                     .padding(16.dp)
                             )
-                            if (index < todos.value.lastIndex)
-                                Divider(color = Color.DarkGray, thickness = 1.dp)
+                            if (index != 0){
+                                Divider(color = Color.LightGray, thickness = 1.dp)
+                            }
                         }
                     }
                 )
