@@ -1,6 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
@@ -24,6 +23,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
 @ExperimentalMaterialApi
@@ -34,6 +34,15 @@ fun TodoScreen(
 ) {
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     val scaffoldState = rememberScaffoldState()
+    var shouldShowDialog by remember { mutableStateOf(false) }
+
+    if (shouldShowDialog){
+        CustomDialog(
+            setShowDialog =  {
+            shouldShowDialog = it
+            }
+        )
+    }
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
@@ -88,9 +97,11 @@ fun TodoScreen(
                     }
                 )
                 if (dismissState.isDismissed(DismissDirection.EndToStart)){
-                    Log.i("MYTAG", "delete swipe caught, implement alert dialog")
                     LaunchedEffect(key1 = true){
+                        // assign current todoEntity to viewModels deletedTodo var and make it public
+                        viewModel.deletedTodo = todo
                         dismissState.reset() // reset dismiss state to default
+                        shouldShowDialog = true
                     }
                 }
 

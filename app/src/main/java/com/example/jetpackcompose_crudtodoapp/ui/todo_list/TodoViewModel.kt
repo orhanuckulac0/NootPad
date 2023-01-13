@@ -23,7 +23,7 @@ class TodoViewModel @Inject constructor(
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    private var deletedTodo : TodoEntity? = null
+    var deletedTodo : TodoEntity? = null
 
     fun onEvent(event: TodoEvent) {
         when(event) {

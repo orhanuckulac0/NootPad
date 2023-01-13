@@ -3,6 +3,7 @@ package com.example.jetpackcompose_crudtodoapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -14,6 +15,7 @@ import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 import com.example.jetpackcompose_crudtodoapp.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
 
+@OptIn(ExperimentalMaterialApi::class)
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
