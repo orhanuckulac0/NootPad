@@ -10,4 +10,6 @@ data class TodoEntity(
     val title: String,
     val description: String,
     val isDone: Boolean,
+//    val dueDate: String,
+//    val priorityColor: String
 )

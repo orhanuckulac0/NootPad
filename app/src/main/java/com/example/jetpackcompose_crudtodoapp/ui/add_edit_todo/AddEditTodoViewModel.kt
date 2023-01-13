@@ -78,6 +78,9 @@ class AddEditTodoViewModel @Inject constructor(
                     sendUiEvent(UiEvent.PopBackStack)
                 }
             }
+            is AddEditTodoEvent.OnDatePickerClick -> {
+                sendUiEvent(UiEvent.ShowDatePicker)
+            }
         }
     }
 
