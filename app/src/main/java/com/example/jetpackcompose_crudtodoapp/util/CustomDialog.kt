@@ -1,6 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.util
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -27,7 +26,7 @@ fun CustomDialog(
         Card(
             //shape = MaterialTheme.shapes.medium,
             shape = RoundedCornerShape(10.dp),
-            // modifier = modifier.size(280.dp, 240.dp)
+            // modifier = modifier.size(280 .dp, 240.dp)
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp
         ) {
@@ -50,29 +49,31 @@ fun CustomDialog(
 
                 Row {
                     OutlinedButton(
-                        onClick = { setShowDialog(false) },
+                        onClick = {
+                            viewModel.onEvent(
+                            TodoEvent.OnDeleteTodoClick(
+                                viewModel.deletedTodo!!)
+                            )
+                            setShowDialog(false)
+                        },
                         Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .weight(1F).clickable {
-                                // on cancel, set it to null again
-                                viewModel.deletedTodo = null
-                            }
+                            .weight(1F)
                     ) {
                         Text(
-                            text = "Delete", fontSize = 16.sp, color = Color.Black,
-                            modifier = Modifier.clickable{
-                            setShowDialog(false)
-                            // delete the current todoEntity which was assigned on TodoScreen.kt
-                            viewModel.onEvent(
-                                TodoEvent.OnDeleteTodoClick(
-                                    viewModel.deletedTodo!!)
-                            )
-                        })
+                            text = "Delete",
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                        )
                     }
 
                     Button(
-                        onClick = { setShowDialog(false) },
+                        onClick = {
+                            // after cancel set it to null again
+                            viewModel.onEvent(TodoEvent.OnSetTodoToDeleteToNull)
+                            setShowDialog(false)
+                                  },
                         Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
@@ -80,7 +81,11 @@ fun CustomDialog(
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
 
                     ) {
-                        Text(text = "Cancel", fontSize = 16.sp, color = Color.White)
+                        Text(
+                            text = "Cancel",
+                            fontSize = 16.sp,
+                            color = Color.White
+                        )
                     }
                 }
             }

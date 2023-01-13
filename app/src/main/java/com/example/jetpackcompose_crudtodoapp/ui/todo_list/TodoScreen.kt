@@ -98,8 +98,8 @@ fun TodoScreen(
                 )
                 if (dismissState.isDismissed(DismissDirection.EndToStart)){
                     LaunchedEffect(key1 = true){
-                        // assign current todoEntity to viewModels deletedTodo var and make it public
-                        viewModel.deletedTodo = todo
+                        // assign current todoEntity to viewModel's deletedTodo var and make it public
+                        viewModel.onEvent(TodoEvent.OnSetTodoToDelete(todo))
                         dismissState.reset() // reset dismiss state to default
                         shouldShowDialog = true
                     }

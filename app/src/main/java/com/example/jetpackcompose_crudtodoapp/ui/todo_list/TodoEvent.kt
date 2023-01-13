@@ -9,5 +9,7 @@ sealed class TodoEvent {
     object OnUndoDeleteClick: TodoEvent()
     data class OnTodoClick(val todoEntity: TodoEntity): TodoEvent()
     object OnAddTodoClick: TodoEvent()
+    data class OnSetTodoToDelete(val todoEntity: TodoEntity): TodoEvent()
+    object OnSetTodoToDeleteToNull: TodoEvent()
 
 }
