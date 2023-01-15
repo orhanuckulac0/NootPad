@@ -21,6 +21,7 @@ import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.color.colorChooser
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
@@ -54,8 +55,9 @@ fun AddEditTodoScreen(
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton(text = "Ok") {
-            }
+            positiveButton(text = "Ok", onClick = {
+                viewModel.onEvent(AddEditTodoEvent.OnDueDateChange(formattedDate))
+            })
             negativeButton(text = "Cancel")
         }
     ) {
@@ -77,6 +79,7 @@ fun AddEditTodoScreen(
         mutableStateOf("")
     }
     val listOfColors = listOf(
+        Color(0xFF808080),
         Color(0xFFEF9A9A),
         Color(0xFFF48FB1),
         Color(0xFF80CBC4),
@@ -85,8 +88,6 @@ fun AddEditTodoScreen(
         Color(0xFFFFAB91),
         Color(0xFF81D4FA),
         Color(0xFFCE93D8),
-        Color(0xFFB39DDB),
-        Color(0xFF808080),
         Color(0xFF000000),
         Color(0xFFFF0000),
         Color(0xFF0000FF),
@@ -97,15 +98,18 @@ fun AddEditTodoScreen(
     MaterialDialog(
         dialogState = colorPickerDialogState,
         buttons = {
-            positiveButton(text = "Select") {
-            }
-            negativeButton(text = "Cancel")
+            positiveButton(text = "Select", onClick = {
+                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(pickedColor))
+            })
+            negativeButton(text = "Cancel", onClick = {
+                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(toHexString(listOfColors[0])))
+            })
         }
     ) {
         colorChooser(
             colors = listOfColors,
             onColorSelected = {
-                pickedColor = it.toHexString()
+                pickedColor = toHexString(it)
             }
         )
     }
@@ -118,7 +122,7 @@ fun AddEditTodoScreen(
                     onPopBackStack()
                 }
                 is UiEvent.ShowSnackbar -> {
-                    scaffoldState.snackbarHostState.showSnackbar(event.message, event.action, SnackbarDuration.Long)
+                    scaffoldState.snackbarHostState.showSnackbar(event.message, event.action, SnackbarDuration.Short)
                 }
                 is UiEvent.ShowDatePicker -> {
                     dateDialogState.show()
@@ -185,27 +189,28 @@ fun AddEditTodoScreen(
             Spacer(modifier = modifier.height(8.dp))
 
             Column {
-               Row {
-                   Text(
-                       modifier = modifier.padding(0.dp, 10.dp, 10.dp, 0.dp),
-                       text = "Due Date: ",
-                       color = Color.Black,
-                       fontWeight = FontWeight.Bold
-                   )
+                Row {
+                    Text(
 
-                   Text(
-                       modifier = modifier.padding(0.dp, 10.dp),
-                       text = formattedDate
-                   )
+                        modifier = modifier.padding(0.dp, 10.dp, 10.dp, 0.dp),
+                        text = "Due Date: ",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
 
-                   IconButton(onClick = {
-                       viewModel.onEvent(AddEditTodoEvent.OnDatePickerClick)
-                   }) {
-                       Icon(
-                           imageVector = Icons.Default.EditCalendar, contentDescription = "DatePickerIcon", tint = Color.Black
-                       )
-                   }
-               } 
+                    Text(
+                        modifier = modifier.padding(0.dp, 10.dp),
+                        text = viewModel.dueDate
+                    )
+
+                    IconButton(onClick = {
+                        viewModel.onEvent(AddEditTodoEvent.OnDatePickerClick)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Default.EditCalendar, contentDescription = "DatePickerIcon", tint = Color.Black
+                        )
+                    }
+                }
             }
             Column {
                 Row {
@@ -216,9 +221,11 @@ fun AddEditTodoScreen(
                         fontWeight = FontWeight.Bold
                     )
 
-                    if (pickedColor == ""){
+                    if (viewModel.priorityColor == ""){
                         Button(
-                            onClick = { colorPickerDialogState.show() },
+                            onClick = {
+                                colorPickerDialogState.show()
+                                      },
                             modifier = modifier.background(Color.White).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
                             shape = CircleShape,
                             colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
@@ -230,7 +237,7 @@ fun AddEditTodoScreen(
                             onClick = { colorPickerDialogState.show() },
                             modifier = modifier.background((Color.White)).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
                             shape = CircleShape,
-                            colors= ButtonDefaults.buttonColors(backgroundColor = ((Color(pickedColor.toColorInt()))))
+                            colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
 
                         ) {
 
@@ -240,11 +247,4 @@ fun AddEditTodoScreen(
             }
         }
     }
-}
-
-fun Color.toHexString(): String {
-    return String.format(
-        "#%02x%02x%02x%02x", (this.alpha * 255).toInt(),
-        (this.red * 255).toInt(), (this.green * 255).toInt(), (this.blue * 255).toInt()
-    )
 }

@@ -48,26 +48,6 @@ fun CustomDialog(
                 }
 
                 Row {
-                    OutlinedButton(
-                        onClick = {
-                            viewModel.onEvent(
-                            TodoEvent.OnDeleteTodoClick(
-                                viewModel.deletedTodo!!)
-                            )
-                            setShowDialog(false)
-                        },
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(8.dp)
-                            .weight(1F)
-                    ) {
-                        Text(
-                            text = "Delete",
-                            fontSize = 16.sp,
-                            color = Color.Black,
-                        )
-                    }
-
                     Button(
                         onClick = {
                             // after cancel set it to null again
@@ -85,6 +65,25 @@ fun CustomDialog(
                             text = "Cancel",
                             fontSize = 16.sp,
                             color = Color.White
+                        )
+                    }
+                    OutlinedButton(
+                        onClick = {
+                            viewModel.onEvent(
+                                TodoEvent.OnDeleteTodoClick(
+                                    viewModel.deletedTodo!!)
+                            )
+                            setShowDialog(false)
+                        },
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(8.dp)
+                            .weight(1F)
+                    ) {
+                        Text(
+                            text = "Delete",
+                            fontSize = 16.sp,
+                            color = Color.Black,
                         )
                     }
                 }
