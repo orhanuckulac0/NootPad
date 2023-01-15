@@ -1,28 +1,28 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
-import android.app.DatePickerDialog
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.color.colorChooser
 import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -36,6 +36,8 @@ fun AddEditTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddEditTodoViewModel = hiltViewModel()
 ) {
+
+    // DatePicker related
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -63,11 +65,49 @@ fun AddEditTodoScreen(
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = Color.Cyan,
                 dateActiveBackgroundColor = Color.Cyan,
-            )
+            ),
         ) {
             pickedDate = it
-            Log.i("MYTAG", formattedDate)
         }
+    }
+
+    // Color Picker Related
+    val colorPickerDialogState = rememberMaterialDialogState()
+    var pickedColor by remember {
+        mutableStateOf("")
+    }
+    val listOfColors = listOf(
+        Color(0xFFEF9A9A),
+        Color(0xFFF48FB1),
+        Color(0xFF80CBC4),
+        Color(0xFFA5D6A7),
+        Color(0xFFFFCC80),
+        Color(0xFFFFAB91),
+        Color(0xFF81D4FA),
+        Color(0xFFCE93D8),
+        Color(0xFFB39DDB),
+        Color(0xFF808080),
+        Color(0xFF000000),
+        Color(0xFFFF0000),
+        Color(0xFF0000FF),
+        Color(0xFFFFFF00),
+        Color(0xFF00FF00),
+    )
+
+    MaterialDialog(
+        dialogState = colorPickerDialogState,
+        buttons = {
+            positiveButton(text = "Select") {
+            }
+            negativeButton(text = "Cancel")
+        }
+    ) {
+        colorChooser(
+            colors = listOfColors,
+            onColorSelected = {
+                pickedColor = it.toHexString()
+            }
+        )
     }
 
     val scaffoldState: ScaffoldState = rememberScaffoldState()
@@ -98,14 +138,16 @@ fun AddEditTodoScreen(
                 shape = CircleShape,
                 onClick = {
                 viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
-            }) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save")
+                },
+                backgroundColor = colorResource(id = R.color.purple_700)
+            ) {
+                Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint=colorResource(id = R.color.white))
             }
         },
         floatingActionButtonPosition = FabPosition.End,
         isFloatingActionButtonDocked = true,
         bottomBar = {
-            BottomAppBar(backgroundColor = Color.Cyan, cutoutShape = CircleShape) {
+            BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
 
             }
         }
@@ -165,6 +207,44 @@ fun AddEditTodoScreen(
                    }
                } 
             }
+            Column {
+                Row {
+                    Text(
+                        modifier = modifier.padding(0.dp, 25.dp, 10.dp, 0.dp),
+                        text = "Priority Color: ",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    if (pickedColor == ""){
+                        Button(
+                            onClick = { colorPickerDialogState.show() },
+                            modifier = modifier.background(Color.White).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
+                            shape = CircleShape,
+                            colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
+                        ) {
+
+                        }
+                    }else{
+                        Button(
+                            onClick = { colorPickerDialogState.show() },
+                            modifier = modifier.background((Color.White)).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
+                            shape = CircleShape,
+                            colors= ButtonDefaults.buttonColors(backgroundColor = ((Color(pickedColor.toColorInt()))))
+
+                        ) {
+
+                        }
+                    }
+                }
+            }
         }
     }
+}
+
+fun Color.toHexString(): String {
+    return String.format(
+        "#%02x%02x%02x%02x", (this.alpha * 255).toInt(),
+        (this.red * 255).toInt(), (this.green * 255).toInt(), (this.blue * 255).toInt()
+    )
 }

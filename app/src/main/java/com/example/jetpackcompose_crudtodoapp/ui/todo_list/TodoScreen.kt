@@ -21,8 +21,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
@@ -66,14 +68,15 @@ fun TodoScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = { viewModel.onEvent(TodoEvent.OnAddTodoClick) },
+                backgroundColor = colorResource(id = R.color.purple_700)
             ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "icon")
+                Icon(imageVector = Icons.Filled.Add, contentDescription = "icon", tint = colorResource(id = R.color.white))
             }
         },
         floatingActionButtonPosition = FabPosition.End,
         isFloatingActionButtonDocked = true,
         bottomBar = {
-            BottomAppBar(backgroundColor = Color.Cyan, cutoutShape = CircleShape) {
+            BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
 
             }
         }
