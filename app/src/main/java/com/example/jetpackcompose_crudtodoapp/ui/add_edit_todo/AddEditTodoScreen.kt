@@ -1,6 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -28,14 +29,17 @@ import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.ZoneId
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddEditTodoScreen(
     modifier: Modifier = Modifier,
     onPopBackStack: () -> Unit,
-    viewModel: AddEditTodoViewModel = hiltViewModel()
+    viewModel: AddEditTodoViewModel = hiltViewModel(),
 ) {
 
     // DatePicker related
@@ -45,7 +49,7 @@ fun AddEditTodoScreen(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("MMM dd yyyy")
+                .ofPattern("d-MMM-yyyy")
                 .format(pickedDate)
         }
     }
@@ -226,7 +230,10 @@ fun AddEditTodoScreen(
                             onClick = {
                                 colorPickerDialogState.show()
                                       },
-                            modifier = modifier.background(Color.White).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
+                            modifier = modifier
+                                .background(Color.White)
+                                .clip(RoundedCornerShape(20.dp))
+                                .requiredSize(70.dp),
                             shape = CircleShape,
                             colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
                         ) {
@@ -235,7 +242,10 @@ fun AddEditTodoScreen(
                     }else{
                         Button(
                             onClick = { colorPickerDialogState.show() },
-                            modifier = modifier.background((Color.White)).clip(RoundedCornerShape(20.dp)).requiredSize(70.dp),
+                            modifier = modifier
+                                .background((Color.White))
+                                .clip(RoundedCornerShape(20.dp))
+                                .requiredSize(70.dp),
                             shape = CircleShape,
                             colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
 

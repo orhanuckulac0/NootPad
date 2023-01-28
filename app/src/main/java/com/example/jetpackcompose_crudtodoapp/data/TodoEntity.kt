@@ -11,5 +11,6 @@ data class TodoEntity(
     val description: String,
     val isDone: Boolean,
     val dueDate: String,
-    val priorityColor: String
+    val priorityColor: String,
+    val isNotified: Int?
 )

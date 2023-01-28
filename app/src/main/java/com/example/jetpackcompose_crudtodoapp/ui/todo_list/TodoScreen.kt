@@ -28,12 +28,14 @@ import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
+
 @ExperimentalMaterialApi
 @Composable
 fun TodoScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
+
     val todos = viewModel.todos.collectAsState(initial = emptyList())
     val scaffoldState = rememberScaffoldState()
     var shouldShowDialog by remember { mutableStateOf(false) }

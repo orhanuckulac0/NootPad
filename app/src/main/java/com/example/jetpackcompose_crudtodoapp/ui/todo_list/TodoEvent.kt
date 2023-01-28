@@ -11,5 +11,7 @@ sealed class TodoEvent {
     object OnAddTodoClick: TodoEvent()
     data class OnSetTodoToDelete(val todoEntity: TodoEntity): TodoEvent()
     object OnSetTodoToDeleteToNull: TodoEvent()
+    data class OnCheckDueDatesForAllTodos(val todosToNotifyList: ArrayList<TodoEntity>): TodoEvent()
+    data class OnSendNotifyNotificationRequest(val todosNotified: ArrayList<TodoEntity>): TodoEvent()
 
 }
