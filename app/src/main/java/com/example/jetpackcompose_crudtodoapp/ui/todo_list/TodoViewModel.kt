@@ -1,6 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
@@ -26,12 +25,10 @@ class TodoViewModel @Inject constructor(
 
     var deletedTodo : TodoEntity? = null
 
-    var todosToNotify: ArrayList<TodoEntity> = ArrayList()
-
     fun onEvent(event: TodoEvent) {
         when(event) {
             is TodoEvent.OnTodoClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO + "?todoId=${event.todoEntity.id}"))
+                sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${event.todoEntity.id}"))
             }
             is TodoEvent.OnAddTodoClick -> {
                 sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO))
@@ -69,27 +66,6 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.OnSetTodoToDeleteToNull -> {
                 viewModelScope.launch {
                     deletedTodo = null
-                }
-            }
-            is TodoEvent.OnCheckDueDatesForAllTodos -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    for (item in event.todosToNotifyList){
-                        todosToNotify.add(item)
-                        Log.i("MYTAG", "items send to View Model ${item.title}")
-
-                    }
-                    Log.i("MYTAG ","UPDATED todosToNotify last $todosToNotify")
-                }
-            }
-            is TodoEvent.OnSendNotifyNotificationRequest -> {
-                viewModelScope.launch(Dispatchers.IO) {
-                    for (todo in event.todosNotified){
-                        repository.insertTodo(
-                            todo.copy(
-                                isNotified = 1
-                            )
-                        )
-                    }
                 }
             }
         }

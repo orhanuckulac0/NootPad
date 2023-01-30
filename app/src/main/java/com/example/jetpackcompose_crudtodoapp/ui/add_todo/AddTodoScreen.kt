@@ -1,26 +1,22 @@
-package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
+package com.example.jetpackcompose_crudtodoapp.ui.add_todo
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.EditCalendar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.util.Routes
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -29,18 +25,18 @@ import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.date.datepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneId
 import java.time.format.DateTimeFormatter
-import java.time.temporal.ChronoUnit
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun AddEditTodoScreen(
     modifier: Modifier = Modifier,
-    onPopBackStack: () -> Unit,
-    viewModel: AddEditTodoViewModel = hiltViewModel(),
+    onPopBackStack: (destinationId: String) -> Unit,
+    onNavigate: (UiEvent.Navigate) -> Unit,
+    viewModel: AddTodoViewModel = hiltViewModel(),
 ) {
+
+    val scrollableDescription = rememberScrollState()
 
     // DatePicker related
     var pickedDate by remember {
@@ -49,7 +45,7 @@ fun AddEditTodoScreen(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("d-MMM-yyyy")
+                .ofPattern("d MMM yyyy")
                 .format(pickedDate)
         }
     }
@@ -60,7 +56,7 @@ fun AddEditTodoScreen(
         dialogState = dateDialogState,
         buttons = {
             positiveButton(text = "Ok", onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnDueDateChange(formattedDate))
+                viewModel.onEvent(AddTodoEvent.OnDueDateChange(formattedDate))
             })
             negativeButton(text = "Cancel")
         }
@@ -84,29 +80,25 @@ fun AddEditTodoScreen(
     }
     val listOfColors = listOf(
         Color(0xFF808080),
-        Color(0xFFEF9A9A),
-        Color(0xFFF48FB1),
-        Color(0xFF80CBC4),
-        Color(0xFFA5D6A7),
-        Color(0xFFFFCC80),
-        Color(0xFFFFAB91),
-        Color(0xFF81D4FA),
-        Color(0xFFCE93D8),
         Color(0xFF000000),
         Color(0xFFFF0000),
         Color(0xFF0000FF),
         Color(0xFFFFFF00),
         Color(0xFF00FF00),
+        Color(0xFFFFA500),
+        Color(0xFF30D5C8),
+        Color(0xFFA020F0),
+        Color(0xFF964B00),
     )
 
     MaterialDialog(
         dialogState = colorPickerDialogState,
         buttons = {
             positiveButton(text = "Select", onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(pickedColor))
+                viewModel.onEvent(AddTodoEvent.OnPriorityColorChange(pickedColor))
             })
             negativeButton(text = "Cancel", onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(toHexString(listOfColors[0])))
+//                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(toHexString(listOfColors[0])))
             })
         }
     ) {
@@ -123,13 +115,16 @@ fun AddEditTodoScreen(
         viewModel.uiEvent.collect { event->
             when(event){
                 is UiEvent.PopBackStack -> {
-                    onPopBackStack()
+                    onPopBackStack(Routes.TODO_LIST)
                 }
                 is UiEvent.ShowSnackbar -> {
                     scaffoldState.snackbarHostState.showSnackbar(event.message, event.action, SnackbarDuration.Short)
                 }
                 is UiEvent.ShowDatePicker -> {
                     dateDialogState.show()
+                }
+                is UiEvent.Navigate -> {
+                    onNavigate(event)
                 }
                 else-> Unit
             }
@@ -145,7 +140,7 @@ fun AddEditTodoScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = {
-                viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
+                viewModel.onEvent(AddTodoEvent.OnSaveTodoClick)
                 },
                 backgroundColor = colorResource(id = R.color.purple_700)
             ) {
@@ -165,88 +160,88 @@ fun AddEditTodoScreen(
         Column(modifier = modifier
             .fillMaxSize()
             .padding(16.dp)) {
-            TextField(
-                value = viewModel.title,
-                onValueChange = {
-                    viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))
-                },
 
-                label = { Text("Title") },
-                modifier = modifier
-                    .fillMaxWidth()
-                    .background(Color.White),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
-            )
+            Column {
+                Row {
+                    TextField(
+                        value = viewModel.title,
+                        onValueChange = {
+                            viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
+                        },
+                        label = { Text("Title") },
+                        modifier = modifier
+                            .fillMaxWidth()
+                            .background(Color.White)
+                            .weight(0.9f),
+                        colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
+                    )
+                }
+            }
             Spacer(modifier = modifier.height(8.dp))
-            TextField(
-                value = viewModel.description,
-                onValueChange = {
-                    viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))
-                },
-                label = { Text("Description") },
-                modifier = modifier.fillMaxWidth(),
-                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
-                singleLine = false,
-                maxLines = 5
-            )
+            
+            Column(
+                modifier = Modifier
+                    .verticalScroll(scrollableDescription)
+                    .fillMaxWidth()
+            ) {
+                TextField(
+                    value = viewModel.description,
+                    onValueChange = {
+                        viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
+                    },
+                    label = { Text("Description") },
+                    modifier = modifier
+                        .fillMaxWidth(),
+                    colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+                    singleLine = false,
+                    maxLines = 10
+                )
+            }
 
             Spacer(modifier = modifier.height(8.dp))
 
             Column {
                 Row {
-                    Text(
-
-                        modifier = modifier.padding(0.dp, 10.dp, 10.dp, 0.dp),
-                        text = "Due Date: ",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Text(
-                        modifier = modifier.padding(0.dp, 10.dp),
-                        text = viewModel.dueDate
-                    )
-
-                    IconButton(onClick = {
-                        viewModel.onEvent(AddEditTodoEvent.OnDatePickerClick)
-                    }) {
-                        Icon(
-                            imageVector = Icons.Default.EditCalendar, contentDescription = "DatePickerIcon", tint = Color.Black
+                    OutlinedButton(onClick = {
+                        viewModel.onEvent(AddTodoEvent.OnDatePickerClick)
+                    }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
+                        Text(
+                            text = "Select Due Date",
+                            color = Color.Black,
                         )
                     }
+
+                    Text(
+                        modifier = modifier.padding(30.dp, 10.dp),
+                        text = viewModel.dueDate
+                    )
                 }
             }
             Column {
                 Row {
-                    Text(
-                        modifier = modifier.padding(0.dp, 25.dp, 10.dp, 0.dp),
-                        text = "Priority Color: ",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold
-                    )
+                    OutlinedButton(onClick = {
+                        colorPickerDialogState.show()
+                    }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
+                        Text(
+                            text = "Select Priority Color",
+                            color = Color.Black
+                        )
+                    }
 
                     if (viewModel.priorityColor == ""){
                         Button(
-                            onClick = {
-                                colorPickerDialogState.show()
-                                      },
+                            onClick = { },
                             modifier = modifier
-                                .background(Color.White)
-                                .clip(RoundedCornerShape(20.dp))
-                                .requiredSize(70.dp),
-                            shape = CircleShape,
+                                .background(Color.White),
                             colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
                         ) {
 
                         }
                     }else{
                         Button(
-                            onClick = { colorPickerDialogState.show() },
+                            onClick = { },
                             modifier = modifier
-                                .background((Color.White))
-                                .clip(RoundedCornerShape(20.dp))
-                                .requiredSize(70.dp),
-                            shape = CircleShape,
+                                .background((Color.White)),
                             colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
 
                         ) {

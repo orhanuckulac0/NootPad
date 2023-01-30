@@ -46,7 +46,9 @@ fun TodoItem(
         }
 
         Column(
-            modifier = Modifier.weight(0.9f).padding(10.dp,0.dp,0.dp,0.dp),
+            modifier = Modifier
+                .weight(0.9f)
+                .padding(10.dp, 0.dp, 0.dp, 0.dp),
             verticalArrangement = Arrangement.Center
         ) {
             Row(
@@ -67,6 +69,15 @@ fun TodoItem(
                     text = it,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
+                )
+            }
+            todo.dueDate.let {
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text =it,
+                    fontSize = 16.sp,
+                    color = Color.Gray,
+                    fontWeight = FontWeight.Medium
                 )
             }
         }

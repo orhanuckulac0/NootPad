@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
+package com.example.jetpackcompose_crudtodoapp.ui.add_todo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
+import com.example.jetpackcompose_crudtodoapp.util.Routes
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddEditTodoViewModel @Inject constructor(
+class AddTodoViewModel @Inject constructor(
     private val todoRepository: TodoRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -54,27 +55,27 @@ class AddEditTodoViewModel @Inject constructor(
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
                     // assign this todoEntity to ViewModel's todoEntity state
-                    this@AddEditTodoViewModel.todoEntity = it
+                    this@AddTodoViewModel.todoEntity = it
                 }
             }
         }
     }
 
-    fun onEvent(event: AddEditTodoEvent) {
+    fun onEvent(event: AddTodoEvent) {
         when(event) {
-            is AddEditTodoEvent.OnTitleChange -> {
+            is AddTodoEvent.OnTitleChange -> {
                 title = event.title
             }
-            is AddEditTodoEvent.OnDescriptionChange -> {
+            is AddTodoEvent.OnDescriptionChange -> {
                 description = event.description
             }
-            is AddEditTodoEvent.OnDueDateChange -> {
+            is AddTodoEvent.OnDueDateChange -> {
                 dueDate = event.dueDate
             }
-            is AddEditTodoEvent.OnPriorityColorChange -> {
+            is AddTodoEvent.OnPriorityColorChange -> {
                 priorityColor = event.priorityColor
             }
-            is AddEditTodoEvent.OnSaveTodoClick -> {
+            is AddTodoEvent.OnSaveTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     if (title.isBlank()){
                         sendUiEvent(UiEvent.ShowSnackbar(
@@ -102,10 +103,10 @@ class AddEditTodoViewModel @Inject constructor(
                         )
                     )
                     // go back to main screen
-                    sendUiEvent(UiEvent.PopBackStack)
+                    sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${todoEntity?.id}"))
                 }
             }
-            is AddEditTodoEvent.OnDatePickerClick -> {
+            is AddTodoEvent.OnDatePickerClick -> {
                 sendUiEvent(UiEvent.ShowDatePicker)
             }
         }

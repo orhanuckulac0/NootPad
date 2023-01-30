@@ -11,8 +11,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo.AddEditTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddEditTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.theme.JetpackComposeCRUDTodoAppTheme
+import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 import com.example.jetpackcompose_crudtodoapp.util.Routes
 import dagger.hilt.android.AndroidEntryPoint
@@ -33,7 +34,8 @@ class MainActivity : ComponentActivity() {
                     builder = {
                         composable( route = Routes.TODO_LIST ){
                             TodoScreen(
-                                onNavigate = { navController.navigate(it.route)
+                                onNavigate = {
+                                    navController.navigate(it.route)
                                 }
                             )
                         }
@@ -48,8 +50,26 @@ class MainActivity : ComponentActivity() {
                         ) {
                             AddEditTodoScreen(onPopBackStack = {
                                 navController.popBackStack()
+                            }, onNavigate = {
+                                navController.navigate(it.route)
                             })
                         }
+                        composable(
+                            route = Routes.TODO_INFO+"?todoId={todoId}",
+                            arguments = listOf(
+                                navArgument(name = "todoId") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ){
+                            TodoInfoScreen(onPopBackStack = {
+                                navController.popBackStack()
+                            }, onNavigate = {
+                                navController.navigate(it.route)
+                            })
+                        }
+
                     }
                 )
             }
