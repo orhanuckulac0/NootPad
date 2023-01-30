@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddEditTodoScreen(
+fun AddTodoScreen(
     modifier: Modifier = Modifier,
     onPopBackStack: (destinationId: String) -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
@@ -211,10 +211,17 @@ fun AddEditTodoScreen(
                         )
                     }
 
-                    Text(
-                        modifier = modifier.padding(30.dp, 10.dp),
-                        text = viewModel.dueDate
-                    )
+                    if (viewModel.dueDate != ""){
+                        Text(
+                            modifier = modifier.padding(30.dp, 10.dp),
+                            text = viewModel.dueDate
+                        )
+                    }else{
+                        Text(
+                            modifier = modifier.padding(30.dp, 10.dp),
+                            text = "Not Selected Yet"
+                        )
+                    }
                 }
             }
             Column {

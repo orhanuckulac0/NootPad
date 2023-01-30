@@ -11,7 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddEditTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.theme.JetpackComposeCRUDTodoAppTheme
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
@@ -40,21 +40,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
                         composable(
-                            route = Routes.ADD_EDIT_TODO+"?todoId={todoId}",
-                            arguments = listOf(
-                                navArgument(name = "todoId") {
-                                    type = NavType.IntType
-                                    defaultValue = -1
-                                }
-                            )
-                        ) {
-                            AddEditTodoScreen(onPopBackStack = {
-                                navController.popBackStack()
-                            }, onNavigate = {
-                                navController.navigate(it.route)
-                            })
-                        }
-                        composable(
                             route = Routes.TODO_INFO+"?todoId={todoId}",
                             arguments = listOf(
                                 navArgument(name = "todoId") {
@@ -64,6 +49,15 @@ class MainActivity : ComponentActivity() {
                             )
                         ){
                             TodoInfoScreen(onPopBackStack = {
+                                navController.popBackStack()
+                            }, onNavigate = {
+                                navController.navigate(it.route)
+                            })
+                        }
+                        composable(
+                            route = Routes.ADD_TODO,
+                        ) {
+                            AddTodoScreen(onPopBackStack = {
                                 navController.popBackStack()
                             }, onNavigate = {
                                 navController.navigate(it.route)

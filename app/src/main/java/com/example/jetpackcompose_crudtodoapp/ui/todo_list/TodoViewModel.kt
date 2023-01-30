@@ -31,7 +31,7 @@ class TodoViewModel @Inject constructor(
                 sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${event.todoEntity.id}"))
             }
             is TodoEvent.OnAddTodoClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO))
+                sendUiEvent(UiEvent.Navigate(Routes.ADD_TODO))
             }
             is TodoEvent.OnUndoDeleteClick -> {
                 deletedTodo?.let {

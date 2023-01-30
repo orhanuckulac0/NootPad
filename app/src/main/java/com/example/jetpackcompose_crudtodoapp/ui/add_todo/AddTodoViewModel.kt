@@ -4,7 +4,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
@@ -22,7 +21,6 @@ import javax.inject.Inject
 @HiltViewModel
 class AddTodoViewModel @Inject constructor(
     private val todoRepository: TodoRepository,
-    savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
     var todoEntity by mutableStateOf<TodoEntity?>(null)
@@ -44,25 +42,11 @@ class AddTodoViewModel @Inject constructor(
     val uiEvent = _uiEvent.asSharedFlow()
 
 
-    init {
-        val todoId = savedStateHandle.get<Int>("todoId")
-        if (todoId != -1 && todoId != null){
-            // remove Dispatchers.IO because it executes before recomposition and causes error
-            viewModelScope.launch {
-                todoRepository.getTodoByID(todoId)?.let {
-                    title = it.title
-                    description = it.description
-                    dueDate = it.dueDate
-                    priorityColor = it.priorityColor
-                    // assign this todoEntity to ViewModel's todoEntity state
-                    this@AddTodoViewModel.todoEntity = it
-                }
-            }
-        }
-    }
-
     fun onEvent(event: AddTodoEvent) {
         when(event) {
+            is AddTodoEvent.OnDatePickerClick -> {
+                sendUiEvent(UiEvent.ShowDatePicker)
+            }
             is AddTodoEvent.OnTitleChange -> {
                 title = event.title
             }
@@ -103,11 +87,8 @@ class AddTodoViewModel @Inject constructor(
                         )
                     )
                     // go back to main screen
-                    sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${todoEntity?.id}"))
+                    sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
                 }
-            }
-            is AddTodoEvent.OnDatePickerClick -> {
-                sendUiEvent(UiEvent.ShowDatePicker)
             }
         }
     }

@@ -96,9 +96,9 @@ fun TodoScreen(
                 // otherwise unexpected errors can happen
                 var notSwiped by remember { mutableStateOf(false) }
                 val dismissState = rememberDismissState(
-                    confirmStateChange = {
-                        if (it == DismissValue.DismissedToEnd) notSwiped = !notSwiped
-                        it != DismissValue.DismissedToEnd
+                    confirmStateChange = { dismiss->
+                        if (dismiss == DismissValue.DismissedToEnd) notSwiped = !notSwiped
+                        dismiss != DismissValue.DismissedToEnd
                     }
                 )
                 if (dismissState.isDismissed(DismissDirection.EndToStart)){
@@ -107,6 +107,7 @@ fun TodoScreen(
                         viewModel.onEvent(TodoEvent.OnSetTodoToDelete(todo))
                         dismissState.reset() // reset dismiss state to default
                         shouldShowDialog = true
+                        dismissState.reset() // again, just to prevent any bugs
                     }
                 }
 
