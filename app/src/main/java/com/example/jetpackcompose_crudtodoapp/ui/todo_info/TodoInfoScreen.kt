@@ -7,9 +7,13 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -44,64 +48,94 @@ fun TodoInfoScreen(
             }
         }
     }
-
     Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = modifier
-            .fillMaxSize(),
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                    viewModel.onEvent(TodoInfoEvent.OnEditTodoClick)
+        topBar = {
+            TopAppBar(
+                title = { Text(viewModel.title) },
+                navigationIcon = {
+                    IconButton(onClick = {
+                        onPopBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Navigate Back",
+                        )
+                    }
                 },
-                backgroundColor = colorResource(id = R.color.purple_700)
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Todo",
-                    tint=colorResource(id = R.color.white)
-                )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(
-                backgroundColor = colorResource(id = R.color.purple_700),
-                cutoutShape = CircleShape) {
-            }
+                actions = {
+                    IconButton(onClick = {
+                        viewModel.onEvent(TodoInfoEvent.OnDeleteTodoClick)
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Delete,
+                            contentDescription = "Delete",
+                             tint = Color.White
+                        )
+                    }
+                }
+            )
         }
-    ) {
+    ){
         it.calculateBottomPadding()
-        it.calculateTopPadding()
-        Column(modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
-            Row() {
-                Text(text = "Title")
-            }
-            Spacer(modifier = modifier.height(8.dp))
-            Row() {
-                Text(text = viewModel.title)
-            }
-            Spacer(modifier = modifier.height(8.dp))
-            Column() {
-                Row() {
-                    Text(text = "Due Date:")
-                    Text(text = viewModel.dueDate)
+        Scaffold(
+            scaffoldState = scaffoldState,
+            modifier = modifier
+                .fillMaxSize(),
+            floatingActionButton = {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = {
+                        viewModel.onEvent(TodoInfoEvent.OnEditTodoClick)
+                    },
+                    backgroundColor = colorResource(id = R.color.purple_700)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Edit,
+                        contentDescription = "Edit Todo",
+                        tint=colorResource(id = R.color.white)
+                    )
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            isFloatingActionButtonDocked = true,
+            bottomBar = {
+                BottomAppBar(
+                    backgroundColor = colorResource(id = R.color.purple_700),
+                    cutoutShape = CircleShape) {
                 }
             }
-            Spacer(modifier = modifier.height(8.dp))
-            Text(text = "Description:")
-            Row(modifier = Modifier
-                .verticalScroll(scrollableDescription)
-                .fillMaxWidth()
-            ) {
-                Text(text = viewModel.description)
-            }
-            Spacer(modifier = modifier.height(8.dp))
+        ) {
+            it.calculateBottomPadding()
+            it.calculateTopPadding()
+            Column(modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)) {
+                Row() {
+                    Text(text = "Title")
+                }
+                Spacer(modifier = modifier.height(8.dp))
+                Row() {
+                    Text(text = viewModel.title)
+                }
+                Spacer(modifier = modifier.height(8.dp))
+                Column() {
+                    Row() {
+                        Text(text = "Due Date:")
+                        Text(text = viewModel.dueDate)
+                    }
+                }
+                Spacer(modifier = modifier.height(8.dp))
+                Text(text = "Description:")
+                Row(modifier = Modifier
+                    .verticalScroll(scrollableDescription)
+                    .fillMaxWidth()
+                ) {
+                    Text(text = viewModel.description)
+                }
+                Spacer(modifier = modifier.height(8.dp))
 
+            }
         }
+
     }
 }

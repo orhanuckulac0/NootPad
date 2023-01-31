@@ -4,4 +4,5 @@ import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
 
 sealed class TodoInfoEvent {
     object OnEditTodoClick: TodoInfoEvent()
+    object OnDeleteTodoClick: TodoInfoEvent()
 }

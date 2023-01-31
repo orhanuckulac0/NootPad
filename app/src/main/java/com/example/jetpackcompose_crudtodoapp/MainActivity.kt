@@ -18,7 +18,6 @@ import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 import com.example.jetpackcompose_crudtodoapp.util.Routes
 import com.example.jetpackcompose_crudtodoapp.util.Routes.popUpToTop
-import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterialApi::class)
