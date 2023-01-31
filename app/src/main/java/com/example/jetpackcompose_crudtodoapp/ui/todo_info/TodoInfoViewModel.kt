@@ -8,7 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
-import com.example.jetpackcompose_crudtodoapp.util.Routes
+import com.example.jetpackcompose_crudtodoapp.navigation.Routes
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers

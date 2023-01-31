@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.util
+package com.example.jetpackcompose_crudtodoapp.navigation
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptionsBuilder
