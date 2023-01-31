@@ -12,10 +12,13 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.edit_todo.EditTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.theme.JetpackComposeCRUDTodoAppTheme
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 import com.example.jetpackcompose_crudtodoapp.util.Routes
+import com.example.jetpackcompose_crudtodoapp.util.Routes.popUpToTop
+import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import dagger.hilt.android.AndroidEntryPoint
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -32,7 +35,9 @@ class MainActivity : ComponentActivity() {
                     navController = navController,
                     startDestination = Routes.TODO_LIST,
                     builder = {
-                        composable( route = Routes.TODO_LIST ){
+                        composable(
+                            route = Routes.TODO_LIST
+                        ){
                             TodoScreen(
                                 onNavigate = {
                                     navController.navigate(it.route)
@@ -55,15 +60,29 @@ class MainActivity : ComponentActivity() {
                             })
                         }
                         composable(
-                            route = Routes.ADD_TODO,
+                            route = Routes.ADD_TODO
                         ) {
-                            AddTodoScreen(onPopBackStack = {
-                                navController.popBackStack()
-                            }, onNavigate = {
-                                navController.navigate(it.route)
+                            AddTodoScreen(onNavigate = {
+                                navController.navigate(it.route) {
+                                    popUpToTop(navController)
+                                }
                             })
                         }
-
+                        composable(
+                            route = Routes.EDIT_TODO+"?todoId={todoId}",
+                            arguments = listOf(
+                                navArgument(name = "todoId") {
+                                    type = NavType.IntType
+                                    defaultValue = -1
+                                }
+                            )
+                        ){
+                            EditTodoScreen(onNavigate = {
+                                navController.navigate(it.route) {
+                                    popUpTo(Routes.TODO_LIST)
+                                }
+                            })
+                        }
                     }
                 )
             }

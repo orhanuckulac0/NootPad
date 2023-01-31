@@ -1,10 +1,12 @@
-package com.example.jetpackcompose_crudtodoapp.ui.add_todo
+package com.example.jetpackcompose_crudtodoapp.ui.edit_todo
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
@@ -28,12 +30,11 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun AddTodoScreen(
+fun EditTodoScreen(
     modifier: Modifier = Modifier,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: AddTodoViewModel = hiltViewModel(),
+    viewModel: EditTodoViewModel = hiltViewModel(),
 ) {
-
     val scrollableDescription = rememberScrollState()
 
     // DatePicker related
@@ -54,7 +55,7 @@ fun AddTodoScreen(
         dialogState = dateDialogState,
         buttons = {
             positiveButton(text = "Ok", onClick = {
-                viewModel.onEvent(AddTodoEvent.OnDueDateChange(formattedDate))
+                viewModel.onEvent(EditTodoEvent.OnDueDateChange(formattedDate))
             })
             negativeButton(text = "Cancel")
         }
@@ -93,7 +94,7 @@ fun AddTodoScreen(
         dialogState = colorPickerDialogState,
         buttons = {
             positiveButton(text = "Select", onClick = {
-                viewModel.onEvent(AddTodoEvent.OnPriorityColorChange(pickedColor))
+                viewModel.onEvent(EditTodoEvent.OnPriorityColorChange(pickedColor))
             })
             negativeButton(text = "Cancel", onClick = {
 //                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(toHexString(listOfColors[0])))
@@ -135,11 +136,11 @@ fun AddTodoScreen(
             FloatingActionButton(
                 shape = CircleShape,
                 onClick = {
-                viewModel.onEvent(AddTodoEvent.OnSaveTodoClick)
+                    viewModel.onEvent(EditTodoEvent.OnSaveTodoClick)
                 },
                 backgroundColor = colorResource(id = R.color.purple_700)
             ) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint=colorResource(id = R.color.white))
+                Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint= colorResource(id = R.color.white))
             }
         },
         floatingActionButtonPosition = FabPosition.End,
@@ -161,7 +162,7 @@ fun AddTodoScreen(
                     TextField(
                         value = viewModel.title,
                         onValueChange = {
-                            viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
+                            viewModel.onEvent(EditTodoEvent.OnTitleChange(it))
                         },
                         label = { Text("Title") },
                         modifier = modifier
@@ -173,7 +174,7 @@ fun AddTodoScreen(
                 }
             }
             Spacer(modifier = modifier.height(8.dp))
-            
+
             Column(
                 modifier = Modifier
                     .verticalScroll(scrollableDescription)
@@ -182,7 +183,7 @@ fun AddTodoScreen(
                 TextField(
                     value = viewModel.description,
                     onValueChange = {
-                        viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
+                        viewModel.onEvent(EditTodoEvent.OnDescriptionChange(it))
                     },
                     label = { Text("Description") },
                     modifier = modifier
@@ -198,7 +199,7 @@ fun AddTodoScreen(
             Column {
                 Row {
                     OutlinedButton(onClick = {
-                        viewModel.onEvent(AddTodoEvent.OnDatePickerClick)
+                        viewModel.onEvent(EditTodoEvent.OnDatePickerClick)
                     }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                         Text(
                             text = "Select Due Date",
