@@ -68,9 +68,13 @@ fun EditTodoScreen(
             initialDate = LocalDate.now(),
             title = "Pick a date",
             colors = DatePickerDefaults.colors(
-                headerBackgroundColor = Color.Cyan,
-                dateActiveBackgroundColor = Color.Cyan,
+                headerBackgroundColor = MaterialTheme.colors.primary,
+                dateActiveBackgroundColor = MaterialTheme.colors.primary,
             ),
+            allowedDateValidator = {
+                val yesterdayDate = LocalDate.now().minusDays(1)
+                it.isAfter(yesterdayDate)
+            }
         ) {
             pickedDate = it
         }

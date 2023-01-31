@@ -53,7 +53,11 @@ fun NavGraph(
             composable(
                 route = Routes.ADD_TODO
             ) {
-                AddTodoScreen(onNavigate = {
+                AddTodoScreen(
+                    onPopBackStack = {
+                        navController.popBackStack()
+                                     },
+                    onNavigate = {
                     navController.navigate(it.route) {
                         popUpToTop(navController)
                     }

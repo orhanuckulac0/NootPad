@@ -14,8 +14,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -25,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
@@ -66,106 +66,126 @@ fun TodoScreen(
         }
     }
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = { viewModel.onEvent(TodoEvent.OnAddTodoClick) },
-                backgroundColor = colorResource(id = R.color.purple_700)
-            ) {
-                Icon(imageVector = Icons.Filled.Add, contentDescription = "icon", tint = colorResource(id = R.color.white))
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
-
-            }
-        }
-
-    ) {
-        it.calculateBottomPadding()
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(0.dp, 0.dp, 0.dp, 75.dp)
-        ) {
-
-            itemsIndexed(todos.value) { index, todo ->
-                // notSwiped and dismissState should be inside lazy column
-                // otherwise unexpected errors can happen
-                var notSwiped by remember { mutableStateOf(false) }
-                val dismissState = rememberDismissState(
-                    confirmStateChange = { dismiss->
-                        if (dismiss == DismissValue.DismissedToEnd) notSwiped = !notSwiped
-                        dismiss != DismissValue.DismissedToEnd
-                    }
-                )
-                if (dismissState.isDismissed(DismissDirection.EndToStart)){
-                    LaunchedEffect(key1 = true){
-                        // assign current todoEntity to viewModel's deletedTodo var and make it public
-                        viewModel.onEvent(TodoEvent.OnSetTodoToDelete(todo))
-                        dismissState.reset() // reset dismiss state to default
-                        shouldShowDialog = true
-                        dismissState.reset() // again, just to prevent any bugs
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "All Todos") },
+                actions = {
+                    IconButton(onClick = {
+                        // TODO implement a custom dialog to show information related to the app
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.HelpOutline,
+                            contentDescription = "Help",
+                            tint = Color.White
+                        )
                     }
                 }
+            )
+        }
+    ){
+        it.calculateBottomPadding()
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = { viewModel.onEvent(TodoEvent.OnAddTodoClick) },
+                    backgroundColor = colorResource(id = R.color.purple_700)
+                ) {
+                    Icon(imageVector = Icons.Filled.Add, contentDescription = "icon", tint = colorResource(id = R.color.white))
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            isFloatingActionButtonDocked = true,
+            bottomBar = {
+                BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
 
-                SwipeToDismiss(
-                    state = dismissState,
-                    modifier = Modifier.padding(vertical = 4.dp),
-                    directions = setOf(DismissDirection.EndToStart),
-                    background = {
-                        val color by animateColorAsState(
-                            when (dismissState.targetValue) {
-                                DismissValue.Default -> Color.LightGray
-                                DismissValue.DismissedToEnd -> Color.LightGray
-                                DismissValue.DismissedToStart -> Color.Red
-                            }
-                        )
-                        val alignment = Alignment.CenterEnd
-                        val icon = Icons.Default.Delete
+                }
+            }
 
-                        val scale by animateFloatAsState(
-                            if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
-                        )
+        ) {
+            it.calculateBottomPadding()
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(0.dp, 0.dp, 0.dp, 75.dp)
+            ) {
 
-                        Box(
-                            Modifier
-                                .fillMaxSize()
-                                .background(color)
-                                .padding(horizontal = 20.dp),
-                            contentAlignment = alignment
-                        ) {
-                            Icon(
-                                icon,
-                                contentDescription = "Localized description",
-                                modifier = Modifier.scale(scale)
-                            )
+                itemsIndexed(todos.value) { index, todo ->
+                    // notSwiped and dismissState should be inside lazy column
+                    // otherwise unexpected errors can happen
+                    var notSwiped by remember { mutableStateOf(false) }
+                    val dismissState = rememberDismissState(
+                        confirmStateChange = { dismiss->
+                            if (dismiss == DismissValue.DismissedToEnd) notSwiped = !notSwiped
+                            dismiss != DismissValue.DismissedToEnd
                         }
-                    },
-                    dismissContent = {
-                        Card(
-                            elevation = animateDpAsState(
-                                if (dismissState.dismissDirection != null) 4.dp else 0.dp
-                            ).value
-                        ) {
-                            TodoItem(
-                                todo = todo,
-                                onEvent = viewModel::onEvent,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        viewModel.onEvent(TodoEvent.OnTodoClick(todo))
-                                    }
-                                    .padding(16.dp)
-                            )
-                            if (index != 0){
-                                Divider(color = Color.LightGray, thickness = 1.dp)
-                            }
+                    )
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)){
+                        LaunchedEffect(key1 = true){
+                            // assign current todoEntity to viewModel's deletedTodo var and make it public
+                            viewModel.onEvent(TodoEvent.OnSetTodoToDelete(todo))
+                            dismissState.reset() // reset dismiss state to default
+                            shouldShowDialog = true
+                            dismissState.reset() // again, just to prevent any bugs
                         }
                     }
-                )
+
+                    SwipeToDismiss(
+                        state = dismissState,
+                        modifier = Modifier.padding(vertical = 4.dp),
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            val color by animateColorAsState(
+                                when (dismissState.targetValue) {
+                                    DismissValue.Default -> Color.LightGray
+                                    DismissValue.DismissedToEnd -> Color.LightGray
+                                    DismissValue.DismissedToStart -> Color.Red
+                                }
+                            )
+                            val alignment = Alignment.CenterEnd
+                            val icon = Icons.Default.Delete
+
+                            val scale by animateFloatAsState(
+                                if (dismissState.targetValue == DismissValue.Default) 0.75f else 1f
+                            )
+
+                            Box(
+                                Modifier
+                                    .fillMaxSize()
+                                    .background(color)
+                                    .padding(horizontal = 20.dp),
+                                contentAlignment = alignment
+                            ) {
+                                Icon(
+                                    icon,
+                                    contentDescription = "Localized description",
+                                    modifier = Modifier.scale(scale)
+                                )
+                            }
+                        },
+                        dismissContent = {
+                            Card(
+                                elevation = animateDpAsState(
+                                    if (dismissState.dismissDirection != null) 4.dp else 0.dp
+                                ).value
+                            ) {
+                                TodoItem(
+                                    todo = todo,
+                                    onEvent = viewModel::onEvent,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            viewModel.onEvent(TodoEvent.OnTodoClick(todo))
+                                        }
+                                        .padding(16.dp)
+                                )
+                                if (index != 0){
+                                    Divider(color = Color.LightGray, thickness = 1.dp)
+                                }
+                            }
+                        }
+                    )
+                }
             }
         }
     }

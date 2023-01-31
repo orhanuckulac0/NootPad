@@ -7,7 +7,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -16,6 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -31,6 +34,7 @@ import java.time.format.DateTimeFormatter
 fun AddTodoScreen(
     modifier: Modifier = Modifier,
     onNavigate: (UiEvent.Navigate) -> Unit,
+    onPopBackStack: () -> Unit,
     viewModel: AddTodoViewModel = hiltViewModel(),
 ) {
 
@@ -63,9 +67,13 @@ fun AddTodoScreen(
             initialDate = LocalDate.now(),
             title = "Pick a date",
             colors = DatePickerDefaults.colors(
-                headerBackgroundColor = Color.Cyan,
-                dateActiveBackgroundColor = Color.Cyan,
+                headerBackgroundColor = MaterialTheme.colors.primary,
+                dateActiveBackgroundColor = MaterialTheme.colors.primary,
             ),
+            allowedDateValidator = {
+                val yesterdayDate = LocalDate.now().minusDays(1)
+                it.isAfter(yesterdayDate)
+            }
         ) {
             pickedDate = it
         }
@@ -126,128 +134,146 @@ fun AddTodoScreen(
         }
     }
 
-
     Scaffold(
-        scaffoldState = scaffoldState,
-        modifier = modifier
-            .fillMaxSize(),
-        floatingActionButton = {
-            FloatingActionButton(
-                shape = CircleShape,
-                onClick = {
-                viewModel.onEvent(AddTodoEvent.OnSaveTodoClick)
-                },
-                backgroundColor = colorResource(id = R.color.purple_700)
-            ) {
-                Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint=colorResource(id = R.color.white))
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
-
-            }
+        topBar = {
+            TopAppBar(
+                title = { Text(text = "Add New Todo") },
+                actions = {
+                    IconButton(onClick = {
+                        onPopBackStack()
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.ArrowBack,
+                            contentDescription = "Navigate Back",
+                        )
+                    }
+                }
+            )
         }
-    ) {
+    ){
         it.calculateBottomPadding()
-        it.calculateTopPadding()
-        Column(modifier = modifier
-            .fillMaxSize()
-            .padding(16.dp)) {
+        Scaffold(
+            scaffoldState = scaffoldState,
+            modifier = modifier
+                .fillMaxSize(),
+            floatingActionButton = {
+                FloatingActionButton(
+                    shape = CircleShape,
+                    onClick = {
+                        viewModel.onEvent(AddTodoEvent.OnSaveTodoClick)
+                    },
+                    backgroundColor = colorResource(id = R.color.purple_700)
+                ) {
+                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint=colorResource(id = R.color.white))
+                }
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            isFloatingActionButtonDocked = true,
+            bottomBar = {
+                BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
 
-            Column {
-                Row {
+                }
+            }
+        ) {
+            it.calculateBottomPadding()
+            it.calculateTopPadding()
+            Column(modifier = modifier
+                .fillMaxSize()
+                .padding(16.dp)) {
+
+                Column {
+                    Row {
+                        TextField(
+                            value = viewModel.title,
+                            onValueChange = {
+                                viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
+                            },
+                            label = { Text("Title") },
+                            modifier = modifier
+                                .fillMaxWidth()
+                                .background(Color.White)
+                                .weight(0.9f),
+                            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
+                        )
+                    }
+                }
+                Spacer(modifier = modifier.height(8.dp))
+
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(scrollableDescription)
+                        .fillMaxWidth()
+                ) {
                     TextField(
-                        value = viewModel.title,
+                        value = viewModel.description,
                         onValueChange = {
-                            viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
+                            viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
                         },
-                        label = { Text("Title") },
+                        label = { Text("Description") },
                         modifier = modifier
-                            .fillMaxWidth()
-                            .background(Color.White)
-                            .weight(0.9f),
-                        colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+                        singleLine = false,
+                        maxLines = 10
                     )
                 }
-            }
-            Spacer(modifier = modifier.height(8.dp))
-            
-            Column(
-                modifier = Modifier
-                    .verticalScroll(scrollableDescription)
-                    .fillMaxWidth()
-            ) {
-                TextField(
-                    value = viewModel.description,
-                    onValueChange = {
-                        viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
-                    },
-                    label = { Text("Description") },
-                    modifier = modifier
-                        .fillMaxWidth(),
-                    colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
-                    singleLine = false,
-                    maxLines = 10
-                )
-            }
 
-            Spacer(modifier = modifier.height(8.dp))
+                Spacer(modifier = modifier.height(8.dp))
 
-            Column {
-                Row {
-                    OutlinedButton(onClick = {
-                        viewModel.onEvent(AddTodoEvent.OnDatePickerClick)
-                    }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
-                        Text(
-                            text = "Select Due Date",
-                            color = Color.Black,
-                        )
-                    }
+                Column {
+                    Row {
+                        OutlinedButton(onClick = {
+                            viewModel.onEvent(AddTodoEvent.OnDatePickerClick)
+                        }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
+                            Text(
+                                text = "Select Due Date",
+                                color = Color.Black,
+                            )
+                        }
 
-                    if (viewModel.dueDate != ""){
-                        Text(
-                            modifier = modifier.padding(30.dp, 10.dp),
-                            text = viewModel.dueDate
-                        )
-                    }else{
-                        Text(
-                            modifier = modifier.padding(30.dp, 10.dp),
-                            text = "Not Selected Yet"
-                        )
+                        if (viewModel.dueDate != ""){
+                            Text(
+                                modifier = modifier.padding(30.dp, 10.dp),
+                                text = viewModel.dueDate
+                            )
+                        }else{
+                            Text(
+                                modifier = modifier.padding(30.dp, 10.dp),
+                                text = "Not Selected Yet"
+                            )
+                        }
                     }
                 }
-            }
-            Column {
-                Row {
-                    OutlinedButton(onClick = {
-                        colorPickerDialogState.show()
-                    }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
-                        Text(
-                            text = "Select Priority Color",
-                            color = Color.Black
-                        )
-                    }
-
-                    if (viewModel.priorityColor == ""){
-                        Button(
-                            onClick = { },
-                            modifier = modifier
-                                .background(Color.White),
-                            colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
-                        ) {
-
+                Column {
+                    Row {
+                        OutlinedButton(onClick = {
+                            colorPickerDialogState.show()
+                        }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
+                            Text(
+                                text = "Select Priority Color",
+                                color = Color.Black
+                            )
                         }
-                    }else{
-                        Button(
-                            onClick = { },
-                            modifier = modifier
-                                .background((Color.White)),
-                            colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
 
-                        ) {
+                        if (viewModel.priorityColor == ""){
+                            Button(
+                                onClick = { },
+                                modifier = modifier
+                                    .background(Color.White),
+                                colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
+                            ) {
 
+                            }
+                        }else{
+                            Button(
+                                onClick = { },
+                                modifier = modifier
+                                    .background((Color.White)),
+                                colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
+
+                            ) {
+
+                            }
                         }
                     }
                 }
