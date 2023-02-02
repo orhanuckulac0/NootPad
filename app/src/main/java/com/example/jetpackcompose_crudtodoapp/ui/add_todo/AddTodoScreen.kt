@@ -326,8 +326,8 @@ fun AddTodoScreen(
                         ) {
                             mCategories.forEach { category ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.onEvent(AddTodoEvent.OnCategoryChange(mSelectedCategory))
                                     mSelectedCategory = category
+                                    viewModel.onEvent(AddTodoEvent.OnCategoryChange(mSelectedCategory))
                                     mExpanded = false
                                 }) {
                                     Text(text = category)
@@ -337,13 +337,13 @@ fun AddTodoScreen(
 
                         if (mSelectedCategory == ""){
                             Text(
-                                modifier = Modifier.padding(30.dp, 10.dp),
+                                modifier = Modifier.padding(20.dp, 10.dp),
                                 text = "Not Selected Yet"
                             )
                         }
                         else{
                             Text(
-                                modifier = Modifier.padding(30.dp, 10.dp),
+                                modifier = Modifier.padding(20.dp, 10.dp),
                                 text = mSelectedCategory
                             )
                         }

@@ -99,6 +99,11 @@ class EditTodoViewModel @Inject constructor(
                     if (priorityColor.isBlank()){
                         priorityColor = toHexString(Color(0xFF808080))
                     }
+                    if (category.isBlank()){
+                        sendUiEvent(UiEvent.ShowSnackbar(
+                            "Category can not be blank."
+                        ))
+                    }
                     todoRepository.insertTodo(
                         TodoEntity(
                             id = todoEntity?.id,

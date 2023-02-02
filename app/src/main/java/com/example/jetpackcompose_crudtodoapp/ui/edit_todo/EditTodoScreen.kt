@@ -3,23 +3,27 @@ package com.example.jetpackcompose_crudtodoapp.ui.edit_todo
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddTodoEvent
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
@@ -39,6 +43,20 @@ fun EditTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: EditTodoViewModel = hiltViewModel(),
 ) {
+    // Category Dropdown Related
+
+    // Declaring a boolean value to store
+    // the expanded state of the Text Field
+    var mExpanded by remember { mutableStateOf(false) }
+    val mCategories = listOf("Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
+    var mSelectedCategory by remember { mutableStateOf("") }
+    var mDropdownSize by remember { mutableStateOf(Size.Zero)}
+
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
     val scrollableDescription = rememberScrollState()
 
     // DatePicker related
@@ -275,6 +293,60 @@ fun EditTodoScreen(
                             ) {
 
                             }
+                        }
+                    }
+                }
+                Column {
+                    Row {
+                        OutlinedButton(onClick = {
+                            mExpanded = !mExpanded
+                        }, modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
+                                mDropdownSize = coordinates.size.toSize()
+                            }
+                            .clickable { mExpanded = !mExpanded }
+                        ) {
+                            Text(
+                                "Select Category",
+                                color = Color.Black
+                            )
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "dropdownIcon",
+                                Modifier.clickable { mExpanded = !mExpanded }
+                            )
+                        }
+
+                        // Create a drop-down menu with list of cities,
+                        // when clicked, set the Text Field text as the city selected
+                        DropdownMenu(
+                            expanded = mExpanded,
+                            onDismissRequest = { mExpanded = false },
+                            modifier = Modifier
+                                .width(with(LocalDensity.current){mDropdownSize.width.toDp()})
+                        ) {
+                            mCategories.forEach { category ->
+                                DropdownMenuItem(onClick = {
+                                    mSelectedCategory = category
+                                    viewModel.onEvent(EditTodoEvent.OnCategoryChange(mSelectedCategory))
+                                    mExpanded = false
+                                }) {
+                                    Text(text = category)
+                                }
+                            }
+                        }
+
+                        if (mSelectedCategory == ""){
+                            Text(
+                                modifier = Modifier.padding(20.dp, 10.dp),
+                                text = "Not Selected Yet"
+                            )
+                        }
+                        else{
+                            Text(
+                                modifier = Modifier.padding(20.dp, 10.dp),
+                                text = mSelectedCategory
+                            )
                         }
                     }
                 }
