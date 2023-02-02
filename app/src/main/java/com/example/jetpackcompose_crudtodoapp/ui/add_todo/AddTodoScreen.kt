@@ -9,16 +9,20 @@ import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
-import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -37,6 +41,20 @@ fun AddTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddTodoViewModel = hiltViewModel(),
 ) {
+    // Category Dropdown Related
+
+    // Declaring a boolean value to store
+    // the expanded state of the Text Field
+    var mExpanded by remember { mutableStateOf(false) }
+    val mCategories = listOf("Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
+    var mSelectedCategory by remember { mutableStateOf("") }
+    var mDropdownSize by remember { mutableStateOf(Size.Zero)}
+
+    val icon = if (mExpanded)
+        Icons.Filled.KeyboardArrowUp
+    else
+        Icons.Filled.KeyboardArrowDown
+
 
     val scrollableDescription = rememberScrollState()
 
@@ -274,6 +292,60 @@ fun AddTodoScreen(
                             ) {
 
                             }
+                        }
+                    }
+                }
+                Column {
+                    Row {
+                        OutlinedButton(onClick = {
+                            mExpanded = !mExpanded
+                        }, modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
+                                mDropdownSize = coordinates.size.toSize()
+                            }
+                            .clickable { mExpanded = !mExpanded }
+                        ) {
+                            Text(
+                                "Select Category",
+                                color = Color.Black
+                            )
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "dropdownIcon",
+                                Modifier.clickable { mExpanded = !mExpanded }
+                            )
+                        }
+
+                        // Create a drop-down menu with list of cities,
+                        // when clicked, set the Text Field text as the city selected
+                        DropdownMenu(
+                            expanded = mExpanded,
+                            onDismissRequest = { mExpanded = false },
+                            modifier = Modifier
+                                .width(with(LocalDensity.current){mDropdownSize.width.toDp()})
+                        ) {
+                            mCategories.forEach { category ->
+                                DropdownMenuItem(onClick = {
+                                    viewModel.onEvent(AddTodoEvent.OnCategoryChange(mSelectedCategory))
+                                    mSelectedCategory = category
+                                    mExpanded = false
+                                }) {
+                                    Text(text = category)
+                                }
+                            }
+                        }
+
+                        if (mSelectedCategory == ""){
+                            Text(
+                                modifier = Modifier.padding(30.dp, 10.dp),
+                                text = "Not Selected Yet"
+                            )
+                        }
+                        else{
+                            Text(
+                                modifier = Modifier.padding(30.dp, 10.dp),
+                                text = mSelectedCategory
+                            )
                         }
                     }
                 }

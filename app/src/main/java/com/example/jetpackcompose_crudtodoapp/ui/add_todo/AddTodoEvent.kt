@@ -6,6 +6,7 @@ sealed class AddTodoEvent {
     data class OnDescriptionChange(val description: String): AddTodoEvent()
     data class OnDueDateChange(val dueDate: String): AddTodoEvent()
     data class OnPriorityColorChange(val priorityColor: String): AddTodoEvent()
+    data class OnCategoryChange(val category: String): AddTodoEvent()
     object OnDatePickerClick: AddTodoEvent()
     object OnSaveTodoClick: AddTodoEvent()
 

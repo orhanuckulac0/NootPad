@@ -128,6 +128,10 @@ fun TodoScreen(
                             shouldShowDialog = true
                             dismissState.reset() // again, just to prevent any bugs
                         }
+                    } else { // prevent UI bug on left to right swipe
+                        LaunchedEffect(key1 = true){
+                            dismissState.reset()
+                        }
                     }
 
                     SwipeToDismiss(

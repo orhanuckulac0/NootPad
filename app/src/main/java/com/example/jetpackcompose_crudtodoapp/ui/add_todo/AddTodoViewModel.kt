@@ -38,6 +38,9 @@ class AddTodoViewModel @Inject constructor(
     var priorityColor by mutableStateOf("")
         private set
 
+    var category by mutableStateOf("")
+        private set
+
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
@@ -58,6 +61,9 @@ class AddTodoViewModel @Inject constructor(
             }
             is AddTodoEvent.OnPriorityColorChange -> {
                 priorityColor = event.priorityColor
+            }
+            is AddTodoEvent.OnCategoryChange -> {
+                category = event.category
             }
             is AddTodoEvent.OnSaveTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
@@ -83,7 +89,8 @@ class AddTodoViewModel @Inject constructor(
                             description = description,
                             isDone = todoEntity?.isDone ?: false,  // if isDone is null, it will be false
                             dueDate = dueDate,
-                            priorityColor = priorityColor
+                            priorityColor = priorityColor,
+                            category = category
                         )
                     )
                     // go back to main screen
