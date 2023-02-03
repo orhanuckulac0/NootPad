@@ -68,7 +68,7 @@ fun TodoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "All Todos") },
+                title = { Text(text = "${viewModel.selectedCategory.value} Todos" ) },
                 actions = {
                     IconButton(onClick = {
                         viewModel.onEvent(TodoEvent.OnAddTodoClick)

@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -41,6 +42,7 @@ fun ChipSection(
                         .padding(start = 15.dp, top = 15.dp, bottom = 15.dp)
                         .clickable {
                             selectedChipIndex = it
+                            viewModel.selectedCategory.value = categories[it]
                             viewModel.onEvent(TodoEvent.OnCategoryClicked(categories[it]))
                         }
                         .clip(RoundedCornerShape(10.dp))

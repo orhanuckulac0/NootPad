@@ -20,6 +20,7 @@ class TodoViewModel @Inject constructor(
 ): ViewModel() {
 
     val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())
+    var selectedCategory = mutableStateOf("All")
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -51,6 +52,11 @@ class TodoViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     deletedTodo = event.todoEntity
                     repository.deleteTodo(event.todoEntity)
+                    if (selectedCategory.value == "All"){
+                        todos.value = repository.getAllTodos()
+                    }else{
+                        todos.value = repository.getTodosByCategory(selectedCategory.value)
+                    }
                     // after delete, set it to null again
                     deletedTodo = null
                 }
