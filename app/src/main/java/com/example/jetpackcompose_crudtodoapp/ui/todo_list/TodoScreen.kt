@@ -22,8 +22,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.jetpackcompose_crudtodoapp.ui.theme.BackgroundColor
-import com.example.jetpackcompose_crudtodoapp.ui.theme.TodoBackground
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
@@ -34,10 +34,8 @@ fun TodoScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
+    val todos = viewModel.todos.value
 
-    val categories = listOf("All","Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
-
-    val todos = viewModel.todos.collectAsState(initial = emptyList())
     val scaffoldState = rememberScaffoldState()
     var shouldShowDialog by remember { mutableStateOf(false) }
 
@@ -89,10 +87,10 @@ fun TodoScreen(
 
         Column(
             modifier = Modifier
-                .background(BackgroundColor)
+                .background(MainBackgroundColor)
                 .fillMaxSize()) {
             Row(modifier = Modifier.padding(0.dp, 15.dp, 0.dp, 0.dp)) {
-                ChipSection(chips = categories)
+                ChipSection()
             }
             Row() {
                 Column() {
@@ -104,7 +102,7 @@ fun TodoScreen(
                             .padding(15.dp, 0.dp, 15.dp, 0.dp)
                     ) {
 
-                        itemsIndexed(todos.value) { index, todo ->
+                        itemsIndexed(todos!!) { index, todo ->
                             // notSwiped and dismissState should be inside lazy column
                             // otherwise unexpected errors can happen
                             var notSwiped by remember { mutableStateOf(false) }
@@ -136,8 +134,8 @@ fun TodoScreen(
                                 background = {
                                     val color by animateColorAsState(
                                         when (dismissState.targetValue) {
-                                            DismissValue.Default -> BackgroundColor
-                                            DismissValue.DismissedToEnd -> BackgroundColor
+                                            DismissValue.Default -> MainBackgroundColor
+                                            DismissValue.DismissedToEnd -> MainBackgroundColor
                                             DismissValue.DismissedToStart -> Color.Red
                                         }
                                     )
@@ -171,7 +169,7 @@ fun TodoScreen(
                                         Modifier
                                             .clip(RoundedCornerShape(30.dp))
                                             .fillMaxSize()
-                                            .background(TodoBackground)
+                                            .background(DarkBlue)
                                     ) {
                                         TodoItem(
                                             todo = todo,
@@ -181,7 +179,7 @@ fun TodoScreen(
                                                 .clickable {
                                                     viewModel.onEvent(TodoEvent.OnTodoClick(todo))
                                                 }
-                                                .background(TodoBackground)
+                                                .background(DarkBlue)
                                                 .padding(16.dp)
                                         )
                                     }

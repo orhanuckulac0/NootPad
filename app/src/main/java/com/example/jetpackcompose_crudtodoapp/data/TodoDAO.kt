@@ -22,5 +22,8 @@ interface TodoDAO {
     suspend fun deleteAllTodos()
 
     @Query("SELECT * FROM todo_table")
-    fun getAllTodos(): Flow<List<TodoEntity>>
+    suspend fun getAllTodos(): List<TodoEntity>
+
+    @Query("SELECT * FROM todo_table WHERE category=:category")
+    suspend fun getTodosByCategory(category: String): List<TodoEntity>
 }

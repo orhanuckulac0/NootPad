@@ -19,7 +19,11 @@ class TodoRepositoryImpl(private val todoDAO: TodoDAO): TodoRepository {
         todoDAO.deleteAllTodos()
     }
 
-    override fun getAllTodos(): Flow<List<TodoEntity>> {
+    override suspend fun getAllTodos(): List<TodoEntity> {
         return todoDAO.getAllTodos()
+    }
+
+    override suspend fun getTodosByCategory(category: String): List<TodoEntity> {
+        return todoDAO.getTodosByCategory(category)
     }
 }

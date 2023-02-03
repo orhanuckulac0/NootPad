@@ -1,5 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
@@ -8,8 +10,7 @@ import com.example.jetpackcompose_crudtodoapp.navigation.Routes
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,12 +19,18 @@ class TodoViewModel @Inject constructor(
     private val repository: TodoRepository
 ): ViewModel() {
 
-    val todos = repository.getAllTodos()
+    val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
     var deletedTodo : TodoEntity? = null
+
+    init {
+        viewModelScope.launch {
+            todos.value = repository.getAllTodos()
+        }
+    }
 
     fun onEvent(event: TodoEvent) {
         when(event) {
@@ -66,6 +73,15 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.OnSetTodoToDeleteToNull -> {
                 viewModelScope.launch {
                     deletedTodo = null
+                }
+            }
+            is TodoEvent.OnCategoryClicked -> {
+                viewModelScope.launch {
+                    if (event.category == "All"){
+                        todos.value = repository.getAllTodos()
+                    }else{
+                        todos.value = repository.getTodosByCategory(event.category)
+                    }
                 }
             }
         }
