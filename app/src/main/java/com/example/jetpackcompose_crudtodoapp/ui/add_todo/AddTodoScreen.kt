@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -12,17 +13,25 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.unit.toSize
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.ui.edit_todo.EditTodoEvent
+import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -41,8 +50,11 @@ fun AddTodoScreen(
     onPopBackStack: () -> Unit,
     viewModel: AddTodoViewModel = hiltViewModel(),
 ) {
-    // Category Dropdown Related
+    // input related
+    val titleMaxCharLength = 70
+    val descriptionMaxCharLength = 500
 
+    // Category Dropdown Related
     // Declaring a boolean value to store
     // the expanded state of the Text Field
     var mExpanded by remember { mutableStateOf(false) }
@@ -180,7 +192,7 @@ fun AddTodoScreen(
                     onClick = {
                         viewModel.onEvent(AddTodoEvent.OnSaveTodoClick)
                     },
-                    backgroundColor = colorResource(id = R.color.purple_700)
+                    backgroundColor = DarkBlue
                 ) {
                     Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint=colorResource(id = R.color.white))
                 }
@@ -188,7 +200,7 @@ fun AddTodoScreen(
             floatingActionButtonPosition = FabPosition.End,
             isFloatingActionButtonDocked = true,
             bottomBar = {
-                BottomAppBar(backgroundColor = colorResource(id = R.color.purple_700), cutoutShape = CircleShape) {
+                BottomAppBar(backgroundColor = DarkBlue, cutoutShape = CircleShape) {
 
                 }
             }
@@ -197,45 +209,102 @@ fun AddTodoScreen(
             it.calculateTopPadding()
             Column(modifier = modifier
                 .fillMaxSize()
+                .background(MainBackgroundColor)
                 .padding(16.dp)) {
 
-                Column {
-                    Row {
-                        TextField(
-                            value = viewModel.title,
-                            onValueChange = {
-                                viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
-                            },
-                            label = { Text("Title") },
-                            modifier = modifier
-                                .fillMaxWidth()
-                                .background(Color.White)
-                                .weight(0.9f),
-                            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
+                Column(modifier = modifier
+                    .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top) {
+                    Row() {
+                        Text(
+                            text = "Todo Title",
+                            color = Color.LightGray,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
                         )
+                    }
+
+                    Spacer(modifier = modifier.height(8.dp))
+
+                    Row() {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentSize(Alignment.Center),
+                        ) {
+                            TextField(
+                                value = viewModel.title,
+                                onValueChange = {
+                                    if (it.length <= titleMaxCharLength){
+                                        viewModel.onEvent(AddTodoEvent.OnTitleChange(it))
+                                    }
+                                },
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .background(DarkBlue),
+                                shape = RoundedCornerShape(8.dp),
+                                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
+                            )
+                            Text(
+                                text = "${viewModel.title.length} / $titleMaxCharLength",
+                                textAlign = TextAlign.End,
+                                color = Color.White,
+                                style = MaterialTheme.typography.caption, //use the caption text style
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
                     }
                 }
                 Spacer(modifier = modifier.height(8.dp))
 
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(scrollableDescription)
-                        .fillMaxWidth()
-                ) {
-                    TextField(
-                        value = viewModel.description,
-                        onValueChange = {
-                            viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
-                        },
-                        label = { Text("Description") },
-                        modifier = modifier
-                            .fillMaxWidth(),
-                        colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
-                        singleLine = false,
-                        maxLines = 10
-                    )
-                }
+                Column(modifier = modifier
+                    .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Top) {
+                    Row() {
+                        Text(
+                            text = "Todo Description",
+                            color = Color.LightGray,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
+                        )
+                    }
 
+                    Spacer(modifier = modifier.height(8.dp))
+
+                    Row() {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                        ) {
+                            TextField(
+                                value = viewModel.description,
+                                onValueChange = {
+                                    if (it.length <= descriptionMaxCharLength){
+                                        viewModel.onEvent(AddTodoEvent.OnDescriptionChange(it))
+                                    }
+                                },
+                                label = { Text("Description") },
+                                modifier = modifier
+                                    .fillMaxWidth()
+                                    .fillMaxHeight(0.6F)
+                                    .clip(RoundedCornerShape(5.dp))
+                                    .verticalScroll(scrollableDescription),
+                                colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+                                singleLine = false,
+                                maxLines = 15
+                            )
+                            Text(
+                                text = "${viewModel.description.length} / $descriptionMaxCharLength",
+                                textAlign = TextAlign.End,
+                                color = Color.White,
+                                style = MaterialTheme.typography.caption, //use the caption text style
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
+                }
                 Spacer(modifier = modifier.height(8.dp))
 
                 Column {
@@ -252,12 +321,71 @@ fun AddTodoScreen(
                         if (viewModel.dueDate != ""){
                             Text(
                                 modifier = modifier.padding(30.dp, 10.dp),
-                                text = viewModel.dueDate
+                                text = viewModel.dueDate,
+                                color = Color.White
+
                             )
                         }else{
                             Text(
                                 modifier = modifier.padding(30.dp, 10.dp),
-                                text = "Not Selected Yet"
+                                text = "Not Selected Yet",
+                                color = Color.White
+                            )
+                        }
+                    }
+                }
+                Column {
+                    Row {
+                        OutlinedButton(onClick = {
+                            mExpanded = !mExpanded
+                        }, modifier = Modifier
+                            .onGloballyPositioned { coordinates ->
+                                mDropdownSize = coordinates.size.toSize()
+                            }
+                            .clickable { mExpanded = !mExpanded }
+                        ) {
+                            Text(
+                                "Select Category",
+                                color = Color.Black,
+                            )
+                            Icon(
+                                imageVector = icon,
+                                contentDescription = "dropdownIcon",
+                                Modifier.clickable { mExpanded = !mExpanded }
+                            )
+                        }
+
+                        // Create a drop-down menu with list of cities,
+                        // when clicked, set the Text Field text as the city selected
+                        DropdownMenu(
+                            expanded = mExpanded,
+                            onDismissRequest = { mExpanded = false },
+                            modifier = Modifier
+                                .width(with(LocalDensity.current){mDropdownSize.width.toDp()})
+                        ) {
+                            mCategories.forEach { category ->
+                                DropdownMenuItem(onClick = {
+                                    viewModel.onEvent(AddTodoEvent.OnCategoryChange(category))
+                                    mExpanded = false
+                                }) {
+                                    Text(text = category)
+                                }
+                            }
+                        }
+
+                        if (viewModel.category == ""){
+                            Text(
+                                modifier = Modifier.padding(16.dp, 10.dp),
+                                text = "Not Selected Yet",
+                                color = Color.White
+
+                            )
+                        }
+                        else{
+                            Text(
+                                modifier = Modifier.padding(16.dp, 10.dp),
+                                text = viewModel.category,
+                                color = Color.White
                             )
                         }
                     }
@@ -277,7 +405,7 @@ fun AddTodoScreen(
                             Button(
                                 onClick = { },
                                 modifier = modifier
-                                    .background(Color.White),
+                                    .background(MainBackgroundColor),
                                 colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
                             ) {
 
@@ -286,66 +414,12 @@ fun AddTodoScreen(
                             Button(
                                 onClick = { },
                                 modifier = modifier
-                                    .background((Color.White)),
+                                    .background(MainBackgroundColor),
                                 colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
 
                             ) {
 
                             }
-                        }
-                    }
-                }
-                Column {
-                    Row {
-                        OutlinedButton(onClick = {
-                            mExpanded = !mExpanded
-                        }, modifier = Modifier
-                            .onGloballyPositioned { coordinates ->
-                                mDropdownSize = coordinates.size.toSize()
-                            }
-                            .clickable { mExpanded = !mExpanded }
-                        ) {
-                            Text(
-                                "Select Category",
-                                color = Color.Black
-                            )
-                            Icon(
-                                imageVector = icon,
-                                contentDescription = "dropdownIcon",
-                                Modifier.clickable { mExpanded = !mExpanded }
-                            )
-                        }
-
-                        // Create a drop-down menu with list of cities,
-                        // when clicked, set the Text Field text as the city selected
-                        DropdownMenu(
-                            expanded = mExpanded,
-                            onDismissRequest = { mExpanded = false },
-                            modifier = Modifier
-                                .width(with(LocalDensity.current){mDropdownSize.width.toDp()})
-                        ) {
-                            mCategories.forEach { category ->
-                                DropdownMenuItem(onClick = {
-                                    mSelectedCategory = category
-                                    viewModel.onEvent(AddTodoEvent.OnCategoryChange(mSelectedCategory))
-                                    mExpanded = false
-                                }) {
-                                    Text(text = category)
-                                }
-                            }
-                        }
-
-                        if (mSelectedCategory == ""){
-                            Text(
-                                modifier = Modifier.padding(20.dp, 10.dp),
-                                text = "Not Selected Yet"
-                            )
-                        }
-                        else{
-                            Text(
-                                modifier = Modifier.padding(20.dp, 10.dp),
-                                text = mSelectedCategory
-                            )
                         }
                     }
                 }
