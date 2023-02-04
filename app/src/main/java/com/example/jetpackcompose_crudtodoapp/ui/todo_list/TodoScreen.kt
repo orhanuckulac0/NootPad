@@ -36,29 +36,20 @@ fun TodoScreen(
 ) {
     val todos = viewModel.todos.value
 
-    val scaffoldState = rememberScaffoldState()
     var shouldShowDialog by remember { mutableStateOf(false) }
 
     if (shouldShowDialog){
         CustomDialog(
             setShowDialog =  {
             shouldShowDialog = it
-            }
+            },
+            deletedFromScreen = "TodoScreen"
         )
     }
 
     LaunchedEffect(key1 = true) {
         viewModel.uiEvent.collect { event ->
             when(event) {
-                is UiEvent.ShowSnackbar -> {
-                    val result = scaffoldState.snackbarHostState.showSnackbar(
-                        message = event.message,
-                        actionLabel = event.action
-                    )
-                    if(result == SnackbarResult.ActionPerformed) {
-                        viewModel.onEvent(TodoEvent.OnUndoDeleteClick)
-                    }
-                }
                 is UiEvent.Navigate -> onNavigate(event)
                 else -> Unit
             }
@@ -102,7 +93,7 @@ fun TodoScreen(
                             .padding(15.dp, 0.dp, 15.dp, 0.dp)
                     ) {
 
-                        itemsIndexed(todos!!) { index, todo ->
+                        itemsIndexed(todos) { index, todo ->
                             // notSwiped and dismissState should be inside lazy column
                             // otherwise unexpected errors can happen
                             var notSwiped by remember { mutableStateOf(false) }

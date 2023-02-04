@@ -59,7 +59,9 @@ fun NavGraph(
                                      },
                     onNavigate = {
                     navController.navigate(it.route) {
-                        popUpToTop(navController)
+                        popUpTo(Routes.TODO_LIST) {
+                            inclusive = true
+                        }
                     }
                 })
             }

@@ -233,7 +233,7 @@ fun EditTodoScreen(
                             .fillMaxWidth(),
                         colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
                         singleLine = false,
-                        maxLines = 10
+                        maxLines = 15
                     )
                 }
 

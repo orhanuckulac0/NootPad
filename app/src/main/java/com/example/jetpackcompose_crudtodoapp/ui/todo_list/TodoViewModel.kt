@@ -52,13 +52,7 @@ class TodoViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     deletedTodo = event.todoEntity
                     repository.deleteTodo(event.todoEntity)
-                    if (selectedCategory.value == "All"){
-                        todos.value = repository.getAllTodos()
-                    }else{
-                        todos.value = repository.getTodosByCategory(selectedCategory.value)
-                    }
-                    // after delete, set it to null again
-                    deletedTodo = null
+                    getTodos(selectedCategory.value)
                 }
             }
             is TodoEvent.OnDoneChange -> {
@@ -69,6 +63,7 @@ class TodoViewModel @Inject constructor(
                                 isDone = event.isDone
                             )
                     )
+                    getTodos(selectedCategory.value)
                 }
             }
             is TodoEvent.OnSetTodoToDelete -> {
@@ -83,11 +78,7 @@ class TodoViewModel @Inject constructor(
             }
             is TodoEvent.OnCategoryClicked -> {
                 viewModelScope.launch {
-                    if (event.category == "All"){
-                        todos.value = repository.getAllTodos()
-                    }else{
-                        todos.value = repository.getTodosByCategory(event.category)
-                    }
+                    getTodos(event.category)
                 }
             }
         }
@@ -96,6 +87,14 @@ class TodoViewModel @Inject constructor(
     private fun sendUiEvent(event: UiEvent) {
         viewModelScope.launch {
             _uiEvent.emit(event)
+        }
+    }
+
+    private suspend fun getTodos(category: String){
+        if (category == "All"){
+            todos.value = repository.getAllTodos()
+        }else{
+            todos.value = repository.getTodosByCategory(category)
         }
     }
 }

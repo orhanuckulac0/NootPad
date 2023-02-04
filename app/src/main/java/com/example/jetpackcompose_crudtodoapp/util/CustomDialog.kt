@@ -14,13 +14,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
+import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoEvent
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoViewModel
 
 @Composable
 fun CustomDialog(
     setShowDialog: (Boolean) -> Unit,
-    viewModel: TodoViewModel = hiltViewModel()
+    todoScreenViewModel: TodoViewModel = hiltViewModel(),
+    todoInfoViewModel: TodoInfoViewModel = hiltViewModel(),
+    deletedFromScreen: String
 ){
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Card(
@@ -33,7 +38,9 @@ fun CustomDialog(
             Column(modifier = Modifier.padding(20.dp)) {
 
                 Row(
-                    modifier = Modifier.fillMaxWidth().padding(0.dp, 0.dp, 0.dp, 20.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 0.dp, 0.dp, 20.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -50,15 +57,13 @@ fun CustomDialog(
                 Row {
                     Button(
                         onClick = {
-                            // after cancel set it to null again
-                            viewModel.onEvent(TodoEvent.OnSetTodoToDeleteToNull)
                             setShowDialog(false)
                                   },
                         Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
                             .weight(1F),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
+                        colors = ButtonDefaults.buttonColors(backgroundColor = DarkBlue)
 
                     ) {
                         Text(
@@ -69,10 +74,17 @@ fun CustomDialog(
                     }
                     OutlinedButton(
                         onClick = {
-                            viewModel.onEvent(
-                                TodoEvent.OnDeleteTodoClick(
-                                    viewModel.deletedTodo!!)
-                            )
+                            if (deletedFromScreen == "TodoScreen"){
+                                todoScreenViewModel.onEvent(
+                                    TodoEvent.OnDeleteTodoClick(
+                                        todoScreenViewModel.deletedTodo!!)
+                                )
+                            }else{
+                                todoInfoViewModel.onEvent(
+                                    TodoInfoEvent.OnDeleteTodoClick(
+                                        todoInfoViewModel.todoEntity!!)
+                                )
+                            }
                             setShowDialog(false)
                         },
                         Modifier

@@ -75,7 +75,8 @@ fun TodoItem(
                 )
             }
         }
-        IconButton(onClick = { onEvent(TodoEvent.OnDoneChange(todo, !todo.isDone)) },
+        IconButton(
+            onClick = { onEvent(TodoEvent.OnDoneChange(todo, !todo.isDone)) },
             modifier = Modifier.offset(x = 4.dp, y = 4.dp),
             ) {
 
