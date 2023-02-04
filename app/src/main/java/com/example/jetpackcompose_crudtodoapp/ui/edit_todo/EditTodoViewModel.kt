@@ -56,6 +56,7 @@ class EditTodoViewModel @Inject constructor(
                     description = it.description
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
+                    category = it.category
                     // assign this todoEntity to ViewModel's todoEntity state
                     this@EditTodoViewModel.todoEntity = it
                 }
