@@ -86,6 +86,7 @@ class AddTodoViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowSnackbar(
                             "Category can not be blank."
                         ))
+                        return@launch
                     }
                     todoRepository.insertTodo(
                         TodoEntity(

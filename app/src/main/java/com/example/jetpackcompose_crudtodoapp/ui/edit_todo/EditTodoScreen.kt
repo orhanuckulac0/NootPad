@@ -370,7 +370,8 @@ fun EditTodoScreen(
                         if (viewModel.category == ""){
                             Text(
                                 modifier = Modifier.padding(20.dp, 10.dp),
-                                text = "Not Selected Yet"
+                                text = "Not Selected Yet",
+                                color = Color.White
                             )
                         }
                         else{
