@@ -3,7 +3,6 @@ package com.example.jetpackcompose_crudtodoapp.ui.todo_info
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -165,70 +164,9 @@ fun TodoInfoScreen(
 
                 Spacer(modifier = modifier.height(8.dp))
 
-                Column() {
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth().padding(0.dp, 5.dp,0.dp, 0.dp)
-                    ) {
-                        Text(
-                            text = "Due Date",
-                            color = Color.LightGray,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 18.sp
-                        )
-                        Text(
-                            modifier = modifier.padding(0.dp, 0.dp, 5.dp, 5.dp),
-                            text = "Priority Color",
-                            color = Color.LightGray,
-                            fontWeight = FontWeight.Medium,
-                            fontSize = 18.sp
-                        )
-                    }
-
-                    Row(
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .clip(RoundedCornerShape(10.dp))
-                                .background(DarkBlue)
-                                .padding(10.dp),
-                            contentAlignment = Alignment.Center
-                        ){
-                            Text(
-                                text = viewModel.dueDate,
-                                color = Color.White,
-                                fontWeight = FontWeight.Light,
-                                fontSize = 18.sp
-                            )
-                        }
-                        if (viewModel.priorityColor == ""){
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .size(110.dp, 43.dp)
-                                    .background(Color.Gray)
-                                    .padding(10.dp)
-                            )
-                        }else{
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .size(110.dp, 43.dp)
-
-                                    .background(Color(viewModel.priorityColor.toColorInt()))
-                                    .padding(10.dp)
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = modifier.height(8.dp))
-
                 Column(modifier = modifier
                     .fillMaxWidth()
-                    .fillMaxHeight(0.8f)
+                    .fillMaxHeight(0.75f)
                     .padding(0.dp, 10.dp, 0.dp, 0.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
@@ -254,7 +192,7 @@ fun TodoInfoScreen(
                                     .size(width = 360.dp, height = 360.dp)
                                     .clip(RoundedCornerShape(10.dp))
                                     .background(DarkBlue)
-                                    .padding(10.dp, 10.dp, 10.dp, 10.dp),
+                                    .padding(10.dp, 10.dp, 10.dp, 0.dp),
                             ){
                                 Text(
                                     modifier = modifier.verticalScroll(scrollableDescription),
@@ -263,6 +201,87 @@ fun TodoInfoScreen(
                                     fontWeight = FontWeight.Light,
                                     fontSize = 20.sp)
                             }
+                        }
+                    }
+                }
+
+                Column() {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "Due Date",
+                            color = Color.LightGray,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            modifier = modifier.padding(0.dp, 0.dp, 15.dp, 0.dp),
+                            text = "Category",
+                            color = Color.LightGray,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
+                        )
+                        Text(
+                            modifier = modifier.padding(0.dp, 0.dp, 20.dp, 5.dp),
+                            text = "Color",
+                            color = Color.LightGray,
+                            fontWeight = FontWeight.Medium,
+                            fontSize = 18.sp
+                        )
+                    }
+
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(DarkBlue)
+                                .padding(10.dp),
+                            contentAlignment = Alignment.Center
+                        ){
+                            Text(
+                                text = viewModel.dueDate,
+                                color = Color.White,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        }
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(DarkBlue)
+                                .size(100.dp, 40.dp)
+                                .padding(10.dp),
+                            contentAlignment = Alignment.Center
+                        ){
+                            Text(
+                                text = viewModel.category,
+                                color = Color.White,
+                                fontWeight = FontWeight.Medium,
+                                fontSize = 16.sp
+                            )
+                        }
+                        if (viewModel.priorityColor == ""){
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .size(110.dp, 43.dp)
+                                    .background(Color.Gray)
+                                    .padding(10.dp)
+                            )
+                        }else{
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(10.dp))
+                                    .background(Color(viewModel.priorityColor.toColorInt()))
+                                    .size(100.dp, 40.dp)
+                                    .padding(10.dp)
+                            )
                         }
                     }
                 }

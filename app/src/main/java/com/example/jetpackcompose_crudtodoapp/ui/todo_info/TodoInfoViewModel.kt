@@ -38,6 +38,9 @@ class TodoInfoViewModel @Inject constructor(
     var priorityColor by mutableStateOf("")
         private set
 
+    var category by mutableStateOf("")
+        private set
+
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
@@ -51,6 +54,7 @@ class TodoInfoViewModel @Inject constructor(
                     description = it.description
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
+                    category = it.category
                     // assign this todoEntity to ViewModel's todoEntity state
                     this@TodoInfoViewModel.todoEntity = it
                 }
