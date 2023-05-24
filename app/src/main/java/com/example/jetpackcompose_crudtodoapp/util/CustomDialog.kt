@@ -29,9 +29,7 @@ fun CustomDialog(
 ){
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Card(
-            //shape = MaterialTheme.shapes.medium,
             shape = RoundedCornerShape(10.dp),
-            // modifier = modifier.size(280 .dp, 240.dp)
             modifier = Modifier.padding(8.dp),
             elevation = 8.dp
         ) {
@@ -45,7 +43,7 @@ fun CustomDialog(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        text = "Are you sure to delete this?",
+                        text = Constants.DELETE_QUESTION,
                         style = TextStyle(
                             fontSize = 20.sp,
                             fontFamily = FontFamily.Default,
@@ -67,7 +65,7 @@ fun CustomDialog(
 
                     ) {
                         Text(
-                            text = "Cancel",
+                            text = Constants.CANCEL,
                             fontSize = 16.sp,
                             color = Color.White
                         )
@@ -93,7 +91,7 @@ fun CustomDialog(
                             .weight(1F)
                     ) {
                         Text(
-                            text = "Delete",
+                            text = Constants.DELETE,
                             fontSize = 16.sp,
                             color = Color.Black,
                         )
@@ -102,5 +100,4 @@ fun CustomDialog(
             }
         }
     }
-
 }

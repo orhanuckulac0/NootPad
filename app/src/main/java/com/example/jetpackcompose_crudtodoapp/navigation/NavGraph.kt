@@ -9,7 +9,6 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.jetpackcompose_crudtodoapp.navigation.Routes.popUpToTop
 import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.edit_todo.EditTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen

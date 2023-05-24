@@ -1,7 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.data
 
-import kotlinx.coroutines.flow.Flow
-
 class TodoRepositoryImpl(private val todoDAO: TodoDAO): TodoRepository {
     override suspend fun insertTodo(todoEntity: TodoEntity) {
         todoDAO.insertTodo(todoEntity)

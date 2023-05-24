@@ -14,12 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 
 @Composable
 fun ChipSection(
@@ -32,7 +32,7 @@ fun ChipSection(
 
     Column {
         Row(modifier = Modifier.padding(15.dp,15.dp,0.dp,0.dp)) {
-            Text(text = "CATEGORIES", color= Color.LightGray, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+            Text(text = Constants.CATEGORIES, color= Color.LightGray, fontWeight = FontWeight.Medium, fontSize = 14.sp)
         }
         LazyRow {
             items(categories.size) {

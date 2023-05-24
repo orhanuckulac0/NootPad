@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
@@ -83,19 +84,17 @@ fun TodoScreen(
             Row(modifier = Modifier.padding(0.dp, 15.dp, 0.dp, 0.dp)) {
                 ChipSection()
             }
-            Row() {
-                Column() {
+            Row {
+                Column {
                     Row(modifier = Modifier.padding(15.dp,5.dp,0.dp,15.dp)) {
-                        Text(text = "TASKS", color= Color.LightGray, fontWeight = FontWeight.Medium, fontSize = 14.sp)
+                        Text(text = Constants.TASKS, color= Color.LightGray, fontWeight = FontWeight.Medium, fontSize = 14.sp)
                     }
                     LazyColumn(
                         modifier = Modifier
                             .padding(15.dp, 0.dp, 15.dp, 0.dp)
                     ) {
 
-                        itemsIndexed(todos) { index, todo ->
-                            // notSwiped and dismissState should be inside lazy column
-                            // otherwise unexpected errors can happen
+                        itemsIndexed(todos) { _, todo ->
                             var notSwiped by remember { mutableStateOf(false) }
                             val dismissState = rememberDismissState(
                                 confirmStateChange = { dismiss ->
@@ -106,13 +105,12 @@ fun TodoScreen(
                             )
                             if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                                 LaunchedEffect(key1 = true) {
-                                    // assign current todoEntity to viewModel's deletedTodo var and make it public
                                     viewModel.onEvent(TodoEvent.OnSetTodoToDelete(todo))
-                                    dismissState.reset() // reset dismiss state to default
+                                    dismissState.reset()
                                     shouldShowDialog = true
-                                    dismissState.reset() // again, just to prevent any bugs
+                                    dismissState.reset()
                                 }
-                            } else { // prevent UI bug on left to right swipe
+                            } else {
                                 LaunchedEffect(key1 = true) {
                                     dismissState.reset()
                                 }

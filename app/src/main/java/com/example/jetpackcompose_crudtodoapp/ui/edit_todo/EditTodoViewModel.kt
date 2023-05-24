@@ -10,6 +10,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
 import com.example.jetpackcompose_crudtodoapp.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -25,7 +26,7 @@ class EditTodoViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     var todoEntity by mutableStateOf<TodoEntity?>(null)
-        private set // can only change the value of this within the view model
+        private set
 
     var title by mutableStateOf("")
         private set
@@ -49,7 +50,6 @@ class EditTodoViewModel @Inject constructor(
     init {
         val todoId = savedStateHandle.get<Int>("todoId")
         if (todoId != -1 && todoId != null){
-            // remove Dispatchers.IO because it executes before recomposition and causes error
             viewModelScope.launch {
                 todoRepository.getTodoByID(todoId)?.let {
                     title = it.title
@@ -57,7 +57,6 @@ class EditTodoViewModel @Inject constructor(
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
                     category = it.category
-                    // assign this todoEntity to ViewModel's todoEntity state
                     this@EditTodoViewModel.todoEntity = it
                 }
             }
@@ -85,32 +84,26 @@ class EditTodoViewModel @Inject constructor(
                 viewModelScope.launch(Dispatchers.IO) {
                     if (title.isBlank()){
                         sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                            "The title can not be blank.",
-                        ))
+                            UiEvent.ShowSnackbar(Constants.EMPTY_TITLE))
                         return@launch
                     }
                     if (dueDate.isBlank()){
                         sendUiEvent(
-                            UiEvent.ShowSnackbar(
-                            "The due date can not be blank.",
-                        ))
+                            UiEvent.ShowSnackbar(Constants.EMPTY_DUE_DATE))
                         return@launch
                     }
                     if (priorityColor.isBlank()){
                         priorityColor = toHexString(Color(0xFF808080))
                     }
                     if (category.isBlank()){
-                        sendUiEvent(UiEvent.ShowSnackbar(
-                            "Category can not be blank."
-                        ))
+                        sendUiEvent(UiEvent.ShowSnackbar(Constants.EMPTY_CATEGORY))
                     }
                     todoRepository.insertTodo(
                         TodoEntity(
                             id = todoEntity?.id,
                             title = title,
                             description = description,
-                            isDone = todoEntity?.isDone ?: false,  // if isDone is null, it will be false
+                            isDone = todoEntity?.isDone ?: false,
                             dueDate = dueDate,
                             priorityColor = priorityColor,
                             category = category

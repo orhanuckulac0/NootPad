@@ -24,7 +24,7 @@ class TodoInfoViewModel @Inject constructor(
 ): ViewModel() {
 
     var todoEntity by mutableStateOf<TodoEntity?>(null)
-        private set // can only change the value of this within the view model
+        private set
 
     var title by mutableStateOf("")
         private set
@@ -47,7 +47,6 @@ class TodoInfoViewModel @Inject constructor(
     init {
         val todoId = savedStateHandle.get<Int>("todoId")
         if (todoId != -1 && todoId != null){
-            // remove Dispatchers.IO because it executes before recomposition and causes error
             viewModelScope.launch {
                 todoRepository.getTodoByID(todoId)?.let {
                     title = it.title
@@ -55,7 +54,6 @@ class TodoInfoViewModel @Inject constructor(
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
                     category = it.category
-                    // assign this todoEntity to ViewModel's todoEntity state
                     this@TodoInfoViewModel.todoEntity = it
                 }
             }

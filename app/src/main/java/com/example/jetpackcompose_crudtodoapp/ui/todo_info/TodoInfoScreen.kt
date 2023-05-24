@@ -25,6 +25,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 
@@ -66,14 +67,14 @@ fun TodoInfoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Todo Details") },
+                title = { Text(text = Constants.TODO_DETAILS) },
                 navigationIcon = {
                     IconButton(onClick = {
                         onPopBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Navigate Back",
+                            contentDescription = Constants.NAVIGATE_BACK,
                         )
                     }
                 },
@@ -83,7 +84,7 @@ fun TodoInfoScreen(
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
-                            contentDescription = "Delete",
+                            contentDescription = Constants.DELETE,
                              tint = Color.White
                         )
                     }
@@ -106,7 +107,7 @@ fun TodoInfoScreen(
                 ) {
                     Icon(
                         imageVector = Icons.Default.Edit,
-                        contentDescription = "Edit Todo",
+                        contentDescription = Constants.EDIT_TODO,
                         tint= colorResource(id = R.color.white)
                     )
                 }
@@ -131,9 +132,9 @@ fun TodoInfoScreen(
                     .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top) {
-                    Row() {
+                    Row {
                         Text(
-                            text = "Todo Title",
+                            text = Constants.TODO_TITLE,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
@@ -142,7 +143,7 @@ fun TodoInfoScreen(
 
                     Spacer(modifier = modifier.height(8.dp))
 
-                    Row() {
+                    Row {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -171,9 +172,9 @@ fun TodoInfoScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top
                 ) {
-                    Row() {
+                    Row {
                         Text(
-                            text = "Todo Description",
+                            text = Constants.TODO_DESCR,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
@@ -182,7 +183,7 @@ fun TodoInfoScreen(
 
                     Spacer(modifier = modifier.height(8.dp))
 
-                    Row() {
+                    Row {
                         Column(
                             horizontalAlignment = Alignment.Start,
                             verticalArrangement = Arrangement.Top
@@ -205,28 +206,28 @@ fun TodoInfoScreen(
                     }
                 }
 
-                Column() {
+                Column {
                     Row(
                         horizontalArrangement = Arrangement.SpaceAround,
                         modifier = Modifier
                             .fillMaxWidth()
                     ) {
                         Text(
-                            text = "Due Date",
+                            text = Constants.DUE_DATE,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
                         )
                         Text(
                             modifier = modifier.padding(0.dp, 0.dp, 15.dp, 0.dp),
-                            text = "Category",
+                            text = Constants.CATEGORY,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
                         )
                         Text(
                             modifier = modifier.padding(0.dp, 0.dp, 20.dp, 5.dp),
-                            text = "Color",
+                            text = Constants.COLOR,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp

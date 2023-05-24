@@ -28,6 +28,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import com.example.jetpackcompose_crudtodoapp.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -44,15 +45,11 @@ fun EditTodoScreen(
     modifier: Modifier = Modifier,
     onNavigate: (UiEvent.Navigate) -> Unit,
     onPopBackStack: () -> Unit,
-    viewModel: EditTodoViewModel = hiltViewModel(),
+    viewModel: EditTodoViewModel = hiltViewModel()
 ) {
-    // input related
     val titleMaxCharLength = 70
     val descriptionMaxCharLength = 500
 
-    // Category Dropdown Related
-    // Declaring a boolean value to store
-    // the expanded state of the Text Field
     var mExpanded by remember { mutableStateOf(false) }
     val mCategories = listOf("Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
     var mDropdownSize by remember { mutableStateOf(Size.Zero)}
@@ -64,7 +61,6 @@ fun EditTodoScreen(
 
     val scrollableDescription = rememberScrollState()
 
-    // DatePicker related
     var pickedDate by remember {
         mutableStateOf(LocalDate.now())
     }
@@ -81,15 +77,15 @@ fun EditTodoScreen(
     MaterialDialog(
         dialogState = dateDialogState,
         buttons = {
-            positiveButton(text = "Ok", onClick = {
+            positiveButton(text = Constants.OK, onClick = {
                 viewModel.onEvent(EditTodoEvent.OnDueDateChange(formattedDate))
             })
-            negativeButton(text = "Cancel")
+            negativeButton(text = Constants.CANCEL)
         }
     ) {
         datepicker(
             initialDate = LocalDate.now(),
-            title = "Pick a date",
+            title = Constants.PICK_A_DATE,
             colors = DatePickerDefaults.colors(
                 headerBackgroundColor = MaterialTheme.colors.primary,
                 dateActiveBackgroundColor = MaterialTheme.colors.primary,
@@ -103,7 +99,6 @@ fun EditTodoScreen(
         }
     }
 
-    // Color Picker Related
     val colorPickerDialogState = rememberMaterialDialogState()
     var pickedColor by remember {
         mutableStateOf("")
@@ -124,10 +119,10 @@ fun EditTodoScreen(
     MaterialDialog(
         dialogState = colorPickerDialogState,
         buttons = {
-            positiveButton(text = "Select", onClick = {
+            positiveButton(text = Constants.SELECT, onClick = {
                 viewModel.onEvent(EditTodoEvent.OnPriorityColorChange(pickedColor))
             })
-            negativeButton(text = "Cancel", onClick = {})
+            negativeButton(text = Constants.CANCEL, onClick = {})
         }
     ) {
         colorChooser(
@@ -159,20 +154,20 @@ fun EditTodoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text( text = "Edit Todo") },
+                title = { Text( text = Constants.EDIT_TODO) },
                 navigationIcon = {
                     IconButton(onClick = {
                         onPopBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
-                            contentDescription = "Navigate Back",
+                            contentDescription = Constants.NAVIGATE_BACK,
                         )
                     }
                 }
             )
         }
-    ){
+    ){ it ->
         it.calculateBottomPadding()
         Scaffold(
             scaffoldState = scaffoldState,
@@ -186,7 +181,7 @@ fun EditTodoScreen(
                     },
                     backgroundColor = DarkBlue
                 ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = "Save", tint= colorResource(id = R.color.white))
+                    Icon(imageVector = Icons.Default.Check, contentDescription = Constants.SAVE, tint= colorResource(id = R.color.white))
                 }
             },
             floatingActionButtonPosition = FabPosition.End,
@@ -208,9 +203,9 @@ fun EditTodoScreen(
                     .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top) {
-                    Row() {
+                    Row {
                         Text(
-                            text = "Todo Title",
+                            text = Constants.TODO_TITLE,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
@@ -219,7 +214,7 @@ fun EditTodoScreen(
 
                     Spacer(modifier = modifier.height(8.dp))
 
-                    Row() {
+                    Row {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -242,7 +237,7 @@ fun EditTodoScreen(
                                 text = "${viewModel.title.length} / $titleMaxCharLength",
                                 textAlign = TextAlign.End,
                                 color = Color.White,
-                                style = MaterialTheme.typography.caption, //use the caption text style
+                                style = MaterialTheme.typography.caption,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -255,9 +250,9 @@ fun EditTodoScreen(
                     .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Top) {
-                    Row() {
+                    Row {
                         Text(
-                            text = "Todo Description",
+                            text = Constants.TODO_DESCR,
                             color = Color.LightGray,
                             fontWeight = FontWeight.Medium,
                             fontSize = 18.sp
@@ -266,7 +261,7 @@ fun EditTodoScreen(
 
                     Spacer(modifier = modifier.height(8.dp))
 
-                    Row() {
+                    Row {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -278,7 +273,7 @@ fun EditTodoScreen(
                                         viewModel.onEvent(EditTodoEvent.OnDescriptionChange(it))
                                     }
                                 },
-                                label = { Text("Description") },
+                                label = { Text(Constants.DESCR) },
                                 modifier = modifier
                                     .fillMaxWidth()
                                     .fillMaxHeight(0.6F)
@@ -292,7 +287,7 @@ fun EditTodoScreen(
                                 text = "${viewModel.description.length} / $descriptionMaxCharLength",
                                 textAlign = TextAlign.End,
                                 color = Color.White,
-                                style = MaterialTheme.typography.caption, //use the caption text style
+                                style = MaterialTheme.typography.caption,
                                 modifier = Modifier.fillMaxWidth()
                             )
                         }
@@ -307,7 +302,7 @@ fun EditTodoScreen(
                             viewModel.onEvent(EditTodoEvent.OnDatePickerClick)
                         }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                             Text(
-                                text = "Select Due Date",
+                                text = Constants.SELECT_DUE_DATE,
                                 color = Color.Black,
                             )
                         }
@@ -322,7 +317,7 @@ fun EditTodoScreen(
                         }else{
                             Text(
                                 modifier = modifier.padding(30.dp, 10.dp),
-                                text = "Not Selected Yet",
+                                text = Constants.NOT_SELECTED_YET,
                                 color = Color.White
                             )
                         }
@@ -339,7 +334,7 @@ fun EditTodoScreen(
                             .clickable { mExpanded = !mExpanded }
                         ) {
                             Text(
-                                "Select Category",
+                                Constants.SELECT_CATEGORY,
                                 color = Color.Black,
                             )
                             Icon(
@@ -349,8 +344,6 @@ fun EditTodoScreen(
                             )
                         }
 
-                        // Create a drop-down menu with list of cities,
-                        // when clicked, set the Text Field text as the city selected
                         DropdownMenu(
                             expanded = mExpanded,
                             onDismissRequest = { mExpanded = false },
@@ -370,7 +363,7 @@ fun EditTodoScreen(
                         if (viewModel.category == ""){
                             Text(
                                 modifier = Modifier.padding(20.dp, 10.dp),
-                                text = "Not Selected Yet",
+                                text = Constants.SELECT_CATEGORY,
                                 color = Color.White
                             )
                         }
@@ -389,7 +382,7 @@ fun EditTodoScreen(
                             colorPickerDialogState.show()
                         }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                             Text(
-                                text = "Select Priority Color",
+                                text = Constants.SELECT_PRIORITY_COLOR,
                                 color = Color.Black
                             )
                         }
