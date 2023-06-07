@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
 import com.example.jetpackcompose_crudtodoapp.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.util.Constants
 import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ class TodoViewModel @Inject constructor(
 ): ViewModel() {
 
     val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())
-    var selectedCategory = mutableStateOf("All")
+    var selectedCategory = mutableStateOf(Constants.ALL)
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
@@ -90,8 +91,8 @@ class TodoViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getTodos(category: String){
-        if (category == "All"){
+    suspend fun getTodos(category: String){
+        if (category == Constants.ALL){
             todos.value = repository.getAllTodos()
         }else{
             todos.value = repository.getTodosByCategory(category)

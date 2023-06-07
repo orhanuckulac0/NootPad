@@ -35,6 +35,17 @@ fun TodoScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoViewModel = hiltViewModel()
 ) {
+    LaunchedEffect(key1 = true) {
+        viewModel.getTodos(Constants.ALL)
+
+        viewModel.uiEvent.collect { event ->
+            when(event) {
+                is UiEvent.Navigate -> onNavigate(event)
+                else -> Unit
+            }
+        }
+    }
+
     val todos = viewModel.todos.value
 
     var shouldShowDialog by remember { mutableStateOf(false) }
@@ -48,14 +59,6 @@ fun TodoScreen(
         )
     }
 
-    LaunchedEffect(key1 = true) {
-        viewModel.uiEvent.collect { event ->
-            when(event) {
-                is UiEvent.Navigate -> onNavigate(event)
-                else -> Unit
-            }
-        }
-    }
 
     Scaffold(
         topBar = {
