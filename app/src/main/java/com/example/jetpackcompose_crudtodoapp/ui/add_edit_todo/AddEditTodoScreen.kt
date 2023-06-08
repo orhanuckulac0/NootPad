@@ -2,13 +2,10 @@ package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -54,7 +51,7 @@ fun AddEditTodoScreen(
     viewModel: AddEditTodoViewModel = hiltViewModel(),
     ){
     val titleMaxCharLength = 70
-    val descriptionMaxCharLength = 500
+    val descriptionMaxCharLength = 1000
 
     var mExpanded by remember { mutableStateOf(false) }
     val mCategories = listOf("Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
@@ -74,7 +71,7 @@ fun AddEditTodoScreen(
     val formattedDate by remember {
         derivedStateOf {
             DateTimeFormatter
-                .ofPattern("d MMM yyyy")
+                .ofPattern(Constants.DATE_FORMAT)
                 .format(pickedDate)
         }
     }
@@ -159,6 +156,7 @@ fun AddEditTodoScreen(
     }
 
     Scaffold(
+        scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
                 title = { Text(text = Constants.ADD_NEW_TODO) },
@@ -173,43 +171,24 @@ fun AddEditTodoScreen(
                     }
                 }
             )
-        }
-    ){
-        it.calculateBottomPadding()
-        Scaffold(
-            scaffoldState = scaffoldState,
-            modifier = modifier
-                .fillMaxSize(),
-            floatingActionButton = {
-                FloatingActionButton(
-                    shape = CircleShape,
-                    onClick = {
-                        viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
-                    },
-                    backgroundColor = DarkBlue
-                ) {
-                    Icon(imageVector = Icons.Default.Check, contentDescription = Constants.SAVE, tint= colorResource(id = R.color.white))
-                }
-            },
-            floatingActionButtonPosition = FabPosition.End,
-            isFloatingActionButtonDocked = true,
-            bottomBar = {
-                BottomAppBar(backgroundColor = DarkBlue, cutoutShape = CircleShape) {
-
-                }
-            }
-        ) {
-            it.calculateBottomPadding()
+        },
+        content = {
             it.calculateTopPadding()
-            Column(modifier = modifier
-                .fillMaxSize()
-                .background(MainBackgroundColor)
-                .padding(16.dp)) {
+            it.calculateBottomPadding()
+            Column(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(MainBackgroundColor)
+                    .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 20.dp)
+                    .height(IntrinsicSize.Max)
+            ) {
 
-                Column(modifier = modifier
-                    .fillMaxWidth(),
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top) {
+                    verticalArrangement = Arrangement.Top
+                ) {
                     Row {
                         Text(
                             text = Constants.TODO_TITLE,
@@ -230,7 +209,7 @@ fun AddEditTodoScreen(
                             TextField(
                                 value = viewModel.title,
                                 onValueChange = {
-                                    if (it.length <= titleMaxCharLength){
+                                    if (it.length <= titleMaxCharLength) {
                                         viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))
                                     }
                                 },
@@ -252,10 +231,12 @@ fun AddEditTodoScreen(
                 }
                 Spacer(modifier = modifier.height(8.dp))
 
-                Column(modifier = modifier
-                    .fillMaxWidth(),
+                Column(
+                    modifier = modifier
+                        .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Top) {
+                    verticalArrangement = Arrangement.Top
+                ) {
                     Row {
                         Text(
                             text = Constants.TODO_DESCR,
@@ -275,7 +256,7 @@ fun AddEditTodoScreen(
                             TextField(
                                 value = viewModel.description,
                                 onValueChange = {
-                                    if (it.length <= descriptionMaxCharLength){
+                                    if (it.length <= descriptionMaxCharLength) {
                                         viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))
                                     }
                                 },
@@ -312,14 +293,14 @@ fun AddEditTodoScreen(
                             )
                         }
 
-                        if (viewModel.dueDate != ""){
+                        if (viewModel.dueDate != "") {
                             Text(
                                 modifier = modifier.padding(30.dp, 10.dp),
                                 text = viewModel.dueDate,
                                 color = Color.White
 
                             )
-                        }else{
+                        } else {
                             Text(
                                 modifier = modifier.padding(30.dp, 10.dp),
                                 text = Constants.NOT_SELECTED_YET,
@@ -353,7 +334,7 @@ fun AddEditTodoScreen(
                             expanded = mExpanded,
                             onDismissRequest = { mExpanded = false },
                             modifier = Modifier
-                                .width(with(LocalDensity.current){mDropdownSize.width.toDp()})
+                                .width(with(LocalDensity.current) { mDropdownSize.width.toDp() })
                         ) {
                             mCategories.forEach { category ->
                                 DropdownMenuItem(onClick = {
@@ -365,15 +346,14 @@ fun AddEditTodoScreen(
                             }
                         }
 
-                        if (viewModel.category == ""){
+                        if (viewModel.category == "") {
                             Text(
                                 modifier = Modifier.padding(16.dp, 10.dp),
                                 text = Constants.NOT_SELECTED_YET,
                                 color = Color.White
 
                             )
-                        }
-                        else{
+                        } else {
                             Text(
                                 modifier = Modifier.padding(16.dp, 10.dp),
                                 text = viewModel.category,
@@ -393,22 +373,25 @@ fun AddEditTodoScreen(
                             )
                         }
 
-                        if (viewModel.priorityColor == ""){
+                        if (viewModel.priorityColor == "") {
                             Button(
                                 onClick = { },
                                 modifier = modifier
                                     .background(MainBackgroundColor),
-                                colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
+                                colors = ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
                             ) {
 
                             }
-                        }else{
+                        } else {
                             Button(
                                 onClick = { },
                                 modifier = modifier
                                     .background(MainBackgroundColor),
-                                colors= ButtonDefaults.buttonColors(backgroundColor = (Color(viewModel.priorityColor.toColorInt())))
-
+                                colors = ButtonDefaults.buttonColors(
+                                    backgroundColor = (Color(
+                                        viewModel.priorityColor.toColorInt()
+                                    ))
+                                )
                             ) {
 
                             }
@@ -416,7 +399,26 @@ fun AddEditTodoScreen(
                     }
                 }
             }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                shape = CircleShape,
+                onClick = {
+                    viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
+                },
+                backgroundColor = DarkBlue
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Check,
+                    contentDescription = Constants.SAVE,
+                    tint = colorResource(id = R.color.white)
+                )
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        isFloatingActionButtonDocked = true,
+        bottomBar = {
+            BottomAppBar(backgroundColor = DarkBlue, cutoutShape = CircleShape){}
         }
-    }
-
+    )
 }

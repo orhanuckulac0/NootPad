@@ -29,4 +29,5 @@ object Constants {
     const val ADD_NEW_TODO = "Add New Todo"
     const val ALL = "All"
     const val EMPTY_TODO_LIST = "Empty Task List, Please Add Task"
+    const val DATE_FORMAT = "d MMM yyyy"
 }
