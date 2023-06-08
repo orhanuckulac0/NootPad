@@ -28,4 +28,5 @@ object Constants {
     const val TASKS = "TASKS"
     const val ADD_NEW_TODO = "Add New Todo"
     const val ALL = "All"
+    const val EMPTY_TODO_LIST = "Empty Task List, Please Add Task"
 }
