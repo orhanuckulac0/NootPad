@@ -1,13 +1,19 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -22,7 +28,8 @@ import com.example.jetpackcompose_crudtodoapp.util.UiEvent
 @Composable
 fun TodoScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: TodoViewModel = hiltViewModel()
+    viewModel: TodoViewModel = hiltViewModel(),
+    shouldShowDialog: MutableState<Boolean>
 ) {
     LaunchedEffect(key1 = true) {
         viewModel.getTodos(Constants.ALL)
@@ -36,8 +43,7 @@ fun TodoScreen(
     }
 
     val todos = viewModel.todos.value
-
-    val shouldShowDialog = remember { mutableStateOf(false) }
+    val loading = viewModel.loading.value
 
     if (shouldShowDialog.value){
         CustomDialog(
@@ -73,7 +79,10 @@ fun TodoScreen(
                 .background(MainBackgroundColor)
                 .fillMaxSize()) {
             Row(modifier = Modifier.padding(0.dp, 15.dp, 0.dp, 0.dp)) {
-                ChipSection()
+                val selectedChipIndex = remember {
+                    mutableStateOf(0)
+                }
+                ChipSection(selectedChipIndex = selectedChipIndex)
             }
             Row {
                 Column {
@@ -85,14 +94,37 @@ fun TodoScreen(
                             fontSize = 14.sp
                         )
                     }
-                    if (todos.isEmpty()){
-                        EmptyTodoScreen(modifier = Modifier)
-                    }else{
-                        TodosListComposable(
-                            todos = todos,
-                            viewModel = viewModel,
-                            shouldShowDialog = shouldShowDialog
-                        )
+                    if (loading) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .wrapContentHeight()
+                                .padding(top=100.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.drawBehind {
+                                    drawCircle(
+                                        Color.White,
+                                        radius = size.width / 2 - 5.dp.toPx() / 2,
+                                        style = Stroke(5.dp.toPx())
+                                    )
+                                },
+                                color = Color.LightGray,
+                                strokeWidth = 5.dp
+                            )
+                        }
+                    } else {
+                        if (todos.isEmpty()) {
+                            EmptyTodoScreen(modifier = Modifier)
+                        } else {
+                            TodosList(
+                                todos = todos,
+                                viewModel = viewModel,
+                                shouldShowDialog = shouldShowDialog
+                            )
+                        }
                     }
                 }
             }

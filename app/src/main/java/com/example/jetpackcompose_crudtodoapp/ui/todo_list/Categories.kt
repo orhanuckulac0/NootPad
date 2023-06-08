@@ -24,10 +24,8 @@ import com.example.jetpackcompose_crudtodoapp.util.Constants
 @Composable
 fun ChipSection(
     viewModel: TodoViewModel = hiltViewModel(),
+    selectedChipIndex: MutableState<Int>
 ) {
-    var selectedChipIndex by remember {
-        mutableStateOf(0)
-    }
     val categories = listOf("All", "Home", "School", "Work", "Sports", "Fun", "Friends", "Grocery", "Other")
 
     Column {
@@ -41,18 +39,18 @@ fun ChipSection(
                     modifier = Modifier
                         .padding(start = 15.dp, top = 15.dp, bottom = 15.dp)
                         .clickable {
-                            selectedChipIndex = it
+                            selectedChipIndex.value = it
                             viewModel.selectedCategory.value = categories[it]
                             viewModel.onEvent(TodoEvent.OnCategoryClicked(categories[it]))
                         }
                         .clip(RoundedCornerShape(10.dp))
                         .background(
-                            if (selectedChipIndex == it) Color.White
+                            if (selectedChipIndex.value == it) Color.White
                             else DarkBlue
                         )
                         .padding(15.dp)
                 ) {
-                    if (selectedChipIndex == it){
+                    if (selectedChipIndex.value == it){
                         Text(
                             text = categories[it],
                             color =  DarkBlue

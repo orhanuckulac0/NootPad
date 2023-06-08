@@ -21,6 +21,8 @@ class TodoViewModel @Inject constructor(
 ): ViewModel() {
 
     val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())
+    val loading: MutableState<Boolean> = mutableStateOf(true)
+
     var selectedCategory = mutableStateOf(Constants.ALL)
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
@@ -31,6 +33,7 @@ class TodoViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             todos.value = repository.getAllTodos()
+            loading.value = false
         }
     }
 

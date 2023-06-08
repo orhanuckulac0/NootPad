@@ -36,21 +36,20 @@ fun TodoInfoScreen(
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: TodoInfoViewModel = hiltViewModel(),
+    shouldShowDialog: MutableState<Boolean>,
+    scrollableDescription: ScrollState,
+    scaffoldState: ScaffoldState
 ) {
 
-    val scrollableDescription = rememberScrollState()
-
-    var shouldShowDialog by remember { mutableStateOf(false) }
-    if (shouldShowDialog){
+    if (shouldShowDialog.value){
         CustomDialog(
             setShowDialog =  {
-                shouldShowDialog = it
+                shouldShowDialog.value = it
             },
             deletedFromScreen = "TodoInfoScreen"
         )
     }
 
-    val scaffoldState: ScaffoldState = rememberScaffoldState()
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect { event->
             when(event){
@@ -80,7 +79,7 @@ fun TodoInfoScreen(
                 },
                 actions = {
                     IconButton(onClick = {
-                        shouldShowDialog = true
+                        shouldShowDialog.value = true
                     }) {
                         Icon(
                             imageVector = Icons.Filled.Delete,

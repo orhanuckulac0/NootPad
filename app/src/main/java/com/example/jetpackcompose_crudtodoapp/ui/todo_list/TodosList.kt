@@ -28,10 +28,10 @@ import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TodosListComposable(
+fun TodosList(
     todos: List<TodoEntity>,
     viewModel: TodoViewModel,
-    shouldShowDialog: MutableState<Boolean>,
+    shouldShowDialog: MutableState<Boolean>
 ){
 
     LazyColumn(
