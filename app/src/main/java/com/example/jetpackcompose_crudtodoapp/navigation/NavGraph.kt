@@ -12,8 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.example.jetpackcompose_crudtodoapp.ui.add_todo.AddTodoScreen
-import com.example.jetpackcompose_crudtodoapp.ui.edit_todo.EditTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo.AddEditTodoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 
@@ -66,30 +65,18 @@ fun NavGraph(
                 )
             }
             composable(
-                route = Routes.ADD_TODO
-            ) {
-                AddTodoScreen(
-                    onPopBackStack = {
-                        navController.popBackStack()
-                                     },
-                    onNavigate = {
-                    navController.navigate(it.route) {
-                        popUpTo(Routes.TODO_LIST) {
-                            inclusive = true
-                        }
-                    }
-                })
-            }
-            composable(
-                route = Routes.EDIT_TODO+"?todoId={todoId}",
+                route = Routes.ADD_EDIT_TODO + "?todoId={todoId}",
                 arguments = listOf(
                     navArgument(name = "todoId") {
                         type = NavType.IntType
                         defaultValue = -1
                     }
                 )
-            ){
-                EditTodoScreen(onPopBackStack = { navController.popBackStack() },
+            ) {
+                AddEditTodoScreen(
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    },
                     onNavigate = {
                         navController.navigate(it.route) {
                             popUpTo(Routes.TODO_LIST)

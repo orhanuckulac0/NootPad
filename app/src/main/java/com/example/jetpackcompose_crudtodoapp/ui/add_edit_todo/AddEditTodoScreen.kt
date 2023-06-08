@@ -1,14 +1,20 @@
-package com.example.jetpackcompose_crudtodoapp.ui.edit_todo
+package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.*
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -41,23 +47,24 @@ import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EditTodoScreen(
+fun AddEditTodoScreen(
     modifier: Modifier = Modifier,
     onNavigate: (UiEvent.Navigate) -> Unit,
     onPopBackStack: () -> Unit,
-    viewModel: EditTodoViewModel = hiltViewModel()
-) {
+    viewModel: AddEditTodoViewModel = hiltViewModel(),
+    ){
     val titleMaxCharLength = 70
     val descriptionMaxCharLength = 500
 
     var mExpanded by remember { mutableStateOf(false) }
     val mCategories = listOf("Home", "School", "Work", "Sports", "Fun", "Friends", "Other")
-    var mDropdownSize by remember { mutableStateOf(Size.Zero)}
+    var mDropdownSize by remember { mutableStateOf(Size.Zero) }
 
     val icon = if (mExpanded)
         Icons.Filled.KeyboardArrowUp
     else
         Icons.Filled.KeyboardArrowDown
+
 
     val scrollableDescription = rememberScrollState()
 
@@ -78,7 +85,7 @@ fun EditTodoScreen(
         dialogState = dateDialogState,
         buttons = {
             positiveButton(text = Constants.OK, onClick = {
-                viewModel.onEvent(EditTodoEvent.OnDueDateChange(formattedDate))
+                viewModel.onEvent(AddEditTodoEvent.OnDueDateChange(formattedDate))
             })
             negativeButton(text = Constants.CANCEL)
         }
@@ -119,8 +126,8 @@ fun EditTodoScreen(
     MaterialDialog(
         dialogState = colorPickerDialogState,
         buttons = {
-            positiveButton(text = Constants.SELECT, onClick = {
-                viewModel.onEvent(EditTodoEvent.OnPriorityColorChange(pickedColor))
+            positiveButton(text = Constants.SAVE, onClick = {
+                viewModel.onEvent(AddEditTodoEvent.OnPriorityColorChange(pickedColor))
             })
             negativeButton(text = Constants.CANCEL, onClick = {})
         }
@@ -154,8 +161,8 @@ fun EditTodoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text( text = Constants.EDIT_TODO) },
-                navigationIcon = {
+                title = { Text(text = Constants.ADD_NEW_TODO) },
+                actions = {
                     IconButton(onClick = {
                         onPopBackStack()
                     }) {
@@ -167,7 +174,7 @@ fun EditTodoScreen(
                 }
             )
         }
-    ){ it ->
+    ){
         it.calculateBottomPadding()
         Scaffold(
             scaffoldState = scaffoldState,
@@ -177,7 +184,7 @@ fun EditTodoScreen(
                 FloatingActionButton(
                     shape = CircleShape,
                     onClick = {
-                        viewModel.onEvent(EditTodoEvent.OnSaveTodoClick)
+                        viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
                     },
                     backgroundColor = DarkBlue
                 ) {
@@ -224,7 +231,7 @@ fun EditTodoScreen(
                                 value = viewModel.title,
                                 onValueChange = {
                                     if (it.length <= titleMaxCharLength){
-                                        viewModel.onEvent(EditTodoEvent.OnTitleChange(it))
+                                        viewModel.onEvent(AddEditTodoEvent.OnTitleChange(it))
                                     }
                                 },
                                 modifier = modifier
@@ -243,7 +250,6 @@ fun EditTodoScreen(
                         }
                     }
                 }
-
                 Spacer(modifier = modifier.height(8.dp))
 
                 Column(modifier = modifier
@@ -270,7 +276,7 @@ fun EditTodoScreen(
                                 value = viewModel.description,
                                 onValueChange = {
                                     if (it.length <= descriptionMaxCharLength){
-                                        viewModel.onEvent(EditTodoEvent.OnDescriptionChange(it))
+                                        viewModel.onEvent(AddEditTodoEvent.OnDescriptionChange(it))
                                     }
                                 },
                                 label = { Text(Constants.DESCR) },
@@ -293,13 +299,12 @@ fun EditTodoScreen(
                         }
                     }
                 }
-
                 Spacer(modifier = modifier.height(8.dp))
 
                 Column {
                     Row {
                         OutlinedButton(onClick = {
-                            viewModel.onEvent(EditTodoEvent.OnDatePickerClick)
+                            viewModel.onEvent(AddEditTodoEvent.OnDatePickerClick)
                         }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                             Text(
                                 text = Constants.SELECT_DUE_DATE,
@@ -352,7 +357,7 @@ fun EditTodoScreen(
                         ) {
                             mCategories.forEach { category ->
                                 DropdownMenuItem(onClick = {
-                                    viewModel.onEvent(EditTodoEvent.OnCategoryChange(category))
+                                    viewModel.onEvent(AddEditTodoEvent.OnCategoryChange(category))
                                     mExpanded = false
                                 }) {
                                     Text(text = category)
@@ -362,14 +367,15 @@ fun EditTodoScreen(
 
                         if (viewModel.category == ""){
                             Text(
-                                modifier = Modifier.padding(20.dp, 10.dp),
-                                text = Constants.SELECT_CATEGORY,
+                                modifier = Modifier.padding(16.dp, 10.dp),
+                                text = Constants.NOT_SELECTED_YET,
                                 color = Color.White
+
                             )
                         }
                         else{
                             Text(
-                                modifier = Modifier.padding(20.dp, 10.dp),
+                                modifier = Modifier.padding(16.dp, 10.dp),
                                 text = viewModel.category,
                                 color = Color.White
                             )
@@ -391,7 +397,7 @@ fun EditTodoScreen(
                             Button(
                                 onClick = { },
                                 modifier = modifier
-                                    .background(Color.White),
+                                    .background(MainBackgroundColor),
                                 colors= ButtonDefaults.buttonColors(backgroundColor = (Color.Gray))
                             ) {
 
@@ -412,4 +418,5 @@ fun EditTodoScreen(
             }
         }
     }
+
 }

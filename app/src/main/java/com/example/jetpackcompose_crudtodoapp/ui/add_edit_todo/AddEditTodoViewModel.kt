@@ -1,9 +1,10 @@
-package com.example.jetpackcompose_crudtodoapp.ui.add_todo
+package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
@@ -20,12 +21,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class AddTodoViewModel @Inject constructor(
+class AddEditTodoViewModel @Inject constructor(
     private val todoRepository: TodoRepository,
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
-
     var todoEntity by mutableStateOf<TodoEntity?>(null)
         private set
+
+    private var todoId by mutableStateOf(0)
 
     var title by mutableStateOf("")
         private set
@@ -45,28 +48,43 @@ class AddTodoViewModel @Inject constructor(
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
+    init {
+        todoId = savedStateHandle.get<Int>("todoId")!!
+        if (todoId != -1){
+            viewModelScope.launch {
+                todoRepository.getTodoByID(todoId)?.let {
+                    title = it.title
+                    description = it.description
+                    dueDate = it.dueDate
+                    priorityColor = it.priorityColor
+                    category = it.category
+                    this@AddEditTodoViewModel.todoEntity = it
+                }
+            }
+        }
+    }
 
-    fun onEvent(event: AddTodoEvent) {
+    fun onEvent(event: AddEditTodoEvent) {
         when(event) {
-            is AddTodoEvent.OnDatePickerClick -> {
+            is AddEditTodoEvent.OnDatePickerClick -> {
                 sendUiEvent(UiEvent.ShowDatePicker)
             }
-            is AddTodoEvent.OnTitleChange -> {
+            is AddEditTodoEvent.OnTitleChange -> {
                 title = event.title
             }
-            is AddTodoEvent.OnDescriptionChange -> {
+            is AddEditTodoEvent.OnDescriptionChange -> {
                 description = event.description
             }
-            is AddTodoEvent.OnDueDateChange -> {
+            is AddEditTodoEvent.OnDueDateChange -> {
                 dueDate = event.dueDate
             }
-            is AddTodoEvent.OnPriorityColorChange -> {
+            is AddEditTodoEvent.OnPriorityColorChange -> {
                 priorityColor = event.priorityColor
             }
-            is AddTodoEvent.OnCategoryChange -> {
+            is AddEditTodoEvent.OnCategoryChange -> {
                 category = event.category
             }
-            is AddTodoEvent.OnSaveTodoClick -> {
+            is AddEditTodoEvent.OnSaveTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     if (title.isBlank()){
                         sendUiEvent(UiEvent.ShowSnackbar(Constants.EMPTY_TITLE))
@@ -94,7 +112,11 @@ class AddTodoViewModel @Inject constructor(
                             category = category
                         )
                     )
-                    sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
+                    if (todoId != -1){
+                        sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${todoEntity?.id}"))
+                    }else{
+                        sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
+                    }
                 }
             }
         }
@@ -106,3 +128,4 @@ class AddTodoViewModel @Inject constructor(
         }
     }
 }
+

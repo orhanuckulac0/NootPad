@@ -63,7 +63,7 @@ class TodoInfoViewModel @Inject constructor(
     fun onEvent(event: TodoInfoEvent){
         when(event) {
             is TodoInfoEvent.OnEditTodoClick -> {
-                sendUiEvent(UiEvent.Navigate(Routes.EDIT_TODO + "?todoId=${todoEntity!!.id}"))
+                sendUiEvent(UiEvent.Navigate(Routes.ADD_EDIT_TODO + "?todoId=${todoEntity!!.id}"))
             }
             is TodoInfoEvent.OnDeleteTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
