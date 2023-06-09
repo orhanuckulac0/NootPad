@@ -73,6 +73,7 @@ fun NavGraph(
                     }
                 )
             ) {
+                val scaffoldState: ScaffoldState = rememberScaffoldState()
                 AddEditTodoScreen(
                     onPopBackStack = {
                         navController.popBackStack()
@@ -81,7 +82,9 @@ fun NavGraph(
                         navController.navigate(it.route) {
                             popUpTo(Routes.TODO_LIST)
                         }
-                    })
+                    },
+                    scaffoldState = scaffoldState
+                )
             }
         }
     )
