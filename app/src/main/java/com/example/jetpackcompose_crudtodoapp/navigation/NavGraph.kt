@@ -2,7 +2,6 @@ package com.example.jetpackcompose_crudtodoapp.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.ScaffoldState
 import androidx.compose.material.rememberScaffoldState
@@ -50,7 +49,6 @@ fun NavGraph(
                 )
             ){
                 val shouldShowDialogTIS = remember { mutableStateOf(false) }
-                val scrollableDescription = rememberScrollState()
                 val scaffoldState: ScaffoldState = rememberScaffoldState()
 
                 TodoInfoScreen(
@@ -60,7 +58,6 @@ fun NavGraph(
                     onNavigate = {
                     navController.navigate(it.route) },
                     shouldShowDialog = shouldShowDialogTIS,
-                    scrollableDescription = scrollableDescription,
                     scaffoldState = scaffoldState
                 )
             }

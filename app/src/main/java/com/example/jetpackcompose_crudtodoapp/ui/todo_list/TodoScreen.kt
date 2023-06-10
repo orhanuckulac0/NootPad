@@ -1,8 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
-import androidx.compose.animation.animateColorAsState
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -44,6 +41,9 @@ fun TodoScreen(
 
     val todos = viewModel.todos.value
     val loading = viewModel.loading.value
+    val selectedChipIndex = remember {
+        mutableStateOf(0)
+    }
 
     if (shouldShowDialog.value){
         CustomDialog(
@@ -79,9 +79,6 @@ fun TodoScreen(
                 .background(MainBackgroundColor)
                 .fillMaxSize()) {
             Row(modifier = Modifier.padding(0.dp, 15.dp, 0.dp, 0.dp)) {
-                val selectedChipIndex = remember {
-                    mutableStateOf(0)
-                }
                 ChipSection(selectedChipIndex = selectedChipIndex)
             }
             Row {

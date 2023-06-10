@@ -59,7 +59,7 @@ fun DescriptionSection(
                     label = { Text(Constants.DESCR) },
                     modifier = modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.6F)
+                        .fillMaxHeight(0.5F)
                         .clip(RoundedCornerShape(5.dp))
                         .verticalScroll(scrollableDescription),
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
