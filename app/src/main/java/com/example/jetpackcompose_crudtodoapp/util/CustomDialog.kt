@@ -61,13 +61,12 @@ fun CustomDialog(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .weight(1F),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = DarkBlue)
-
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.White)
                     ) {
                         Text(
                             text = Constants.CANCEL,
                             fontSize = 16.sp,
-                            color = Color.White
+                            color = Color.Black
                         )
                     }
                     OutlinedButton(
@@ -88,12 +87,13 @@ fun CustomDialog(
                         Modifier
                             .fillMaxWidth()
                             .padding(8.dp)
-                            .weight(1F)
+                            .weight(1F),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = DarkBlue)
                     ) {
                         Text(
                             text = Constants.DELETE,
                             fontSize = 16.sp,
-                            color = Color.Black,
+                            color = Color.White
                         )
                     }
                 }

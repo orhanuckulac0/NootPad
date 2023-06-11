@@ -49,7 +49,6 @@ fun NavGraph(
                 )
             ){
                 val shouldShowDialogTIS = remember { mutableStateOf(false) }
-                val scaffoldState: ScaffoldState = rememberScaffoldState()
 
                 TodoInfoScreen(
                     onPopBackStack = {
@@ -57,8 +56,7 @@ fun NavGraph(
                                      },
                     onNavigate = {
                     navController.navigate(it.route) },
-                    shouldShowDialog = shouldShowDialogTIS,
-                    scaffoldState = scaffoldState
+                    shouldShowDialog = shouldShowDialogTIS
                 )
             }
             composable(
