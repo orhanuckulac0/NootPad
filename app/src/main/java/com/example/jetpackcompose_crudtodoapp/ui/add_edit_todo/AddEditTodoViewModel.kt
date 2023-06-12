@@ -30,6 +30,8 @@ class AddEditTodoViewModel @Inject constructor(
 
     private var todoId by mutableStateOf(0)
 
+    var topAppBarText by mutableStateOf("")
+
     var title by mutableStateOf("")
         private set
 
@@ -61,6 +63,10 @@ class AddEditTodoViewModel @Inject constructor(
                     this@AddEditTodoViewModel.todoEntity = it
                 }
             }
+            topAppBarText = Constants.EDIT_TODO
+        }else{
+            topAppBarText = Constants.ADD_NEW_TODO
+
         }
     }
 

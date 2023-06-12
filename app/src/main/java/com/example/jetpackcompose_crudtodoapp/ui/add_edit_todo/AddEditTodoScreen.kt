@@ -73,7 +73,7 @@ fun AddEditTodoScreen(
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text(text = Constants.ADD_NEW_TODO) },
+                title = { Text(text = viewModel.topAppBarText) },
                 actions = {
                     IconButton(onClick = {
                         onPopBackStack()

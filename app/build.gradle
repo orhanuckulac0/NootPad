@@ -6,6 +6,14 @@ plugins {
 }
 
 android {
+    signingConfigs {
+        release {
+            storeFile file(MY_KEYSTORE_PATH)
+            storePassword "${MY_STORE_PW}"
+            keyAlias "${MY_KEY_ALIES}"
+            keyPassword "${MY_KEY_PASSWORD}"
+        }
+    }
     namespace 'com.example.jetpackcompose_crudtodoapp'
     compileSdk 33
 
@@ -24,7 +32,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            signingConfig signingConfigs.release
+            minifyEnabled true
+            shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -50,34 +60,27 @@ android {
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.10.1'
-    // Compose dependencies
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1"
-    implementation "androidx.navigation:navigation-compose:2.6.0-alpha04"
+    implementation "androidx.navigation:navigation-compose:2.7.0-beta01"
 
-    // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
 
-    //Dagger - Hilt
     implementation("com.google.dagger:hilt-android:2.45")
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    // Room
     implementation "androidx.room:room-runtime:2.5.1"
     kapt "androidx.room:room-compiler:2.5.1"
 
-    // Kotlin Extensions and Coroutines support for Room
     implementation "androidx.room:room-ktx:2.5.1"
 
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
 
     implementation "io.github.vanpra.compose-material-dialogs:core:0.9.0"
 
-    // DatePicker
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.9.0"
 
-    // ColorPicker
     implementation "io.github.vanpra.compose-material-dialogs:color:0.9.0"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
@@ -85,7 +88,7 @@ dependencies {
 
     implementation 'androidx.core:core-ktx:1.10.1'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.6.1'
-    implementation 'androidx.activity:activity-compose:1.7.1'
+    implementation 'androidx.activity:activity-compose:1.7.2'
     implementation "androidx.compose.ui:ui:1.4.3"
     implementation "androidx.compose.ui:ui-tooling-preview:1.4.3"
     implementation 'androidx.compose.material:material:1.4.3'
