@@ -1,4 +1,4 @@
-NootPad
+## NootPad
 
 In this project, I have used Jetpack Compose, Hilt for dependency injection, Room DB for local storage and MVVM Architecture Pattern.
 
@@ -17,6 +17,6 @@ In this project, I have used Jetpack Compose, Hilt for dependency injection, Roo
 - Multiple theme options
 
 ## Screenshots
-![ss1](https://github.com/orhanuckulac0/CRUD-TodoApp/assets/101017069/1a3d51c7-41a6-4ac0-a9de-9a08f9fb4c3b)
-![ss2](https://github.com/orhanuckulac0/CRUD-TodoApp/assets/101017069/c396c6bf-4dd0-453c-987a-68dd6a0417db)
-![ss3](https://github.com/orhanuckulac0/CRUD-TodoApp/assets/101017069/e0a52a79-0f64-46a9-9791-963817f713a0)
+![ss1 (1)](https://github.com/orhanuckulac0/NootPad/assets/101017069/4a0f3b44-2f57-4902-ad5d-3883d818b2ae)
+![ss2 1](https://github.com/orhanuckulac0/NootPad/assets/101017069/72016a05-c1a5-4dfd-99db-51a68d2d414b)
+![ss3 1](https://github.com/orhanuckulac0/NootPad/assets/101017069/2c9b240a-cb61-49fb-b018-4ec03b60f2c9)
