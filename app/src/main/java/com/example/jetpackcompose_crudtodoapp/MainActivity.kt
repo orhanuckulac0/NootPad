@@ -7,10 +7,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.annotation.RequiresApi
 import androidx.navigation.compose.rememberNavController
-import com.example.jetpackcompose_crudtodoapp.navigation.NavGraph
+import com.example.jetpackcompose_crudtodoapp.ui.navigation.NavGraph
 import com.example.jetpackcompose_crudtodoapp.ui.theme.JetpackComposeCRUDTodoAppTheme
-import com.example.jetpackcompose_crudtodoapp.navigation.Routes
-import com.example.jetpackcompose_crudtodoapp.util.LockScreenOrientation
+import com.example.jetpackcompose_crudtodoapp.ui.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.ui.util.LockScreenOrientation
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

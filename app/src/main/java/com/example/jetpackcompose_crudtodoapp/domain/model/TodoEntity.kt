@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.data
+package com.example.jetpackcompose_crudtodoapp.domain.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

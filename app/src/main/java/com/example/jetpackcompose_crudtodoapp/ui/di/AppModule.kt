@@ -1,10 +1,10 @@
-package com.example.jetpackcompose_crudtodoapp.di
+package com.example.jetpackcompose_crudtodoapp.ui.di
 
 import android.app.Application
 import androidx.room.Room
-import com.example.jetpackcompose_crudtodoapp.data.TodoDatabase
-import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
-import com.example.jetpackcompose_crudtodoapp.data.TodoRepositoryImpl
+import com.example.jetpackcompose_crudtodoapp.data.data_source.TodoDatabase
+import com.example.jetpackcompose_crudtodoapp.domain.repository.TodoRepository
+import com.example.jetpackcompose_crudtodoapp.data.repository.TodoRepositoryImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -17,7 +17,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoDatabase(app: Application): TodoDatabase{
+    fun provideTodoDatabase(app: Application): TodoDatabase {
         return Room.databaseBuilder(
             app,
             TodoDatabase::class.java,
@@ -27,7 +27,7 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideTodoRepository(db: TodoDatabase): TodoRepository{
+    fun provideTodoRepository(db: TodoDatabase): TodoRepository {
         return TodoRepositoryImpl(db.todoDAO)
     }
 }

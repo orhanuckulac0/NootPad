@@ -1,4 +1,8 @@
-package com.example.jetpackcompose_crudtodoapp.data
+package com.example.jetpackcompose_crudtodoapp.data.repository
+
+import com.example.jetpackcompose_crudtodoapp.domain.repository.TodoRepository
+import com.example.jetpackcompose_crudtodoapp.data.data_source.TodoDAO
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 class TodoRepositoryImpl(private val todoDAO: TodoDAO): TodoRepository {
     override suspend fun insertTodo(todoEntity: TodoEntity) {

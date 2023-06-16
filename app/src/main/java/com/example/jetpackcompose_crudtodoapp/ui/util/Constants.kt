@@ -1,9 +1,9 @@
-package com.example.jetpackcompose_crudtodoapp.util
+package com.example.jetpackcompose_crudtodoapp.ui.util
 
 object Constants {
     const val OK = "Ok"
     const val CANCEL = "Cancel"
-    const val SELECT = "Select"
+    const val TITLE = "Title"
     const val PICK_A_DATE = "Pick a date"
     const val EDIT_TODO = "Edit Todo"
     const val NAVIGATE_BACK = "Navigate Back"

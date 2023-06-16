@@ -14,8 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
-import com.example.jetpackcompose_crudtodoapp.util.Constants
-import com.example.jetpackcompose_crudtodoapp.util.toHexString
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.toHexString
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.color.colorChooser

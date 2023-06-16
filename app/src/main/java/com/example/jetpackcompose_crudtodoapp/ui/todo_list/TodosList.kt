@@ -22,7 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 

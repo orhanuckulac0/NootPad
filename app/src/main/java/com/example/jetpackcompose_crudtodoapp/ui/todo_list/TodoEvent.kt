@@ -1,6 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
-import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 sealed class TodoEvent {
     data class OnDeleteTodoClick(val todoEntity: TodoEntity): TodoEvent()

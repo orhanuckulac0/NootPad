@@ -19,9 +19,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
-import com.example.jetpackcompose_crudtodoapp.util.Constants
-import com.example.jetpackcompose_crudtodoapp.util.CustomDialog
-import com.example.jetpackcompose_crudtodoapp.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.CustomDialog
+import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable

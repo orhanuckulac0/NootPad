@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
-import com.example.jetpackcompose_crudtodoapp.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
 fun ChipSection(

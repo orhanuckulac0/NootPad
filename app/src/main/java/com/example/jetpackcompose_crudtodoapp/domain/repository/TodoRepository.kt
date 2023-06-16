@@ -1,6 +1,6 @@
-package com.example.jetpackcompose_crudtodoapp.data
+package com.example.jetpackcompose_crudtodoapp.domain.repository
 
-import kotlinx.coroutines.flow.Flow
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 interface TodoRepository {
 

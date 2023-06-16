@@ -4,11 +4,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
-import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
-import com.example.jetpackcompose_crudtodoapp.navigation.Routes
-import com.example.jetpackcompose_crudtodoapp.util.Constants
-import com.example.jetpackcompose_crudtodoapp.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.AddEditTodoUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.DeleteTodoUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetAllTodosUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodosByCategory
+import com.example.jetpackcompose_crudtodoapp.ui.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
@@ -17,7 +20,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoViewModel @Inject constructor(
-    private val repository: TodoRepository
+    private val getAllTodosUseCase: GetAllTodosUseCase,
+    private val addEditTodoUseCase: AddEditTodoUseCase,
+    private val deleteTodoUseCase: DeleteTodoUseCase,
+    private val getTodosByCategory: GetTodosByCategory
 ): ViewModel() {
 
     val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())
@@ -32,7 +38,7 @@ class TodoViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            todos.value = repository.getAllTodos()
+            todos.value = getAllTodosUseCase.getAllTodos()
             loading.value = false
         }
     }
@@ -48,20 +54,20 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.OnUndoDeleteClick -> {
                 deletedTodo?.let {
                     viewModelScope.launch(Dispatchers.IO) {
-                        repository.insertTodo(it)
+                        addEditTodoUseCase.addEditTodo(it)
                     }
                 }
             }
             is TodoEvent.OnDeleteTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
                     deletedTodo = event.todoEntity
-                    repository.deleteTodo(event.todoEntity)
+                    deleteTodoUseCase.deleteTodo(event.todoEntity)
                     getTodos(selectedCategory.value)
                 }
             }
             is TodoEvent.OnDoneChange -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    repository.insertTodo(
+                    addEditTodoUseCase.addEditTodo(
                         event.todoEntity
                             .copy(
                                 isDone = event.isDone
@@ -96,9 +102,9 @@ class TodoViewModel @Inject constructor(
 
     suspend fun getTodos(category: String){
         if (category == Constants.ALL){
-            todos.value = repository.getAllTodos()
+            todos.value = getAllTodosUseCase.getAllTodos()
         }else{
-            todos.value = repository.getTodosByCategory(category)
+            todos.value = getTodosByCategory.getTodosByCategory(category)
         }
     }
 }

@@ -1,18 +1,20 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
-import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
-import com.example.jetpackcompose_crudtodoapp.navigation.Routes
-import com.example.jetpackcompose_crudtodoapp.util.Constants
-import com.example.jetpackcompose_crudtodoapp.util.UiEvent
-import com.example.jetpackcompose_crudtodoapp.util.toHexString
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.AddEditTodoUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoByIDUseCase
+import com.example.jetpackcompose_crudtodoapp.ui.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.ui.util.toHexString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -22,13 +24,14 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AddEditTodoViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
+    private val addTodoUseCase: AddEditTodoUseCase,
+    private val getTodoByIDUseCase: GetTodoByIDUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     var todoEntity by mutableStateOf<TodoEntity?>(null)
         private set
 
-    private var todoId by mutableStateOf(0)
+    private var todoId by mutableIntStateOf(0)
 
     var topAppBarText by mutableStateOf("")
 
@@ -54,7 +57,7 @@ class AddEditTodoViewModel @Inject constructor(
         todoId = savedStateHandle.get<Int>("todoId")!!
         if (todoId != -1){
             viewModelScope.launch {
-                todoRepository.getTodoByID(todoId)?.let {
+                getTodoByIDUseCase.getTodoByID(todoId)?.let {
                     title = it.title
                     description = it.description
                     dueDate = it.dueDate
@@ -107,7 +110,7 @@ class AddEditTodoViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowSnackbar(Constants.EMPTY_CATEGORY))
                         return@launch
                     }
-                    todoRepository.insertTodo(
+                    addTodoUseCase.addEditTodo(
                         TodoEntity(
                             id = todoEntity?.id,
                             title = title,

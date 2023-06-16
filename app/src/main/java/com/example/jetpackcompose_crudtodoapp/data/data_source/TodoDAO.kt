@@ -1,11 +1,11 @@
-package com.example.jetpackcompose_crudtodoapp.data
+package com.example.jetpackcompose_crudtodoapp.data.data_source
 
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import kotlinx.coroutines.flow.Flow
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 @Dao
 interface TodoDAO {

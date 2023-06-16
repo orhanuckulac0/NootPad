@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.jetpackcompose_crudtodoapp.data.TodoEntity
-import com.example.jetpackcompose_crudtodoapp.data.TodoRepository
-import com.example.jetpackcompose_crudtodoapp.navigation.Routes
-import com.example.jetpackcompose_crudtodoapp.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.domain.repository.TodoRepository
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.DeleteTodoUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoByIDUseCase
+import com.example.jetpackcompose_crudtodoapp.ui.navigation.Routes
+import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -19,7 +21,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class TodoInfoViewModel @Inject constructor(
-    private val todoRepository: TodoRepository,
+    private val getTodoByIDUseCase: GetTodoByIDUseCase,
+    private val deleteTodoUseCase: DeleteTodoUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
 
@@ -48,7 +51,7 @@ class TodoInfoViewModel @Inject constructor(
         val todoId = savedStateHandle.get<Int>("todoId")
         if (todoId != -1 && todoId != null){
             viewModelScope.launch {
-                todoRepository.getTodoByID(todoId)?.let {
+                getTodoByIDUseCase.getTodoByID(todoId)?.let {
                     title = it.title
                     description = it.description
                     dueDate = it.dueDate
@@ -67,7 +70,7 @@ class TodoInfoViewModel @Inject constructor(
             }
             is TodoInfoEvent.OnDeleteTodoClick -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    todoRepository.deleteTodo(todoEntity!!)
+                    deleteTodoUseCase.deleteTodo(todoEntity!!)
                 }
                 sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
             }

@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.util
+package com.example.jetpackcompose_crudtodoapp.ui.util
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape

@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.navigation
+package com.example.jetpackcompose_crudtodoapp.ui.navigation
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -40,7 +40,7 @@ fun NavGraph(
                 )
             }
             composable(
-                route = Routes.TODO_INFO+"?todoId={todoId}",
+                route = Routes.TODO_INFO +"?todoId={todoId}",
                 arguments = listOf(
                     navArgument(name = "todoId") {
                         type = NavType.IntType

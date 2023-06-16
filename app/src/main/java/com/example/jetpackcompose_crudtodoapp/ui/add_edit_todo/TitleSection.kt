@@ -10,13 +10,14 @@ import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
-import com.example.jetpackcompose_crudtodoapp.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
 fun TitleSection(
@@ -49,6 +50,7 @@ fun TitleSection(
                     .wrapContentSize(Alignment.Center),
             ) {
                 TextField(
+                    label = { Text(Constants.TITLE) },
                     value = viewModel.title,
                     onValueChange = {
                         if (it.length <= titleMaxCharLength) {
@@ -57,8 +59,8 @@ fun TitleSection(
                     },
                     modifier = modifier
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(5.dp))
                         .background(DarkBlue),
-                    shape = RoundedCornerShape(8.dp),
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White)
                 )
                 Text(

@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.util
+package com.example.jetpackcompose_crudtodoapp.ui.util
 
 sealed class UiEvent {
     object PopBackStack: UiEvent()

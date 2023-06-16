@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.util
+package com.example.jetpackcompose_crudtodoapp.ui.util
 
 import android.app.Activity
 import android.content.Context

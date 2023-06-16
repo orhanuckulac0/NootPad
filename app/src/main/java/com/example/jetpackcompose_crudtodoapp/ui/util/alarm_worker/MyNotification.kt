@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp
+package com.example.jetpackcompose_crudtodoapp.ui.util.alarm_worker
 
 import android.app.NotificationChannel
 import android.app.NotificationManager
@@ -7,6 +7,8 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import com.example.jetpackcompose_crudtodoapp.MainActivity
+import com.example.jetpackcompose_crudtodoapp.R
 
 class MyNotification(
     var context : Context,
