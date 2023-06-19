@@ -4,6 +4,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -33,8 +34,6 @@ fun AddEditTodoScreen(
     viewModel: AddEditTodoViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState
     ){
-
-    val scrollableDescription = rememberScrollState()
 
     val mDropdownSize = remember { mutableStateOf(Size.Zero) }
     val mExpanded = remember { mutableStateOf(false) }
@@ -89,44 +88,50 @@ fun AddEditTodoScreen(
         content = {
             it.calculateTopPadding()
             it.calculateBottomPadding()
-            Column(
+            LazyColumn(
                 modifier = modifier
                     .fillMaxSize()
                     .background(MainBackgroundColor)
                     .padding(top = 16.dp, start = 16.dp, end = 16.dp, bottom = 20.dp)
             ) {
+                item{
+                    TitleSection(
+                        modifier = modifier,
+                        viewModel = viewModel
+                    )
+                }
 
-                TitleSection(
-                    modifier = modifier,
-                    viewModel = viewModel
-                )
+                item{
+                    DescriptionSection(
+                        modifier = modifier,
+                        viewModel = viewModel,
+                    )
+                }
+                item{
+                    DueDateSection(
+                        modifier = modifier,
+                        viewModel = viewModel,
+                        dateDialogState = dateDialogState,
+                        formattedDate = formattedDate,
+                        pickedDate = pickedDate
+                    )
+                }
+                item{
+                    CategorySection(
+                        viewModel = viewModel,
+                        mDropdownSize = mDropdownSize,
+                        mExpanded = mExpanded
+                    )
 
-                DescriptionSection(
-                    modifier = modifier,
-                    viewModel = viewModel,
-                    scrollableDescription = scrollableDescription
-                )
-
-                DueDateSection(
-                    modifier = modifier,
-                    viewModel = viewModel,
-                    dateDialogState = dateDialogState,
-                    formattedDate = formattedDate,
-                    pickedDate = pickedDate
-                )
-
-                CategorySection(
-                    viewModel = viewModel,
-                    mDropdownSize = mDropdownSize,
-                    mExpanded = mExpanded
-                )
-
-                PriorityColorSection(
-                    colorPickerDialogState = colorPickerDialogState,
-                    modifier = modifier,
-                    viewModel = viewModel,
-                    pickedColor = pickedColor
-                )
+                }
+                item{
+                    PriorityColorSection(
+                        colorPickerDialogState = colorPickerDialogState,
+                        modifier = modifier,
+                        viewModel = viewModel,
+                        pickedColor = pickedColor
+                    )
+                }
             }
         },
         floatingActionButton = {
@@ -143,11 +148,6 @@ fun AddEditTodoScreen(
                     tint = colorResource(id = R.color.white)
                 )
             }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(backgroundColor = DarkBlue, cutoutShape = CircleShape){}
         }
     )
 }

@@ -1,5 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,8 +22,12 @@ import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.example.jetpackcompose_crudtodoapp.ui.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.ui.util.alarm_manager.AlarmItem
+import com.example.jetpackcompose_crudtodoapp.ui.util.alarm_manager.AndroidAlarmScheduler
+import java.time.LocalDateTime
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @ExperimentalMaterialApi
 @Composable
 fun TodoScreen(
@@ -39,10 +46,22 @@ fun TodoScreen(
         }
     }
 
+    // set dummy alarm for testing only
+    val alarmItem: AlarmItem?
+    alarmItem = AlarmItem(
+        time = LocalDateTime.now()
+            .plusSeconds(10),
+        requestCode = 0
+    )
+
+    val scheduler = AndroidAlarmScheduler(LocalContext.current)
+    scheduler.schedule(alarmItem)
+    scheduler.cancel(alarmItem.requestCode)
+
     val todos = viewModel.todos.value
     val loading = viewModel.loading.value
     val selectedChipIndex = remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
 
     if (shouldShowDialog.value){

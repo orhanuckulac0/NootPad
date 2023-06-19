@@ -1,9 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -23,7 +21,6 @@ import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 fun DescriptionSection(
     modifier: Modifier,
     viewModel: AddEditTodoViewModel,
-    scrollableDescription: ScrollState
 ){
     val descriptionMaxCharLength = 1000
 
@@ -59,9 +56,8 @@ fun DescriptionSection(
                     label = { Text(Constants.DESCR) },
                     modifier = modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.5F)
-                        .clip(RoundedCornerShape(5.dp))
-                        .verticalScroll(scrollableDescription),
+                        .fillMaxHeight()
+                        .clip(RoundedCornerShape(5.dp)),
                     colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
                     singleLine = false,
                     maxLines = 15
