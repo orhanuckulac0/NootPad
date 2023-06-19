@@ -1,4 +1,4 @@
-CrudTodoApp
+## NootPad
 
 In this project, I have used Jetpack Compose, Hilt for dependency injection, Room DB for local storage and MVVM Architecture Pattern.
 
@@ -10,8 +10,13 @@ In this project, I have used Jetpack Compose, Hilt for dependency injection, Roo
 - Swipe to delete functionality
 - Local data storage
 
+
+## Upcoming Features
+- Setting up alarms
+- Receiving notifications
+- Multiple theme options
+
 ## Screenshots
-![main screen](https://user-images.githubusercontent.com/101017069/216797165-b156ae38-9078-4071-9057-951c7f9023e7.PNG)
-![todo info screen](https://user-images.githubusercontent.com/101017069/216797166-d7df8d49-c422-4e6f-82ad-a8945e22fc77.PNG)
-![edit todo screen](https://user-images.githubusercontent.com/101017069/216797167-603573fc-7c00-4579-bb41-30ba301d75b0.PNG)
-![add todo screen](https://user-images.githubusercontent.com/101017069/216797168-8f8db520-e5bc-4d09-b8fd-ab7f882300ef.PNG)
+![ss1 (1)](https://github.com/orhanuckulac0/NootPad/assets/101017069/4a0f3b44-2f57-4902-ad5d-3883d818b2ae)
+![ss2 1](https://github.com/orhanuckulac0/NootPad/assets/101017069/72016a05-c1a5-4dfd-99db-51a68d2d414b)
+![ss3 1](https://github.com/orhanuckulac0/NootPad/assets/101017069/2c9b240a-cb61-49fb-b018-4ec03b60f2c9)
