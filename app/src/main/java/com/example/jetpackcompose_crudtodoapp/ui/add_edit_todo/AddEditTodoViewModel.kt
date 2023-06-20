@@ -44,6 +44,9 @@ class AddEditTodoViewModel @Inject constructor(
     var dueDate by mutableStateOf("")
         private set
 
+    var alarmDate by mutableStateOf<String?>(null)
+        private set
+
     var priorityColor by mutableStateOf("")
         private set
 
@@ -78,6 +81,9 @@ class AddEditTodoViewModel @Inject constructor(
             is AddEditTodoEvent.OnDatePickerClick -> {
                 sendUiEvent(UiEvent.ShowDatePicker)
             }
+            is AddEditTodoEvent.OnTimePickerClicked -> {
+                sendUiEvent(UiEvent.ShowTimePicker)
+            }
             is AddEditTodoEvent.OnTitleChange -> {
                 title = event.title
             }
@@ -86,6 +92,9 @@ class AddEditTodoViewModel @Inject constructor(
             }
             is AddEditTodoEvent.OnDueDateChange -> {
                 dueDate = event.dueDate
+            }
+            is AddEditTodoEvent.OnTimeDateChange -> {
+                alarmDate = event.timeDate
             }
             is AddEditTodoEvent.OnPriorityColorChange -> {
                 priorityColor = event.priorityColor
@@ -110,22 +119,15 @@ class AddEditTodoViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowSnackbar(Constants.EMPTY_CATEGORY))
                         return@launch
                     }
-                    addTodoUseCase.addEditTodo(
-                        TodoEntity(
-                            id = todoEntity?.id,
-                            title = title,
-                            description = description,
-                            isDone = todoEntity?.isDone ?: false,
-                            dueDate = dueDate,
-                            priorityColor = priorityColor,
-                            category = category
-                        )
-                    )
+
+                    addEditTodo()
+
                     if (todoId != -1){
                         sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${todoEntity?.id}"))
                     }else{
                         sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
                     }
+
                 }
             }
         }
@@ -135,6 +137,22 @@ class AddEditTodoViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             _uiEvent.emit(event)
         }
+    }
+
+    private suspend fun addEditTodo() {
+        addTodoUseCase.addEditTodo(
+            TodoEntity(
+                id = todoEntity?.id,
+                title = title,
+                description = description,
+                isDone = todoEntity?.isDone ?: false,
+                dueDate = dueDate,
+                alarmDate = alarmDate,
+                isAlarmSet = todoEntity?.isAlarmSet ?: false,
+                priorityColor = priorityColor,
+                category = category
+            )
+        )
     }
 }
 

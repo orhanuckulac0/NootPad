@@ -8,4 +8,5 @@ sealed class UiEvent {
         val action: String? = null
     ): UiEvent()
     object ShowDatePicker: UiEvent()
+    object ShowTimePicker: UiEvent()
 }

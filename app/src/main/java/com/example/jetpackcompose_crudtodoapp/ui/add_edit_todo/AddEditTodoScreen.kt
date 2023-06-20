@@ -23,6 +23,7 @@ import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -51,6 +52,9 @@ fun AddEditTodoScreen(
         }
     }
 
+    val timeDialogState = rememberMaterialDialogState()
+    val pickedTime = remember { mutableStateOf(LocalTime.now()) }
+
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect { event->
             when(event){
@@ -59,6 +63,9 @@ fun AddEditTodoScreen(
                 }
                 is UiEvent.ShowDatePicker -> {
                     dateDialogState.show()
+                }
+                is UiEvent.ShowTimePicker -> {
+                    timeDialogState.show()
                 }
                 is UiEvent.Navigate -> {
                     onNavigate(event)
@@ -116,6 +123,16 @@ fun AddEditTodoScreen(
                         pickedDate = pickedDate
                     )
                 }
+
+                item{
+                    AlarmSection(
+                        modifier = modifier,
+                        viewModel = viewModel,
+                        timeDialogState = timeDialogState,
+                        pickedTime = pickedTime
+                    )
+                }
+
                 item{
                     CategorySection(
                         viewModel = viewModel,

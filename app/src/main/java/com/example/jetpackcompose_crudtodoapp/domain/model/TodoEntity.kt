@@ -11,6 +11,8 @@ data class TodoEntity(
     val description: String,
     val isDone: Boolean,
     val dueDate: String,
+    val alarmDate: String? = null,
+    var isAlarmSet: Boolean? = null,
     val priorityColor: String,
     val category: String
 )
