@@ -38,6 +38,8 @@ fun PriorityColorSection(
         Color(0xFF30D5C8),
         Color(0xFFA020F0),
         Color(0xFF964B00),
+        Color(0xFFc5a2ff),
+        Color(0xFF514b9a),
     )
 
     MaterialDialog(

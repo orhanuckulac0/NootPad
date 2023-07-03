@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoEvent
@@ -88,7 +87,7 @@ fun CustomDialog(
                             .fillMaxWidth()
                             .padding(8.dp)
                             .weight(1F),
-                        colors = ButtonDefaults.buttonColors(backgroundColor = DarkBlue)
+                        colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
                     ) {
                         Text(
                             text = Constants.DELETE,

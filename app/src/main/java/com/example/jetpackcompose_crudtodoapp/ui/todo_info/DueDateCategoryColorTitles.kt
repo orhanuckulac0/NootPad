@@ -21,21 +21,21 @@ fun DueDateCategoryColorTitles(
     ) {
         Text(
             text = Constants.DUE_DATE,
-            color = Color.LightGray,
+            color = Color.Gray,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp
         )
         Text(
             modifier = modifier.padding(0.dp, 0.dp, 15.dp, 0.dp),
             text = Constants.CATEGORY,
-            color = Color.LightGray,
+            color = Color.Gray,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp
         )
         Text(
             modifier = modifier.padding(0.dp, 0.dp, 20.dp, 5.dp),
             text = Constants.COLOR,
-            color = Color.LightGray,
+            color = Color.Gray,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp
         )

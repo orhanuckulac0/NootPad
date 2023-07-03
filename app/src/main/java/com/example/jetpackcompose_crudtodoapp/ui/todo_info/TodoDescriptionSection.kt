@@ -10,11 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
@@ -33,7 +35,7 @@ fun TodoDescriptionSection(
         Row {
             Text(
                 text = Constants.TODO_DESCR,
-                color = Color.LightGray,
+                color = Color.Gray,
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp
             )
@@ -49,15 +51,15 @@ fun TodoDescriptionSection(
                 Box(
                     modifier = Modifier
                         .size(width = 360.dp, height = 360.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .background(DarkBlue)
+                        .shadow(10.dp, ambientColor = Color.Black, spotColor = Color.Black)
+                        .clip(RoundedCornerShape(5.dp))
+                        .background(WhiteBackground)
                         .padding(10.dp, 10.dp, 10.dp, 0.dp),
                 ){
                     Text(
                         modifier = modifier.verticalScroll(scrollableDescription),
                         text = viewModel.description,
-                        color = Color.White,
-                        fontWeight = FontWeight.Light,
+                        color = MainTextColor,
                         fontSize = 20.sp)
                 }
             }

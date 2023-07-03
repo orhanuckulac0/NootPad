@@ -5,15 +5,15 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
@@ -43,8 +43,8 @@ fun DueDateSection(
             initialDate = LocalDate.now(),
             title = Constants.PICK_A_DATE,
             colors = DatePickerDefaults.colors(
-                headerBackgroundColor = MaterialTheme.colors.primary,
-                dateActiveBackgroundColor = MaterialTheme.colors.primary,
+                headerBackgroundColor = BlueColor,
+                dateActiveBackgroundColor = BlueColor,
             ),
             allowedDateValidator = {
                 val yesterdayDate = LocalDate.now().minusDays(1)
@@ -62,7 +62,7 @@ fun DueDateSection(
             }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                 Text(
                     text = Constants.SELECT_DUE_DATE,
-                    color = Color.Black,
+                    color = MainTextColor,
                 )
             }
 
@@ -70,14 +70,14 @@ fun DueDateSection(
                 Text(
                     modifier = modifier.padding(30.dp, 10.dp),
                     text = viewModel.dueDate,
-                    color = Color.White
+                    color = MainTextColor
 
                 )
             } else {
                 Text(
                     modifier = modifier.padding(30.dp, 10.dp),
                     text = Constants.NOT_SELECTED_YET,
-                    color = Color.White
+                    color = MainTextColor
                 )
             }
         }

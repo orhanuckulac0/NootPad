@@ -17,6 +17,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.toSize
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
@@ -73,14 +74,14 @@ fun CategorySection(
                 Text(
                     modifier = Modifier.padding(16.dp, 10.dp),
                     text = Constants.NOT_SELECTED_YET,
-                    color = Color.White
+                    color = MainTextColor
 
                 )
             } else {
                 Text(
                     modifier = Modifier.padding(16.dp, 10.dp),
                     text = viewModel.category,
-                    color = Color.White
+                    color = MainTextColor
                 )
             }
         }

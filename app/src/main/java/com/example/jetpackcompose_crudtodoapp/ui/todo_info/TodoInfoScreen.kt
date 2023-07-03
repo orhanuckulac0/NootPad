@@ -12,13 +12,14 @@ import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.example.jetpackcompose_crudtodoapp.ui.util.CustomDialog
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
@@ -60,13 +61,15 @@ fun TodoInfoScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = Constants.TODO_DETAILS) },
+                backgroundColor = MainBackgroundColor,
+                title = { Text(text = Constants.TODO_DETAILS, color = MainTextColor) },
                 navigationIcon = {
                     IconButton(onClick = {
                         onPopBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
+                            tint = BlueColor,
                             contentDescription = Constants.NAVIGATE_BACK,
                         )
                     }
@@ -78,7 +81,7 @@ fun TodoInfoScreen(
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = Constants.DELETE,
-                             tint = Color.White
+                             tint = BlueColor
                         )
                     }
                 }
@@ -114,22 +117,13 @@ fun TodoInfoScreen(
                 onClick = {
                     viewModel.onEvent(TodoInfoEvent.OnEditTodoClick)
                 },
-                backgroundColor = DarkBlue
+                backgroundColor = BlueColor
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
                     contentDescription = Constants.EDIT_TODO,
                     tint= colorResource(id = R.color.white)
                 )
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        isFloatingActionButtonDocked = true,
-        bottomBar = {
-            BottomAppBar(
-                backgroundColor = DarkBlue,
-                cutoutShape = CircleShape
-            ) {
             }
         }
     )
