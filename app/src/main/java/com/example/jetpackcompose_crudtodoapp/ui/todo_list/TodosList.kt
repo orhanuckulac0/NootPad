@@ -3,7 +3,9 @@ package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,8 +24,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -101,9 +104,17 @@ fun TodosList(
                         ).value,
                         modifier =
                         Modifier
-                            .clip(RoundedCornerShape(30.dp))
+                            .padding(top = 5.dp, bottom = 5.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .border(
+                                border = BorderStroke(1.dp,
+                                color = Color(todo.priorityColor.toColorInt())),
+                                shape = RoundedCornerShape(10.dp)
+                            )
                             .fillMaxSize()
-                            .background(DarkBlue)
+
+                            .background(WhiteBackground)
+
                     ) {
                         TodoItem(
                             todo = todo,
@@ -113,7 +124,7 @@ fun TodosList(
                                 .clickable {
                                     viewModel.onEvent(TodoEvent.OnTodoClick(todo))
                                 }
-                                .background(DarkBlue)
+                                .background(WhiteBackground)
                                 .padding(16.dp)
                         )
                     }

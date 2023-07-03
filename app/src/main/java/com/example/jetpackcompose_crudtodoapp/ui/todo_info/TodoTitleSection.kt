@@ -8,11 +8,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
@@ -27,7 +29,7 @@ fun TodoTitleSection(
         Row {
             Text(
                 text = Constants.TODO_TITLE,
-                color = Color.LightGray,
+                color = Color.Gray,
                 fontWeight = FontWeight.Medium,
                 fontSize = 18.sp
             )
@@ -43,13 +45,14 @@ fun TodoTitleSection(
             ) {
                 Box(
                     modifier = Modifier
-                        .clip(RoundedCornerShape(10.dp))
+                        .shadow(10.dp, ambientColor = Color.Black, spotColor = Color.Black)
+                        .clip(RoundedCornerShape(5.dp))
                         .fillMaxWidth()
-                        .background(DarkBlue)
+                        .background(WhiteBackground)
                         .padding(10.dp),
                     contentAlignment = Alignment.Center
                 ){
-                    Text(text = viewModel.title, color = Color.White, fontWeight = FontWeight.Light, fontSize = 24.sp)
+                    Text(text = viewModel.title, color = MainTextColor,  fontSize = 20.sp)
                 }
             }
         }

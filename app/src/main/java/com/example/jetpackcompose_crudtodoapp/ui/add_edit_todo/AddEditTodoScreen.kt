@@ -3,22 +3,28 @@ package com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.*
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
-import com.example.jetpackcompose_crudtodoapp.ui.theme.DarkBlue
+import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
@@ -35,6 +41,14 @@ fun AddEditTodoScreen(
     viewModel: AddEditTodoViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState
     ){
+
+    val focusManager = LocalFocusManager.current
+    val interactionSource = remember { MutableInteractionSource() }
+    val focusRequester = remember { FocusRequester() }
+    val customTextSelectionColors = TextSelectionColors(
+        handleColor = Color.Blue,
+        backgroundColor =  Color.Blue.copy(alpha = 0.2f)
+    )
 
     val mDropdownSize = remember { mutableStateOf(Size.Zero) }
     val mExpanded = remember { mutableStateOf(false) }
@@ -76,16 +90,25 @@ fun AddEditTodoScreen(
     }
 
     Scaffold(
+        modifier = Modifier.clickable(
+            interactionSource = interactionSource,
+            indication = null
+        ) {
+            focusManager.clearFocus()
+        },
+
         scaffoldState = scaffoldState,
         topBar = {
             TopAppBar(
-                title = { Text(text = viewModel.topAppBarText) },
-                actions = {
+                backgroundColor = MainBackgroundColor,
+                title = { Text(text = viewModel.topAppBarText, color = MainTextColor) },
+                navigationIcon = {
                     IconButton(onClick = {
                         onPopBackStack()
                     }) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
+                            tint = BlueColor,
                             contentDescription = Constants.NAVIGATE_BACK,
                         )
                     }
@@ -104,7 +127,9 @@ fun AddEditTodoScreen(
                 item{
                     TitleSection(
                         modifier = modifier,
-                        viewModel = viewModel
+                        viewModel = viewModel,
+                        focusRequester = focusRequester,
+                        customTextSelectionColors = customTextSelectionColors
                     )
                 }
 
@@ -112,6 +137,8 @@ fun AddEditTodoScreen(
                     DescriptionSection(
                         modifier = modifier,
                         viewModel = viewModel,
+                        focusRequester = focusRequester,
+                        customTextSelectionColors = customTextSelectionColors
                     )
                 }
                 item{
@@ -157,7 +184,7 @@ fun AddEditTodoScreen(
                 onClick = {
                     viewModel.onEvent(AddEditTodoEvent.OnSaveTodoClick)
                 },
-                backgroundColor = DarkBlue
+                backgroundColor = BlueColor
             ) {
                 Icon(
                     imageVector = Icons.Default.Check,

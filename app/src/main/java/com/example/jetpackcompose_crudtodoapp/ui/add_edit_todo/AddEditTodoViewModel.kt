@@ -53,6 +53,9 @@ class AddEditTodoViewModel @Inject constructor(
     var category by mutableStateOf("")
         private set
 
+    var isAlarmSet by mutableStateOf<Boolean?>(null)
+        private set
+
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
@@ -66,6 +69,8 @@ class AddEditTodoViewModel @Inject constructor(
                     dueDate = it.dueDate
                     priorityColor = it.priorityColor
                     category = it.category
+                    alarmDate = it.alarmDate
+                    isAlarmSet = it.isAlarmSet
                     this@AddEditTodoViewModel.todoEntity = it
                 }
             }

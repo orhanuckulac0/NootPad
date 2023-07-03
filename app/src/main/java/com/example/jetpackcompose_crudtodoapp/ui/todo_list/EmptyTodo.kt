@@ -15,7 +15,7 @@ import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
 @Composable
 fun EmptyTodoScreen(
-    modifier: Modifier,
+    modifier: Modifier
 ){
     Column(modifier = Modifier
         .fillMaxWidth(),
@@ -25,7 +25,7 @@ fun EmptyTodoScreen(
         Row {
             Text(
                 text= Constants.EMPTY_TODO_LIST,
-                color = Color.White,
+                color = Color.Black,
                 fontWeight = FontWeight.Medium,
                 fontSize = 16.sp,
                 modifier = modifier

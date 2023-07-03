@@ -12,9 +12,14 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
+import com.vanpra.composematerialdialogs.datetime.date.DatePickerDefaults
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerColors
+import com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import java.time.LocalTime
 
@@ -40,6 +45,7 @@ fun AlarmSection(
 
         timepicker { time ->
             pickedTime.value = time
+
         }
 
     }
@@ -51,7 +57,7 @@ fun AlarmSection(
             }, modifier = modifier.padding(0.dp, 0.dp, 10.dp, 0.dp)) {
                 Text(
                     text = "Set Alarm Time",
-                    color = Color.Black,
+                    color = MainTextColor,
                 )
             }
 
@@ -59,13 +65,13 @@ fun AlarmSection(
                 Text(
                     modifier = modifier.padding(30.dp, 10.dp),
                     text = "Optional",
-                    color = Color.White
+                    color = MainTextColor
                 )
             }else{
                 Text(
                     modifier = modifier.padding(30.dp, 10.dp),
                     text = viewModel.alarmDate.toString(),
-                    color = Color.White
+                    color = MainTextColor
                 )
             }
         }

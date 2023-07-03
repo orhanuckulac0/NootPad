@@ -70,10 +70,10 @@ dependencies {
     kapt("com.google.dagger:hilt-android-compiler:2.44")
     implementation("androidx.hilt:hilt-navigation-compose:1.0.0")
 
-    implementation "androidx.room:room-runtime:2.5.1"
-    kapt "androidx.room:room-compiler:2.5.1"
+    implementation "androidx.room:room-runtime:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
 
-    implementation "androidx.room:room-ktx:2.5.1"
+    implementation "androidx.room:room-ktx:2.5.2"
 
     implementation "androidx.compose.material:material-icons-extended:1.4.3"
 
