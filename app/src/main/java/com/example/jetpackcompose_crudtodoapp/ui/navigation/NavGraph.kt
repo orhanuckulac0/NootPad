@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo.AddEditTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.settings.SettingsScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
 
@@ -79,6 +80,24 @@ fun NavGraph(
                         }
                     },
                     scaffoldState = scaffoldState
+                )
+            }
+            composable(
+                route = Routes.SETTINGS
+            ){
+                var darkTheme by remember { mutableStateOf(false) }
+
+                SettingsScreen(
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    },
+                    onNavigate = {
+                        navController.navigate(it.route){
+                            popUpTo(Routes.TODO_LIST)
+                        }
+                    },
+                    darkTheme = darkTheme,
+                    onThemeUpdated = { darkTheme = !darkTheme }
                 )
             }
         }

@@ -26,7 +26,9 @@ import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.SecondaryColor
 
 @Composable
-fun DropdownMenuScreen(){
+fun DropdownMenuScreen(
+    viewModel: TodoViewModel
+) {
     var expanded by remember { mutableStateOf(false) }
 
     val menuItems = listOf(
@@ -50,8 +52,8 @@ fun DropdownMenuScreen(){
         ) {
             menuItems.forEach { menuItem ->
                 DropdownMenuItem(onClick = {
-                    // Handle menu item click
                     expanded = false
+                    viewModel.onEvent(TodoEvent.OnSettingsClicked)
                 }) {
                     Row {
                         Icon(

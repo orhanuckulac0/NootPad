@@ -14,10 +14,10 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ListAlt
 import androidx.compose.material.icons.filled.LocalGroceryStore
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.filled.SelectAll
 import androidx.compose.material.icons.filled.Sports
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.runtime.*
@@ -41,15 +41,15 @@ fun CategorySection(
     selectedChipIndex: MutableState<Int>
 ) {
     val categories = listOf(
-        CategoryModel("All", Icons.Default.ListAlt),
-        CategoryModel("Home", Icons.Default.Home),
-        CategoryModel("School", Icons.Default.School),
-        CategoryModel("Work", Icons.Default.Work),
-        CategoryModel("Sports", Icons.Default.Sports),
-        CategoryModel("Fun", Icons.Default.Clear),
-        CategoryModel("Friends", Icons.Default.Person),
-        CategoryModel("Grocery", Icons.Default.LocalGroceryStore),
-        CategoryModel("Other", Icons.Default.Clear),
+        CategoryModel("All", Icons.Default.SelectAll, Color.Gray),
+        CategoryModel("Home", Icons.Default.Home, Color.Gray),
+        CategoryModel("School", Icons.Default.School, Color.Gray),
+        CategoryModel("Work", Icons.Default.Work, Color.Gray),
+        CategoryModel("Sports", Icons.Default.Sports, Color.Gray),
+        CategoryModel("Fun", Icons.Default.Clear, Color.Gray),
+        CategoryModel("Friends", Icons.Default.Person, Color.Gray),
+        CategoryModel("Grocery", Icons.Default.LocalGroceryStore, Color.Gray),
+        CategoryModel("Other", Icons.Default.Clear, Color.Gray),
         )
 
 
@@ -86,9 +86,11 @@ fun CategorySection(
 
                 ) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
+                        val iconColor = if (selectedChipIndex.value == it) Color.Blue else Color.Gray
                         Icon(
                             painter = rememberVectorPainter(image = categories[it].image),
                             contentDescription = "Icon",
+                            tint = iconColor,
                             modifier = Modifier.size(24.dp)
                         )
                         if (selectedChipIndex.value == it){
@@ -113,5 +115,6 @@ fun CategorySection(
 }
 data class CategoryModel(
     val title: String,
-    val image: ImageVector
+    val image: ImageVector,
+    val color: Color
 )

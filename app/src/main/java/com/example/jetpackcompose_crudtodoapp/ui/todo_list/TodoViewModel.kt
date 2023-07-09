@@ -91,6 +91,9 @@ class TodoViewModel @Inject constructor(
                     getTodos(event.category)
                 }
             }
+            is TodoEvent.OnSettingsClicked -> {
+                sendUiEvent(UiEvent.Navigate(Routes.SETTINGS))
+            }
         }
     }
 

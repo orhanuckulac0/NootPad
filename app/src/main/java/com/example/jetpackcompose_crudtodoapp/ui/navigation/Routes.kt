@@ -7,6 +7,8 @@ object Routes {
     const val TODO_LIST = "todo_list"
     const val TODO_INFO = "todo_info"
     const val ADD_EDIT_TODO = "add_edit_todo_info"
+    const val SETTINGS = "settings"
+
     fun NavOptionsBuilder.popUpToTop(navController: NavController) {
         popUpTo(navController.currentBackStackEntry?.destination?.route ?: return) {
             inclusive =  true

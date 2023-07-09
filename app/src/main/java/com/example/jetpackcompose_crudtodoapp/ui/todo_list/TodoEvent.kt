@@ -1,5 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
+import android.service.autofill.UserData
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 sealed class TodoEvent {
@@ -8,6 +9,7 @@ sealed class TodoEvent {
     data class OnTodoClick(val todoEntity: TodoEntity): TodoEvent()
     data class OnCategoryClicked(val category: String): TodoEvent()
     data class OnSetTodoToDelete(val todoEntity: TodoEntity): TodoEvent()
+    object OnSettingsClicked: TodoEvent()
     object OnAddTodoClick: TodoEvent()
     object OnUndoDeleteClick: TodoEvent()
     object OnSetTodoToDeleteToNull: TodoEvent()
