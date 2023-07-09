@@ -14,22 +14,31 @@ import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.ui.util.data_store.StoreThemePref
 
 @Composable
 fun SettingsScreen(
     onPopBackStack: () -> Unit,
     onNavigate: (UiEvent.Navigate) -> Unit,
-    viewModel: SettingsViewModel = hiltViewModel(),
-    darkTheme: Boolean,
-    onThemeUpdated: () -> Unit
+    viewModel: SettingsViewModel = hiltViewModel()
 ){
+    val context = LocalContext.current
+    val dataStore = StoreThemePref(context)
+    val storedTheme = dataStore.getData.collectAsState(initial = false).value
+    var isDarkTheme by remember { mutableStateOf(storedTheme) }
 
     LaunchedEffect(key1 = true){
         viewModel.uiEvent.collect { event->
@@ -71,10 +80,10 @@ fun SettingsScreen(
                     Text(text = "Switch Theme")
                     Spacer(modifier = Modifier.width(20.dp))
                     ThemeSwitcher(
-                        darkTheme = darkTheme,
                         size = 50.dp,
                         padding = 5.dp,
-                        onClick = onThemeUpdated
+                        isDarkTheme = isDarkTheme!!,
+                        onThemeUpdated = { isDarkTheme = !isDarkTheme!! }
                     )
                 }
             }

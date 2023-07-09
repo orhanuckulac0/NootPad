@@ -85,7 +85,6 @@ fun NavGraph(
             composable(
                 route = Routes.SETTINGS
             ){
-                var darkTheme by remember { mutableStateOf(false) }
 
                 SettingsScreen(
                     onPopBackStack = {
@@ -95,9 +94,7 @@ fun NavGraph(
                         navController.navigate(it.route){
                             popUpTo(Routes.TODO_LIST)
                         }
-                    },
-                    darkTheme = darkTheme,
-                    onThemeUpdated = { darkTheme = !darkTheme }
+                    }
                 )
             }
         }

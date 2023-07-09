@@ -21,18 +21,21 @@ import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.NightlightRound
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.jetpackcompose_crudtodoapp.ui.theme.OrangeColor
+import com.example.jetpackcompose_crudtodoapp.ui.util.data_store.StoreThemePref
+import kotlinx.coroutines.launch
 
 @Composable
 fun ThemeSwitcher(
-    darkTheme: Boolean = false,
     size: Dp = 150.dp,
     iconSize: Dp = size / 3,
     padding: Dp = 10.dp,
@@ -40,10 +43,15 @@ fun ThemeSwitcher(
     parentShape: Shape = CircleShape,
     toggleShape: Shape = CircleShape,
     animationSpec: AnimationSpec<Dp> = tween(durationMillis = 300),
-    onClick: () -> Unit
+    isDarkTheme: Boolean,
+    onThemeUpdated: (Boolean) -> Unit
 ) {
+    val context = LocalContext.current
+    val dataStore = StoreThemePref(context)
+    val scope = rememberCoroutineScope()
+
     val offset by animateDpAsState(
-        targetValue = if (darkTheme) 0.dp else size,
+        targetValue = if (isDarkTheme) 0.dp else size,
         animationSpec = animationSpec
     )
 
@@ -51,7 +59,15 @@ fun ThemeSwitcher(
         .width(size * 2)
         .height(size)
         .clip(shape = parentShape)
-        .clickable { onClick() }
+        .clickable {
+            scope.launch {
+                val newTheme = !isDarkTheme
+                onThemeUpdated(newTheme)
+                scope.launch {
+                    dataStore.saveData(newTheme)
+                }
+            }
+        }
         .background(Color.White)
     ) {
         Box(
@@ -80,7 +96,7 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(iconSize),
                     imageVector = Icons.Default.NightlightRound,
                     contentDescription = "Theme Icon",
-                    tint = if (darkTheme) Color.White
+                    tint = if (isDarkTheme) Color.White
                     else Color.DarkGray
                 )
             }
@@ -92,7 +108,7 @@ fun ThemeSwitcher(
                     modifier = Modifier.size(iconSize),
                     imageVector = Icons.Default.LightMode,
                     contentDescription = "Theme Icon",
-                    tint = if (darkTheme) Color.DarkGray
+                    tint = if (isDarkTheme) Color.DarkGray
                     else OrangeColor
                 )
             }
