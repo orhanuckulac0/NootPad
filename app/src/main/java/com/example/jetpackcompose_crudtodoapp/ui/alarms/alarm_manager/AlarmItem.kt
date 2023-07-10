@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.ui.util.alarm_manager
+package com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager
 
 import java.time.LocalDateTime
 

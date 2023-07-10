@@ -26,4 +26,8 @@ interface TodoDAO {
 
     @Query("SELECT * FROM todo_table WHERE category=:category")
     suspend fun getTodosByCategory(category: String): List<TodoEntity>
+
+    @Query("SELECT * FROM todo_table WHERE isAlarmSet = 0")
+    suspend fun getTodoWithoutAlarmSet(): List<TodoEntity>
+
 }

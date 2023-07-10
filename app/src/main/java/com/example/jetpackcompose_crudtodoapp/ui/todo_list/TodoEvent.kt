@@ -1,6 +1,5 @@
 package com.example.jetpackcompose_crudtodoapp.ui.todo_list
 
-import android.service.autofill.UserData
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 
 sealed class TodoEvent {
@@ -13,4 +12,5 @@ sealed class TodoEvent {
     object OnAddTodoClick: TodoEvent()
     object OnUndoDeleteClick: TodoEvent()
     object OnSetTodoToDeleteToNull: TodoEvent()
+    object OnAlarmClicked : TodoEvent()
 }

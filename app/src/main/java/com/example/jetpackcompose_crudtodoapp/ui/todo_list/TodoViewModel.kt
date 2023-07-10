@@ -94,6 +94,9 @@ class TodoViewModel @Inject constructor(
             is TodoEvent.OnSettingsClicked -> {
                 sendUiEvent(UiEvent.Navigate(Routes.SETTINGS))
             }
+            is TodoEvent.OnAlarmClicked -> {
+                sendUiEvent(UiEvent.Navigate(Routes.ALARMS))
+            }
         }
     }
 

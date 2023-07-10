@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.ui.util.alarm_manager
+package com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -18,7 +18,7 @@ class AndroidAlarmScheduler(
     override fun schedule(item: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        alarmManager.setExact(
+        alarmManager.set(
             AlarmManager.RTC_WAKEUP,
             item.time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             PendingIntent.getBroadcast(
@@ -28,7 +28,6 @@ class AndroidAlarmScheduler(
                 PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
             )
         )
-
     }
 
     override fun cancel(requestCode: Int) {

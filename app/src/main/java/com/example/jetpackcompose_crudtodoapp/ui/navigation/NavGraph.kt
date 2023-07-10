@@ -12,6 +12,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import com.example.jetpackcompose_crudtodoapp.ui.add_edit_todo.AddEditTodoScreen
+import com.example.jetpackcompose_crudtodoapp.ui.alarms.AlarmScreen
 import com.example.jetpackcompose_crudtodoapp.ui.settings.SettingsScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoScreen
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoScreen
@@ -93,6 +94,20 @@ fun NavGraph(
                     onNavigate = {
                         navController.navigate(it.route){
                             popUpTo(Routes.TODO_LIST)
+                        }
+                    }
+                )
+            }
+            composable(
+                route = Routes.ALARMS
+            ){
+                AlarmScreen(
+                    onPopBackStack = {
+                        navController.popBackStack()
+                    },
+                    onNavigate = {
+                        navController.navigate(it.route){
+                            popUpTo(Routes.SETTINGS)
                         }
                     }
                 )

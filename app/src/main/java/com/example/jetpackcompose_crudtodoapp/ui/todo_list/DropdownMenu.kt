@@ -53,7 +53,11 @@ fun DropdownMenuScreen(
             menuItems.forEach { menuItem ->
                 DropdownMenuItem(onClick = {
                     expanded = false
-                    viewModel.onEvent(TodoEvent.OnSettingsClicked)
+                    if (menuItem.text == "Settings"){
+                        viewModel.onEvent(TodoEvent.OnSettingsClicked)
+                    }else{
+                        viewModel.onEvent(TodoEvent.OnAlarmClicked)
+                    }
                 }) {
                     Row {
                         Icon(

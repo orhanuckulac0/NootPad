@@ -4,6 +4,7 @@ import com.example.jetpackcompose_crudtodoapp.domain.repository.TodoRepository
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.AddEditTodoUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.DeleteTodoUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetAllTodosUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithoutAlarmSet
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoByIDUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodosByCategory
 import dagger.Module
@@ -44,5 +45,11 @@ class UseCaseModule {
     @Provides
     fun provideGetTodoByIDUseCase(repository: TodoRepository): GetTodoByIDUseCase{
         return GetTodoByIDUseCase(repository)
+    }
+
+    @Singleton
+    @Provides
+    fun provideGetTodoWithoutAlarmSet(repository: TodoRepository): GetTodoWithoutAlarmSet{
+        return GetTodoWithoutAlarmSet(repository)
     }
 }

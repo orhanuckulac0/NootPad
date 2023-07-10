@@ -10,5 +10,6 @@ interface TodoRepository {
     suspend fun deleteAllTodos()
     suspend fun getAllTodos(): List<TodoEntity>
     suspend fun getTodosByCategory(category: String): List<TodoEntity>
+    suspend fun getTodoWithoutAlarmSet(): List<TodoEntity>
 
 }

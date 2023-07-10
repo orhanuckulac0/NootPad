@@ -28,4 +28,8 @@ class TodoRepositoryImpl(private val todoDAO: TodoDAO): TodoRepository {
     override suspend fun getTodosByCategory(category: String): List<TodoEntity> {
         return todoDAO.getTodosByCategory(category)
     }
+
+    override suspend fun getTodoWithoutAlarmSet(): List<TodoEntity> {
+        return todoDAO.getTodoWithoutAlarmSet()
+    }
 }

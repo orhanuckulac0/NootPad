@@ -126,13 +126,7 @@ class AddEditTodoViewModel @Inject constructor(
                     }
 
                     addEditTodo()
-
-                    if (todoId != -1){
-                        sendUiEvent(UiEvent.Navigate(Routes.TODO_INFO + "?todoId=${todoEntity?.id}"))
-                    }else{
-                        sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
-                    }
-
+                    sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
                 }
             }
         }
