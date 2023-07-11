@@ -73,9 +73,9 @@ fun TodoScreen(
                         },
                 actions = {
                     IconButton(onClick = {
-
+                        viewModel.onEvent(TodoEvent.OnAlarmClicked)
                     }) {
-                        DropdownMenuScreen(viewModel)
+                        Icon(imageVector = Icons.Default.Alarm, contentDescription = "Alarms", tint = Color.Blue)
                     }
                 }
             )
@@ -105,7 +105,7 @@ fun TodoScreen(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .wrapContentHeight()
-                                    .padding(top=100.dp),
+                                    .padding(top = 100.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally,
                                 verticalArrangement = Arrangement.Center
                             ) {
