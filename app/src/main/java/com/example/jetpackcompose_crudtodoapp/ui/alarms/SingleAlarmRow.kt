@@ -61,7 +61,7 @@ fun SingleAlarmRow(
             negativeButton(Constants.CANCEL){  }
         }
     ) {
-        val currentTime = LocalTime.now().plusMinutes(2)
+        val currentTime = LocalTime.now().plusMinutes(1)
         val maxTime = LocalTime.MAX
         val timeRange = currentTime..maxTime
 

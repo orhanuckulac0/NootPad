@@ -152,15 +152,6 @@ fun AddEditTodoScreen(
                 }
 
                 item{
-                    AlarmSection(
-                        modifier = modifier,
-                        viewModel = viewModel,
-                        timeDialogState = timeDialogState,
-                        pickedTime = pickedTime
-                    )
-                }
-
-                item{
                     CategorySection(
                         viewModel = viewModel,
                         mDropdownSize = mDropdownSize,

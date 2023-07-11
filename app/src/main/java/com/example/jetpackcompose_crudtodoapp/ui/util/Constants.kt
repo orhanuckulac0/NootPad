@@ -30,4 +30,11 @@ object Constants {
     const val ALL = "All"
     const val EMPTY_TODO_LIST = "Empty Task List, Please Add Task"
     const val DATE_FORMAT = "d MMM yyyy"
+    const val NOTIFICATION_ID = "notificationId"
+    const val NOTIFICATION_INT = 100
+    const val NOTIFICATION_TITLE = "TODO ALARM"
+    const val NOTIFICATION_TEXT = "You have 1 TODO that needs your attention."
+    const val NOTIFICATION_ACTION_TEXT = "Open Nootpad"
+    const val CHANNEL_ID = "channel"
+    const val CHANNEL_NAME = "backgroundWorkerChannel"
 }

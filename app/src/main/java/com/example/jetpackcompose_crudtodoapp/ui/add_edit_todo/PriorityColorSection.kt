@@ -32,13 +32,10 @@ fun PriorityColorSection(
         Color(0xFF000000),
         Color(0xFFFF0000),
         Color(0xFF0000FF),
-        Color(0xFFFFFF00),
         Color(0xFF00FF00),
-        Color(0xFFFFA500),
         Color(0xFF30D5C8),
         Color(0xFFA020F0),
         Color(0xFF964B00),
-        Color(0xFFc5a2ff),
         Color(0xFF514b9a),
     )
 
