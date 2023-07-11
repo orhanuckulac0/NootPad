@@ -35,4 +35,7 @@ object Constants {
     const val NOTIFICATION_ACTION_TEXT = "Open Nootpad"
     const val CHANNEL_ID = "channel"
     const val CHANNEL_NAME = "backgroundWorkerChannel"
+    const val TODO = "TODO"
+    const val ADD_ALARM = "Add Alarm"
+    const val CLOSE = "Close"
 }

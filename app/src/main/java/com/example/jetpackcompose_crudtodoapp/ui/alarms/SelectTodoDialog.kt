@@ -8,12 +8,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import java.time.LocalTime
 
@@ -52,7 +56,7 @@ fun SelectTodoDialog(
             elevation = 5.dp,
             shape = RoundedCornerShape(15.dp),
             modifier = Modifier
-                .fillMaxSize(0.8f)
+                .fillMaxSize(0.9f)
                 .border(2.dp, color = Color.Gray, shape = RoundedCornerShape(10.dp))
         ) {
             Column(
@@ -68,13 +72,17 @@ fun SelectTodoDialog(
                         .padding(top = 5.dp, start = 5.dp, end = 5.dp, bottom = 10.dp)
                 ) {
                     Column(horizontalAlignment = Alignment.Start) {
-                        Text(text = "Title", fontWeight = FontWeight.Bold)
+                        Text(text = Constants.TODO, fontWeight = FontWeight.Bold)
                     }
                     Column(horizontalAlignment = Alignment.Start) {
-                        Text(text = "Select", fontWeight = FontWeight.Bold)
+                        Text(text = Constants.ADD_ALARM, fontWeight = FontWeight.Bold)
                     }
-
                 }
+                Divider(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(3.dp)
+                )
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(25.dp)
@@ -92,9 +100,12 @@ fun SelectTodoDialog(
                     modifier = Modifier
                         .align(Alignment.End)
                         .fillMaxWidth(0.3f)
-                        .padding(vertical = 5.dp)
+                        .padding(vertical = 5.dp),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color.Blue,
+                        contentColor = Color.White)
                 ) {
-                    Text(text = "Close")
+                    Text(text = Constants.CLOSE)
                 }
             }
         }

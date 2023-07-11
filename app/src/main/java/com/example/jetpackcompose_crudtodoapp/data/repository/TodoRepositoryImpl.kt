@@ -32,4 +32,8 @@ class TodoRepositoryImpl(private val todoDAO: TodoDAO): TodoRepository {
     override suspend fun getTodoWithoutAlarmSet(): List<TodoEntity> {
         return todoDAO.getTodoWithoutAlarmSet()
     }
+
+    override suspend fun getTodoWithAlarmSet(): List<TodoEntity> {
+        return todoDAO.getTodoWithAlarmSet()
+    }
 }

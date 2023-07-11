@@ -8,9 +8,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,7 +27,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
@@ -71,7 +73,7 @@ fun SingleAlarmRow(
             val formattedTime = pickerTime.format(formatter)
             val localTime = LocalTime.parse(formattedTime, formatter)
             pickedTime.value = localTime
-            println(pickedTime.value)
+            viewModel.onEvent(AlarmEvents.OnAlarmAdded(todo, pickedTime.value.toString()))
         }
     }
 
@@ -99,14 +101,15 @@ fun SingleAlarmRow(
                 .padding(start = 10.dp, bottom = 5.dp, top = 5.dp)
         ) {
             Column(horizontalAlignment = Alignment.Start) {
-                Text(text = todo.title)
+                Text(text = todo.title, fontWeight = FontWeight.Medium)
+                Spacer(modifier = Modifier.padding(bottom = 2.dp))
+                Text(text = todo.dueDate, color = Color.Gray, fontSize = 14.sp)
             }
             Column(horizontalAlignment = Alignment.End) {
                 IconButton(
                     onClick = {
                         timeDialogState.show()
-                    },
-                    modifier = Modifier.offset(x = 0.dp, y = 4.dp),
+                    }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,

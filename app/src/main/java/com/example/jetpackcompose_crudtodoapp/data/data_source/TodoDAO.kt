@@ -29,5 +29,7 @@ interface TodoDAO {
 
     @Query("SELECT * FROM todo_table WHERE isAlarmSet = 0")
     suspend fun getTodoWithoutAlarmSet(): List<TodoEntity>
+    @Query("SELECT * FROM todo_table WHERE isAlarmSet = 1")
+    suspend fun getTodoWithAlarmSet(): List<TodoEntity>
 
 }

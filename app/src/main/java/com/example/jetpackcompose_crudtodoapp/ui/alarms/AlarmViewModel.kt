@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.AddEditTodoUseCase
-import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetAllTodosUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithAlarmSet
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithoutAlarmSet
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,28 +19,33 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AlarmViewModel @Inject constructor(
-    private val getAllTodosUseCase: GetAllTodosUseCase,
     private val addEditTodoUseCase: AddEditTodoUseCase,
-    private val getTodoWithoutAlarmSet: GetTodoWithoutAlarmSet
+    private val getTodoWithoutAlarmSet: GetTodoWithoutAlarmSet,
+    private val getTodoWithAlarmSet: GetTodoWithAlarmSet
 ): ViewModel() {
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
     val uiEvent = _uiEvent.asSharedFlow()
 
-    var allTodos = emptyList<TodoEntity>()
+    private var _todosWithAlarmSet = mutableStateOf<List<TodoEntity>>(emptyList())
+    val todosWithAlarmSet: State<List<TodoEntity>> = _todosWithAlarmSet
 
-    private val _todosWithoutAlarmSet = mutableStateOf<List<TodoEntity>>(emptyList()) // MutableState holds the mutable list
-    val todosWithoutAlarmSet: State<List<TodoEntity>> = _todosWithoutAlarmSet // Expose the immutable State to observe in the Composable
+    private val _todosWithoutAlarmSet = mutableStateOf<List<TodoEntity>>(emptyList())
+    val todosWithoutAlarmSet: State<List<TodoEntity>> = _todosWithoutAlarmSet
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
-            val todos = getTodoWithoutAlarmSet.getTodoWithoutAlarmSet()
-            allTodos = getAllTodosUseCase.getAllTodos()
-
             withContext(Dispatchers.Main) {
-                _todosWithoutAlarmSet.value = todos
+                withAlarmSet()
+                withoutAlarmSet()
             }
         }
+    }
+    suspend fun withAlarmSet(){
+        _todosWithAlarmSet.value = getTodoWithAlarmSet.getTodoWithAlarmSet()
+    }
+    private suspend fun withoutAlarmSet(){
+        _todosWithoutAlarmSet.value = getTodoWithoutAlarmSet.getTodoWithoutAlarmSet()
     }
 
     fun onEvent(event: AlarmEvents){
@@ -58,5 +63,4 @@ class AlarmViewModel @Inject constructor(
             }
         }
     }
-
 }

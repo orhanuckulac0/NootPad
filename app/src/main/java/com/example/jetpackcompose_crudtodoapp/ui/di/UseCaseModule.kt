@@ -6,6 +6,7 @@ import com.example.jetpackcompose_crudtodoapp.domain.use_case.DeleteTodoUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetAllTodosUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithoutAlarmSet
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoByIDUseCase
+import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithAlarmSet
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodosByCategory
 import dagger.Module
 import dagger.Provides
@@ -51,5 +52,10 @@ class UseCaseModule {
     @Provides
     fun provideGetTodoWithoutAlarmSet(repository: TodoRepository): GetTodoWithoutAlarmSet{
         return GetTodoWithoutAlarmSet(repository)
+    }
+    @Singleton
+    @Provides
+    fun provideGetTodoWithAlarmSet(repository: TodoRepository): GetTodoWithAlarmSet{
+        return GetTodoWithAlarmSet(repository)
     }
 }

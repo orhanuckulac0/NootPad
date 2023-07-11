@@ -22,6 +22,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,8 @@ import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -40,9 +43,18 @@ fun AlarmScreen(
     viewModel: AlarmViewModel = hiltViewModel(),
 ){
     val showDialog = remember { mutableStateOf(false) }
+    val scope = rememberCoroutineScope()
 
     if (showDialog.value){
-        SelectTodoDialog(viewModel.todosWithoutAlarmSet.value, onDismiss = { showDialog.value = false })
+        SelectTodoDialog(
+            viewModel.todosWithoutAlarmSet.value,
+            onDismiss = {
+                showDialog.value = false
+                scope.launch(Dispatchers.IO) {
+                    viewModel.withAlarmSet()
+                }
+            }
+        )
     }
 
     LaunchedEffect(key1 = true){
@@ -74,12 +86,11 @@ fun AlarmScreen(
                 modifier = Modifier
                     .background(MainBackgroundColor)
                     .fillMaxSize()) {
-                
                 LazyColumn(
                     modifier = Modifier.weight(1f),
                     verticalArrangement = Arrangement.spacedBy(25.dp)
                 ) {
-                    itemsIndexed(viewModel.allTodos) { _, todo ->
+                    itemsIndexed(viewModel.todosWithAlarmSet.value) { _, todo ->
                         Row(modifier = Modifier.fillMaxWidth()) {
                             Text(text = todo.title)
                         }
