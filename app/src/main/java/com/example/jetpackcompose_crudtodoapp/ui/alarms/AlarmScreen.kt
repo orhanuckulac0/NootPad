@@ -114,9 +114,25 @@ fun AlarmScreen(
                         }
                     }
                 }else{
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 15.dp, bottom = 5.dp, start = 15.dp, end = 20.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Text(text = "Todo Title")
+                            Text(text = "Alarm Date")
+                            Text(text = "Cancel")
+                        }
+                    }
+
                     LazyColumn(
-                        modifier = Modifier.weight(1f),
-                        verticalArrangement = Arrangement.spacedBy(25.dp)
+                        modifier = Modifier.weight(1f)
                     ) {
                         itemsIndexed(viewModel.todosWithAlarmSet.value) { _, todo ->
                             Row(modifier = Modifier.fillMaxWidth()) {

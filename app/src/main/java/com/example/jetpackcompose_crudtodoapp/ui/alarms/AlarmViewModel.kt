@@ -13,6 +13,7 @@ import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithAlarmSe
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithoutAlarmSet
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.calculateTimeDiff
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
+import com.example.jetpackcompose_crudtodoapp.ui.util.isPastDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -75,6 +76,14 @@ class AlarmViewModel @Inject constructor(
     }
     private suspend fun withoutAlarmSet(){
         _todosWithoutAlarmSet.value = getTodoWithoutAlarmSet.getTodoWithoutAlarmSet()
+        val filteredList = mutableListOf<TodoEntity>()
+
+        todosWithoutAlarmSet.value.forEach {
+            if (!isPastDate(it.dueDate)){
+                filteredList.add(it)
+            }
+        }
+        _todosWithoutAlarmSet.value = filteredList
     }
 
     private fun updateTodo(todoEntity: TodoEntity){
