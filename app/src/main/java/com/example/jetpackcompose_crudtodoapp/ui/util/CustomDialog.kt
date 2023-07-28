@@ -1,5 +1,7 @@
 package com.example.jetpackcompose_crudtodoapp.ui.util
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -7,6 +9,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -14,11 +17,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoEvent
 import com.example.jetpackcompose_crudtodoapp.ui.todo_info.TodoInfoViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoEvent
 import com.example.jetpackcompose_crudtodoapp.ui.todo_list.TodoViewModel
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun CustomDialog(
     setShowDialog: (Boolean) -> Unit,
@@ -26,6 +31,8 @@ fun CustomDialog(
     todoInfoViewModel: TodoInfoViewModel = hiltViewModel(),
     deletedFromScreen: String
 ){
+    val context = LocalContext.current.applicationContext
+
     Dialog(onDismissRequest = { setShowDialog(false) }) {
         Card(
             shape = RoundedCornerShape(10.dp),
@@ -80,6 +87,11 @@ fun CustomDialog(
                                     TodoInfoEvent.OnDeleteTodoClick(
                                         todoInfoViewModel.todoEntity!!)
                                 )
+                            }
+                            if (todoScreenViewModel.deletedTodo != null){
+                                cancelAlarm(context, todoScreenViewModel.deletedTodo!!.id!!)
+                            }else{
+                                cancelAlarm(context, todoInfoViewModel.todoEntity!!.id!!)
                             }
                             setShowDialog(false)
                         },

@@ -15,7 +15,7 @@ object Constants {
     const val SELECT_PRIORITY_COLOR = "Select Priority Color"
     const val DUE_DATE = "Due Date"
     const val CATEGORY = "Category"
-    const val COLOR = "Color"
+    const val PRIORITY = "Priority"
     const val DELETE = "Delete"
     const val TODO_DETAILS = "Todo Details"
     const val EMPTY_TITLE = "Title can not be blank."

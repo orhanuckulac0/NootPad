@@ -23,7 +23,7 @@ class TodoViewModel @Inject constructor(
     private val getAllTodosUseCase: GetAllTodosUseCase,
     private val addEditTodoUseCase: AddEditTodoUseCase,
     private val deleteTodoUseCase: DeleteTodoUseCase,
-    private val getTodosByCategory: GetTodosByCategory
+    private val getTodosByCategory: GetTodosByCategory,
 ): ViewModel() {
 
     val todos: MutableState<List<TodoEntity>> = mutableStateOf(listOf())

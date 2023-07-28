@@ -18,7 +18,7 @@ class AndroidAlarmScheduler(
     override fun schedule(item: AlarmItem) {
         val intent = Intent(context, AlarmReceiver::class.java)
 
-        alarmManager.set(
+        alarmManager.setExact(
             AlarmManager.RTC_WAKEUP,
             item.time.atZone(ZoneId.systemDefault()).toEpochSecond() * 1000,
             PendingIntent.getBroadcast(

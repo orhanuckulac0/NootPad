@@ -1,5 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.alarms
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
@@ -26,14 +27,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.setAlarm
+import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.MaterialDialog
@@ -49,16 +51,17 @@ fun SingleAlarmRow(
     timeDialogState: MaterialDialogState,
     pickedTime: MutableState<LocalTime>,
     viewModel: AlarmViewModel = hiltViewModel(),
-    )
-{
-    val context = LocalContext.current.applicationContext
+    context: Context,
+    onClick: () -> Unit
+)
 
+{
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
             positiveButton(Constants.OK){
-                viewModel.onEvent(AlarmEvents.OnAlarmAdded(todo, pickedTime.value.toString()))
                 setAlarm(context, todo.id!!, todo.dueDate, pickedTime.value.toString())
+                viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
             }
             negativeButton(Constants.CANCEL){  }
         }
@@ -67,16 +70,15 @@ fun SingleAlarmRow(
         val maxTime = LocalTime.MAX
         val timeRange = currentTime..maxTime
 
-        timepicker(timeRange = timeRange) { time ->
+        timepicker(timeRange = timeRange, initialTime = LocalTime.now()) { time ->
             val pickerTime = LocalTime.parse(time.toString())
             val formatter = DateTimeFormatter.ofPattern("HH:mm")
             val formattedTime = pickerTime.format(formatter)
             val localTime = LocalTime.parse(formattedTime, formatter)
             pickedTime.value = localTime
-            viewModel.onEvent(AlarmEvents.OnAlarmAdded(todo, pickedTime.value.toString()))
+            viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
         }
     }
-
 
     Card(
         elevation = 5.dp,
@@ -101,13 +103,21 @@ fun SingleAlarmRow(
                 .padding(start = 10.dp, bottom = 5.dp, top = 5.dp)
         ) {
             Column(horizontalAlignment = Alignment.Start) {
-                Text(text = todo.title, fontWeight = FontWeight.Medium)
+                Text(
+                    modifier = Modifier.fillMaxWidth(0.7f),
+                    text = todo.title,
+                    fontWeight = FontWeight.Medium,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    color = MainTextColor
+                )
                 Spacer(modifier = Modifier.padding(bottom = 2.dp))
                 Text(text = todo.dueDate, color = Color.Gray, fontSize = 14.sp)
             }
             Column(horizontalAlignment = Alignment.End) {
                 IconButton(
                     onClick = {
+                        onClick()
                         timeDialogState.show()
                     }
                 ) {

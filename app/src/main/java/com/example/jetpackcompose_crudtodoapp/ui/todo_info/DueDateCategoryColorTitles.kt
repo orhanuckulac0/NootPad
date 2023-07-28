@@ -34,7 +34,7 @@ fun DueDateCategoryColorTitles(
         )
         Text(
             modifier = modifier.padding(0.dp, 0.dp, 20.dp, 5.dp),
-            text = Constants.COLOR,
+            text = Constants.PRIORITY,
             color = Color.Gray,
             fontWeight = FontWeight.Medium,
             fontSize = 18.sp

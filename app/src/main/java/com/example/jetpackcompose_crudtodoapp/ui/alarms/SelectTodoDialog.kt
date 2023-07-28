@@ -1,5 +1,6 @@
 package com.example.jetpackcompose_crudtodoapp.ui.alarms
 
+import android.content.Context
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.border
@@ -11,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
@@ -19,8 +19,7 @@ import androidx.compose.material.Card
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,18 +29,19 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
-import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import com.vanpra.composematerialdialogs.MaterialDialogState
 import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SelectTodoDialog(
     todos: List<TodoEntity>,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    context: Context,
+    timeDialogState: MaterialDialogState,
+    pickedTime: MutableState<LocalTime>,
+    onTodoClicked: (TodoEntity) -> Unit
 ){
-    val timeDialogState = rememberMaterialDialogState()
-    val pickedTime = remember { mutableStateOf(LocalTime.now()) }
-
 
     Dialog(
         onDismissRequest = {
@@ -81,18 +81,47 @@ fun SelectTodoDialog(
                 Divider(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .padding(bottom = 20.dp)
                         .height(3.dp)
                 )
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(25.dp)
-                ) {
-                    itemsIndexed(todos) { _, todo ->
-                        if (todo.isAlarmSet != true){
-                            Row(modifier = Modifier.fillMaxWidth()) {
-                                SingleAlarmRow(todo, timeDialogState, pickedTime)
+                if (todos.isNotEmpty()) {
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(25.dp)
+                    ) {
+                        items(todos.sortedBy { it.id }.size) { index ->
+                            val todo = todos[index]
+                            Row(
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                SingleAlarmRow(
+                                    todo,
+                                    timeDialogState,
+                                    pickedTime,
+                                    context = context,
+                                    onClick = { onTodoClicked(todo) }
+                                )
                             }
                         }
+                    }
+                }else{
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(top = 20.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "No available todo found.",
+                            fontWeight = FontWeight.Medium,
+                            color = Color.DarkGray
+                        )
+                        Text(
+                            text = "There are currently no todos in the system.",
+                            fontWeight = FontWeight.Medium,
+                            color = Color.DarkGray
+                        )
                     }
                 }
                 Button(

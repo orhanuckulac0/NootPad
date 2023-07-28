@@ -17,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
-import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants

@@ -4,10 +4,12 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
@@ -22,9 +24,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
@@ -32,8 +37,8 @@ import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -42,18 +47,24 @@ fun AlarmScreen(
     onNavigate: (UiEvent.Navigate) -> Unit,
     viewModel: AlarmViewModel = hiltViewModel(),
 ){
+    val context = LocalContext.current.applicationContext
     val showDialog = remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
+    val timeDialogState = rememberMaterialDialogState()
+    val pickedTime = remember { mutableStateOf(LocalTime.now()) }
 
     if (showDialog.value){
         SelectTodoDialog(
             viewModel.todosWithoutAlarmSet.value,
             onDismiss = {
                 showDialog.value = false
-                scope.launch(Dispatchers.IO) {
-                    viewModel.withAlarmSet()
-                }
+            },
+            context = context,
+            timeDialogState,
+            pickedTime,
+            onTodoClicked = { clickedTodo ->
+                viewModel.addedToAlarmTodo = clickedTodo
             }
+
         )
     }
 
@@ -86,13 +97,34 @@ fun AlarmScreen(
                 modifier = Modifier
                     .background(MainBackgroundColor)
                     .fillMaxSize()) {
-                LazyColumn(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(25.dp)
-                ) {
-                    itemsIndexed(viewModel.todosWithAlarmSet.value) { _, todo ->
-                        Row(modifier = Modifier.fillMaxWidth()) {
-                            Text(text = todo.title)
+                if (viewModel.todosWithAlarmSet.value.isEmpty()){
+                    Box(
+                        modifier = Modifier.fillMaxWidth(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(top = 25.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "You don't have any active alarms.",
+                                fontWeight = FontWeight.Medium,
+                                color = Color.DarkGray
+                            )
+                        }
+                    }
+                }else{
+                    LazyColumn(
+                        modifier = Modifier.weight(1f),
+                        verticalArrangement = Arrangement.spacedBy(25.dp)
+                    ) {
+                        itemsIndexed(viewModel.todosWithAlarmSet.value) { _, todo ->
+                            Row(modifier = Modifier.fillMaxWidth()) {
+                                SingleActiveAlarm(
+                                    todoEntity = todo,
+                                    context = context
+                                )
+                            }
                         }
                     }
                 }
