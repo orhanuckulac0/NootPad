@@ -30,7 +30,7 @@ class AlarmReceiver: BroadcastReceiver() {
         val notificationManager = context!!.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         lateinit var notificationChannel: NotificationChannel
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             notificationChannel = NotificationChannel(channelId, channelName, NotificationManager.IMPORTANCE_HIGH)
             notificationManager.createNotificationChannel(notificationChannel)
         }
@@ -42,6 +42,8 @@ class AlarmReceiver: BroadcastReceiver() {
         notificationBuilder.addAction(R.drawable.ic_launcher_background, NOTIFICATION_ACTION_TEXT, pendingIntent)
         notificationBuilder.setContentTitle(NOTIFICATION_TITLE)
         notificationBuilder.setContentText(NOTIFICATION_TEXT)
+        notificationBuilder.priority = NotificationCompat.PRIORITY_HIGH
+        notificationBuilder.setCategory(NotificationCompat.CATEGORY_ALARM)
         notificationBuilder.setAutoCancel(true)
         notificationManager.notify(NOTIFICATION_INT, notificationBuilder.build())
     }

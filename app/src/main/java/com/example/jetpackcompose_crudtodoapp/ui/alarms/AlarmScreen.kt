@@ -3,7 +3,6 @@ package com.example.jetpackcompose_crudtodoapp.ui.alarms
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -114,23 +113,6 @@ fun AlarmScreen(
                         }
                     }
                 }else{
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 15.dp, bottom = 5.dp, start = 15.dp, end = 20.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Text(text = "Todo Title")
-                            Text(text = "Alarm Date")
-                            Text(text = "Cancel")
-                        }
-                    }
-
                     LazyColumn(
                         modifier = Modifier.weight(1f)
                     ) {
