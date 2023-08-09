@@ -23,10 +23,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -37,10 +39,12 @@ import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.setAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
+import com.example.jetpackcompose_crudtodoapp.ui.util.AlarmDataStore
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
+import kotlinx.coroutines.launch
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -56,6 +60,9 @@ fun SingleAlarmRow(
 )
 
 {
+    val dataStore = AlarmDataStore(LocalContext.current)
+    val scope = rememberCoroutineScope()
+
     MaterialDialog(
         dialogState = timeDialogState,
         buttons = {
@@ -77,6 +84,13 @@ fun SingleAlarmRow(
             val localTime = LocalTime.parse(formattedTime, formatter)
             pickedTime.value = localTime
             viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
+            scope.launch {
+                dataStore.saveData(
+                    id = viewModel.addedToAlarmTodo!!.id!!,
+                    alarmTime = pickedTime.value.toString(),
+                    alarmDate = viewModel.addedToAlarmTodo!!.dueDate
+                )
+            }
         }
     }
 
