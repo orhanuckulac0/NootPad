@@ -21,18 +21,23 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
+import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
+import com.example.jetpackcompose_crudtodoapp.ui.util.AlarmDataStore
+import kotlinx.coroutines.launch
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -42,6 +47,8 @@ fun SingleActiveAlarm(
     context: Context
     )
 {
+    val dataStore = AlarmDataStore(LocalContext.current)
+    val scope = rememberCoroutineScope()
     Card(
         elevation = 10.dp,
         modifier =
@@ -106,6 +113,11 @@ fun SingleActiveAlarm(
                     onClick = {
                         cancelAlarm(context, todoEntity.id!!)
                         viewModel.onEvent(AlarmEvents.OnAlarmCancelled(todoEntity))
+                        scope.launch {
+                            val uniqueKey = "${todoEntity.id}-${todoEntity.alarmDate}-${todoEntity.dueDate}"
+                            val key = stringPreferencesKey(uniqueKey)
+                            dataStore.deleteDataByKey(key)
+                        }
                     }
                 ) {
                     Icon(

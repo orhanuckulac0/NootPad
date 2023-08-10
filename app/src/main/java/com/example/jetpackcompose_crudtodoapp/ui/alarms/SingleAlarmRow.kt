@@ -85,7 +85,7 @@ fun SingleAlarmRow(
             pickedTime.value = localTime
             viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
             scope.launch {
-                dataStore.saveData(
+                dataStore.saveDataUnique(
                     id = viewModel.addedToAlarmTodo!!.id!!,
                     alarmTime = pickedTime.value.toString(),
                     alarmDate = viewModel.addedToAlarmTodo!!.dueDate
