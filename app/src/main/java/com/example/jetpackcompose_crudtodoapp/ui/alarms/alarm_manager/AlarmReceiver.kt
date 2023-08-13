@@ -21,12 +21,12 @@ import com.example.jetpackcompose_crudtodoapp.ui.util.Constants.NOTIFICATION_TIT
 class AlarmReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val i =Intent(context, MainActivity::class.java)
-        intent!!.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val i = Intent(context, MainActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         i.putExtra(NOTIFICATION_ID, NOTIFICATION_INT)
 
         val channelId = CHANNEL_ID
-        val channelName= CHANNEL_NAME
+        val channelName = CHANNEL_NAME
         val notificationManager = context!!.applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         lateinit var notificationChannel: NotificationChannel
 
@@ -45,6 +45,7 @@ class AlarmReceiver: BroadcastReceiver() {
         notificationBuilder.priority = NotificationCompat.PRIORITY_HIGH
         notificationBuilder.setCategory(NotificationCompat.CATEGORY_ALARM)
         notificationBuilder.setAutoCancel(true)
+        notificationBuilder.setContentIntent(pendingIntent)
         notificationManager.notify(NOTIFICATION_INT, notificationBuilder.build())
     }
 }

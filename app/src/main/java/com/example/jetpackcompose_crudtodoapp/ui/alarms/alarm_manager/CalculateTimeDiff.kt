@@ -11,10 +11,11 @@ import java.util.Locale
 @RequiresApi(Build.VERSION_CODES.O)
 fun calculateTimeDiff(date: String, time: String): Long {
     val concatenate = "$date $time"
-    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm", Locale.ENGLISH)
+    val userLocale = Locale.getDefault()
+    val formatter = DateTimeFormatter.ofPattern("d MMM yyyy HH:mm", userLocale)
     val targetTime = ZonedDateTime.parse(concatenate, formatter.withZone(ZoneId.systemDefault()))
     val currentTime = ZonedDateTime.now(ZoneId.systemDefault())
 
     val secondsDifference = ChronoUnit.SECONDS.between(currentTime, targetTime)
-    return secondsDifference.coerceAtLeast(0) // Ensure non-negative difference
+    return secondsDifference.coerceAtLeast(0)
 }
