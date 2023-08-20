@@ -120,7 +120,9 @@ fun AlarmScreen(
                             Row(modifier = Modifier.fillMaxWidth()) {
                                 SingleActiveAlarm(
                                     todoEntity = todo,
-                                    context = context
+                                    context = context,
+                                    timeDialogState = timeDialogState,
+                                    pickedTime = pickedTime
                                 )
                             }
                         }

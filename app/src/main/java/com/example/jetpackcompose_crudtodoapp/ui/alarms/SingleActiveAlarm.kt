@@ -6,6 +6,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,7 @@ import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Cancel
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,18 +39,30 @@ import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.AlarmDataStore
+import com.vanpra.composematerialdialogs.MaterialDialogState
 import kotlinx.coroutines.launch
+import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun SingleActiveAlarm(
     todoEntity: TodoEntity,
     viewModel: AlarmViewModel = hiltViewModel(),
-    context: Context
+    context: Context,
+    timeDialogState: MaterialDialogState,
+    pickedTime: MutableState<LocalTime>
     )
 {
+    ShowTimePicker(
+        timeDialogState = timeDialogState,
+        context = context,
+        todo = todoEntity,
+        pickedTime = pickedTime
+    )
+
     val dataStore = AlarmDataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
+
     Card(
         elevation = 10.dp,
         modifier =
@@ -86,7 +100,10 @@ fun SingleActiveAlarm(
                 )
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
+                    verticalArrangement = Arrangement.Center,
+                    modifier = Modifier.clickable {
+                        timeDialogState.show()
+                    }
                 ) {
                     Row {
                         Text(
