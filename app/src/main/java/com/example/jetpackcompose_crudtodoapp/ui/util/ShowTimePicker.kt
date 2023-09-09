@@ -1,4 +1,4 @@
-package com.example.jetpackcompose_crudtodoapp.ui.alarms
+package com.example.jetpackcompose_crudtodoapp.ui.util
 
 import android.content.Context
 import android.os.Build
@@ -9,10 +9,10 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
+import com.example.jetpackcompose_crudtodoapp.ui.alarms.AlarmEvents
+import com.example.jetpackcompose_crudtodoapp.ui.alarms.AlarmViewModel
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.setAlarm
-import com.example.jetpackcompose_crudtodoapp.ui.util.AlarmDataStore
-import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.MaterialDialogState
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
@@ -27,7 +27,7 @@ fun ShowTimePicker(
     context: Context,
     todo: TodoEntity,
     pickedTime: MutableState<LocalTime>,
-    viewModel: AlarmViewModel = hiltViewModel(),
+    viewModel: AlarmViewModel = hiltViewModel()
     ){
     val dataStore = AlarmDataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
@@ -36,16 +36,29 @@ fun ShowTimePicker(
         dialogState = timeDialogState,
         buttons = {
             positiveButton(Constants.OK){
-                if (todo.isAlarmSet!!){
-                    cancelAlarm(context, todo.id!!)
-                    setAlarm(context, todo.id, todo.dueDate, pickedTime.value.toString())
-                    viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
+
+                val todoDueDate = if (viewModel.updatedDueDate != ""){
+                    viewModel.updatedDueDate
                 }else{
-                    setAlarm(context, todo.id!!, todo.dueDate, pickedTime.value.toString())
-                    viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
+                    todo.dueDate
                 }
+
+                if (todo.isAlarmSet == true){
+                    cancelAlarm(context, todo.id!!)
+                }
+
+                viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
+                scope.launch {
+                    dataStore.saveDataUnique(
+                        id = viewModel.addedToAlarmTodo!!.id!!,
+                        alarmTime = pickedTime.value.toString(),
+                        alarmDate = viewModel.addedToAlarmTodo!!.dueDate
+                    )
+                }
+
+                setAlarm(context, todo.id!!, todoDueDate, pickedTime.value.toString())
             }
-            negativeButton(Constants.CANCEL){  }
+            negativeButton(Constants.CANCEL){}
         }
     ) {
         val currentTime = LocalTime.now().plusMinutes(1)
@@ -58,14 +71,6 @@ fun ShowTimePicker(
             val formattedTime = pickerTime.format(formatter)
             val localTime = LocalTime.parse(formattedTime, formatter)
             pickedTime.value = localTime
-            viewModel.onEvent(AlarmEvents.OnAlarmAdded(viewModel.addedToAlarmTodo!!, pickedTime.value.toString()))
-            scope.launch {
-                dataStore.saveDataUnique(
-                    id = viewModel.addedToAlarmTodo!!.id!!,
-                    alarmTime = pickedTime.value.toString(),
-                    alarmDate = viewModel.addedToAlarmTodo!!.dueDate
-                )
-            }
         }
     }
 }

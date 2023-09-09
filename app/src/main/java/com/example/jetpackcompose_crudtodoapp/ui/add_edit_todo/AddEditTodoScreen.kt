@@ -17,17 +17,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.R
+import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import kotlinx.coroutines.delay
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -40,7 +43,7 @@ fun AddEditTodoScreen(
     viewModel: AddEditTodoViewModel = hiltViewModel(),
     scaffoldState: ScaffoldState
     ){
-
+    val context = LocalContext.current
     val focusManager = LocalFocusManager.current
     val interactionSource = remember { MutableInteractionSource() }
     val focusRequester = remember { FocusRequester() }
@@ -76,6 +79,10 @@ fun AddEditTodoScreen(
                 }
                 is UiEvent.Navigate -> {
                     onNavigate(event)
+                }
+                is UiEvent.CancelAlarm -> {
+                    delay(100)
+                    cancelAlarm(context, viewModel.todoEntity!!.id!!)
                 }
                 else-> Unit
             }

@@ -9,4 +9,5 @@ sealed class UiEvent {
     ): UiEvent()
     object ShowDatePicker: UiEvent()
     object ShowTimePicker: UiEvent()
+    object CancelAlarm: UiEvent()
 }

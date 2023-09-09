@@ -8,12 +8,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.AddEditTodoUseCase
-import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetAllTodosUseCase
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithAlarmSet
 import com.example.jetpackcompose_crudtodoapp.domain.use_case.GetTodoWithoutAlarmSet
-import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.calculateTimeDiff
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
-import com.example.jetpackcompose_crudtodoapp.ui.util.isPastDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -28,8 +25,7 @@ import javax.inject.Inject
 class AlarmViewModel @Inject constructor(
     private val addEditTodoUseCase: AddEditTodoUseCase,
     private val getTodoWithoutAlarmSet: GetTodoWithoutAlarmSet,
-    private val getTodoWithAlarmSet: GetTodoWithAlarmSet,
-    private val getAllTodosUseCase: GetAllTodosUseCase
+    private val getTodoWithAlarmSet: GetTodoWithAlarmSet
 ): ViewModel() {
 
     private val _uiEvent =  MutableSharedFlow<UiEvent>()
@@ -42,6 +38,7 @@ class AlarmViewModel @Inject constructor(
     val todosWithoutAlarmSet: State<List<TodoEntity>> = _todosWithoutAlarmSet
 
     var addedToAlarmTodo: TodoEntity? = null
+    var updatedDueDate: String = ""
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -50,17 +47,7 @@ class AlarmViewModel @Inject constructor(
     }
 
     private suspend fun getAllTodos(){
-        val allTodos = getAllTodosUseCase.getAllTodos()
         val todosToUpdate = mutableListOf<TodoEntity>()
-
-        allTodos.forEach {
-            if (it.alarmDate != null){
-                if (calculateTimeDiff(it.dueDate, it.alarmDate.toString()) <= 0) {
-                    val updatedTodo = it.copy(alarmDate = null, isAlarmSet = false)
-                    todosToUpdate.add(updatedTodo)
-                }
-            }
-        }
 
         todosToUpdate.forEach { updateTodo(it) }
 
@@ -79,9 +66,7 @@ class AlarmViewModel @Inject constructor(
         val filteredList = mutableListOf<TodoEntity>()
 
         todosWithoutAlarmSet.value.forEach {
-            if (!isPastDate(it.dueDate)){
-                filteredList.add(it)
-            }
+            filteredList.add(it)
         }
         _todosWithoutAlarmSet.value = filteredList
     }
@@ -94,15 +79,18 @@ class AlarmViewModel @Inject constructor(
         }
     }
 
-    fun onEvent(event: AlarmEvents){
-        when(event){
+    fun onEvent(event: AlarmEvents) {
+        when (event) {
             is AlarmEvents.OnAlarmAdded -> {
                 viewModelScope.launch(Dispatchers.IO) {
-                    addEditTodoUseCase.addEditTodo(
-                        event.todo.copy(
-                            alarmDate = event.alarmTime, isAlarmSet = true
-                        )
+                    val updatedTodo = event.todo.copy(
+                        alarmDate = event.alarmTime,
+                        isAlarmSet = true,
+                        dueDate = updatedDueDate.ifEmpty { event.todo.dueDate }
                     )
+
+                    addEditTodoUseCase.addEditTodo(updatedTodo)
+
                     _todosWithoutAlarmSet.value = getTodoWithoutAlarmSet.getTodoWithoutAlarmSet()
                     _todosWithAlarmSet.value = getTodoWithAlarmSet.getTodoWithAlarmSet()
                 }
@@ -116,10 +104,25 @@ class AlarmViewModel @Inject constructor(
                         )
                     )
                     _todosWithAlarmSet.value = todosWithAlarmSet.value.filter { todoInList -> todoInList.id != event.todo.id }
-                    val updated = todosWithoutAlarmSet.value.toMutableList()
+                    val updated = todosWithoutAlarmSet.value
+                        .filterNot { it.id == event.todo.id }
+                        .toMutableList()
                         .apply { add(event.todo) }
                         .sortedBy { it.id }
+
                     _todosWithoutAlarmSet.value = updated
+                }
+            }
+            is AlarmEvents.OnTodoDueDateChanged -> {
+                viewModelScope.launch(Dispatchers.IO) {
+                    try {
+                        addEditTodoUseCase.addEditTodo(
+                            event.todo.copy(
+                                dueDate = event.newDueDate
+                            )
+                        )
+
+                    } catch (_: Exception) { }
                 }
             }
         }

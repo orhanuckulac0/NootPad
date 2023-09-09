@@ -39,7 +39,10 @@ import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.alarms.alarm_manager.cancelAlarm
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.AlarmDataStore
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.ShowTimePicker
 import com.vanpra.composematerialdialogs.MaterialDialogState
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.time.LocalTime
 
@@ -50,8 +53,9 @@ fun SingleActiveAlarm(
     viewModel: AlarmViewModel = hiltViewModel(),
     context: Context,
     timeDialogState: MaterialDialogState,
-    pickedTime: MutableState<LocalTime>
-    )
+    pickedTime: MutableState<LocalTime>,
+    onTodoClicked: () -> Unit,
+)
 {
     ShowTimePicker(
         timeDialogState = timeDialogState,
@@ -63,87 +67,109 @@ fun SingleActiveAlarm(
     val dataStore = AlarmDataStore(LocalContext.current)
     val scope = rememberCoroutineScope()
 
-    Card(
-        elevation = 10.dp,
-        modifier =
-        Modifier
-            .padding(15.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .border(
-                border = BorderStroke(
-                    1.dp,
-                    color = Color(todoEntity.priorityColor.toColorInt())
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
-            .fillMaxSize()
-            .background(WhiteBackground)
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            modifier = Modifier.weight(0.85f),
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    modifier = Modifier.fillMaxWidth(0.4f),
-                    text = todoEntity.title,
-                    fontWeight = FontWeight.Medium,
-                    color = Color.DarkGray,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
-                    modifier = Modifier.clickable {
+            Card(
+                elevation = 10.dp,
+                modifier =
+                Modifier
+                    .padding(start = 15.dp, top = 15.dp, bottom = 15.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .border(
+                        border = BorderStroke(
+                            1.dp,
+                            color = Color(todoEntity.priorityColor.toColorInt())
+                        ),
+                        shape = RoundedCornerShape(10.dp)
+                    )
+                    .fillMaxSize()
+                    .background(WhiteBackground)
+                    .clickable {
+                        onTodoClicked()
                         timeDialogState.show()
                     }
+
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
                 ) {
-                    Row {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(10.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Text(
                             modifier = Modifier.fillMaxWidth(0.5f),
-                            text= todoEntity.dueDate,
+                            text = todoEntity.title,
                             fontWeight = FontWeight.Medium,
                             color = Color.DarkGray,
-                            maxLines = 2,
+                            maxLines = 1,
                             overflow = TextOverflow.Ellipsis,
                         )
-                    }
-                    Row {
-                        Text(
-                            modifier = Modifier.fillMaxWidth(0.5f),
-                            text= todoEntity.alarmDate!!,
-                            fontWeight = FontWeight.Medium,
-                            color = Color.DarkGray,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis
-                        )
-                    }
-                }
-                IconButton(
-                    onClick = {
-                        cancelAlarm(context, todoEntity.id!!)
-                        viewModel.onEvent(AlarmEvents.OnAlarmCancelled(todoEntity))
-                        scope.launch {
-                            val uniqueKey = "${todoEntity.id}-${todoEntity.alarmDate}-${todoEntity.dueDate}"
-                            val key = stringPreferencesKey(uniqueKey)
-                            dataStore.deleteDataByKey(key)
+                        Column(
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Row {
+                                val dueDateDay = todoEntity.dueDate.split(" ")[0]
+                                val dueDateMonth = todoEntity.dueDate.split(" ")[1]
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(0.5f),
+                                    text= "$dueDateDay $dueDateMonth",
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.DarkGray,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                            Row {
+                                Text(
+                                    modifier = Modifier.fillMaxWidth(0.5f),
+                                    text= todoEntity.alarmDate!!,
+                                    fontWeight = FontWeight.Medium,
+                                    color = Color.DarkGray,
+                                    maxLines = 2,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
                         }
                     }
-                ) {
-                    Icon(
-                        imageVector = Icons.Default.Cancel,
-                        contentDescription = "CancelAlarm",
-                        tint = Color.Blue,
-                        modifier = Modifier.size(24.dp)
-                    )
                 }
+            }
+        }
+        Column(
+            modifier = Modifier.weight(0.15f),
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            IconButton(
+                onClick = {
+                    scope.launch {
+                        delay(200)
+                        cancelAlarm(context, todoEntity.id!!)
+                        viewModel.onEvent(AlarmEvents.OnAlarmCancelled(todoEntity))
+                        val uniqueKey = "${todoEntity.id}-${todoEntity.alarmDate}-${todoEntity.dueDate}"
+                        val key = stringPreferencesKey(uniqueKey)
+                        dataStore.deleteDataByKey(key)
+                    }
+                }
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Cancel,
+                    contentDescription = Constants.CANCEL_ALARM,
+                    tint = Color.Blue,
+                    modifier = Modifier.size(24.dp)
+                )
             }
         }
     }

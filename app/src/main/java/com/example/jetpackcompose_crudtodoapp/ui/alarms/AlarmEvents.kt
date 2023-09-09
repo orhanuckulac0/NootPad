@@ -6,5 +6,6 @@ sealed class AlarmEvents {
 
     data class OnAlarmAdded(val todo: TodoEntity, val alarmTime: String): AlarmEvents()
     data class OnAlarmCancelled(val todo: TodoEntity): AlarmEvents()
+    data class OnTodoDueDateChanged(val todo: TodoEntity, val newDueDate: String): AlarmEvents()
 
 }

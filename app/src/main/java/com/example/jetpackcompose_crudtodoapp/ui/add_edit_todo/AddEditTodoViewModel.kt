@@ -28,6 +28,8 @@ class AddEditTodoViewModel @Inject constructor(
     private val getTodoByIDUseCase: GetTodoByIDUseCase,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
+    private var shouldRemoveAlarm: Boolean? = null
+
     var todoEntity by mutableStateOf<TodoEntity?>(null)
         private set
 
@@ -96,6 +98,9 @@ class AddEditTodoViewModel @Inject constructor(
                 description = event.description
             }
             is AddEditTodoEvent.OnDueDateChange -> {
+                if (todoEntity != null){
+                    shouldRemoveAlarm = dueDate != event.dueDate
+                }
                 dueDate = event.dueDate
             }
             is AddEditTodoEvent.OnTimeDateChange -> {
@@ -124,8 +129,12 @@ class AddEditTodoViewModel @Inject constructor(
                         sendUiEvent(UiEvent.ShowSnackbar(Constants.EMPTY_CATEGORY))
                         return@launch
                     }
-
-                    addEditTodo()
+                    if (shouldRemoveAlarm == true){
+                        updateWithAlarmData()
+                        sendUiEvent(UiEvent.CancelAlarm)
+                    }else{
+                        addEditTodo()
+                    }
                     sendUiEvent(UiEvent.Navigate(Routes.TODO_LIST))
                 }
             }
@@ -152,6 +161,23 @@ class AddEditTodoViewModel @Inject constructor(
                 category = category
             )
         )
+    }
+    private fun updateWithAlarmData(){
+        viewModelScope.launch(Dispatchers.IO) {
+            addTodoUseCase.addEditTodo(
+                TodoEntity(
+                    id = todoEntity?.id,
+                    title = title,
+                    description = description,
+                    isDone = todoEntity?.isDone ?: false,
+                    dueDate = dueDate,
+                    alarmDate = "",
+                    isAlarmSet = false,
+                    priorityColor = priorityColor,
+                    category = category
+                )
+            )
+        }
     }
 }
 

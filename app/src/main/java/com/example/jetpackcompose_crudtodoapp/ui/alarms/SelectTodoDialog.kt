@@ -20,6 +20,7 @@ import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,7 +30,9 @@ import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants.NO_TODOS_FOUND_SECOND
 import com.vanpra.composematerialdialogs.MaterialDialogState
+import java.time.LocalDate
 import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -40,8 +43,12 @@ fun SelectTodoDialog(
     context: Context,
     timeDialogState: MaterialDialogState,
     pickedTime: MutableState<LocalTime>,
+    dateDialogState: MaterialDialogState,
+    pickedDate: MutableState<LocalDate>,
+    formattedDate: State<String>,
     onTodoClicked: (TodoEntity) -> Unit
 ){
+
 
     Dialog(
         onDismissRequest = {
@@ -100,6 +107,9 @@ fun SelectTodoDialog(
                                     timeDialogState,
                                     pickedTime,
                                     context = context,
+                                    dateDialogState,
+                                    pickedDate,
+                                    formattedDate,
                                     onClick = { onTodoClicked(todo) }
                                 )
                             }
@@ -113,12 +123,12 @@ fun SelectTodoDialog(
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Text(
-                            text = "No available todo found.",
+                            text = Constants.NO_TODOS_FOUND,
                             fontWeight = FontWeight.Medium,
                             color = Color.DarkGray
                         )
                         Text(
-                            text = "There are currently no todos in the system.",
+                            text = NO_TODOS_FOUND_SECOND,
                             fontWeight = FontWeight.Medium,
                             color = Color.DarkGray
                         )

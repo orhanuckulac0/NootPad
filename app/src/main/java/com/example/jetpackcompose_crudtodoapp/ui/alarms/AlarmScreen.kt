@@ -21,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,9 +36,13 @@ import com.example.jetpackcompose_crudtodoapp.R
 import com.example.jetpackcompose_crudtodoapp.ui.theme.BlueColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainBackgroundColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants.NO_ACTIVE_ALARM
 import com.example.jetpackcompose_crudtodoapp.ui.util.UiEvent
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
+import java.time.LocalDate
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -51,6 +56,16 @@ fun AlarmScreen(
     val timeDialogState = rememberMaterialDialogState()
     val pickedTime = remember { mutableStateOf(LocalTime.now()) }
 
+    val dateDialogState = rememberMaterialDialogState()
+    val pickedDate = remember { mutableStateOf(LocalDate.now()) }
+    val formattedDate = remember {
+        derivedStateOf {
+            DateTimeFormatter
+                .ofPattern(Constants.DATE_FORMAT)
+                .format(pickedDate.value)
+        }
+    }
+
     if (showDialog.value){
         SelectTodoDialog(
             viewModel.todosWithoutAlarmSet.value,
@@ -60,10 +75,12 @@ fun AlarmScreen(
             context = context,
             timeDialogState,
             pickedTime,
+            dateDialogState,
+            pickedDate,
+            formattedDate,
             onTodoClicked = { clickedTodo ->
                 viewModel.addedToAlarmTodo = clickedTodo
             }
-
         )
     }
 
@@ -106,7 +123,7 @@ fun AlarmScreen(
                             horizontalAlignment = Alignment.CenterHorizontally
                         ) {
                             Text(
-                                text = "You don't have any active alarms.",
+                                text = NO_ACTIVE_ALARM,
                                 fontWeight = FontWeight.Medium,
                                 color = Color.DarkGray
                             )
@@ -122,7 +139,8 @@ fun AlarmScreen(
                                     todoEntity = todo,
                                     context = context,
                                     timeDialogState = timeDialogState,
-                                    pickedTime = pickedTime
+                                    pickedTime = pickedTime,
+                                    onTodoClicked = { viewModel.addedToAlarmTodo = todo }
                                 )
                             }
                         }
@@ -140,7 +158,7 @@ fun AlarmScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Alarm,
-                    contentDescription = "Add Alarm",
+                    contentDescription = Constants.ADD_ALARM,
                     tint = colorResource(id = R.color.white)
                 )
             }

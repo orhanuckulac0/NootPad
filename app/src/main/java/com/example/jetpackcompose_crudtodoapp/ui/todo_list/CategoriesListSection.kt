@@ -13,6 +13,7 @@ import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material.icons.filled.Cyclone
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LocalGroceryStore
 import androidx.compose.material.icons.filled.Person
@@ -26,12 +27,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.jetpackcompose_crudtodoapp.domain.model.CategoryModel
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
 import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
 
@@ -41,15 +42,15 @@ fun CategorySection(
     selectedChipIndex: MutableState<Int>
 ) {
     val categories = listOf(
-        CategoryModel("All", Icons.Default.SelectAll, Color.Gray),
-        CategoryModel("Home", Icons.Default.Home, Color.Gray),
-        CategoryModel("School", Icons.Default.School, Color.Gray),
-        CategoryModel("Work", Icons.Default.Work, Color.Gray),
-        CategoryModel("Sports", Icons.Default.Sports, Color.Gray),
-        CategoryModel("Fun", Icons.Default.Clear, Color.Gray),
-        CategoryModel("Friends", Icons.Default.Person, Color.Gray),
-        CategoryModel("Grocery", Icons.Default.LocalGroceryStore, Color.Gray),
-        CategoryModel("Other", Icons.Default.Clear, Color.Gray),
+        CategoryModel(Constants.ALL, Icons.Default.SelectAll, Color.Gray),
+        CategoryModel(Constants.HOME, Icons.Default.Home, Color.Gray),
+        CategoryModel(Constants.SCHOOL, Icons.Default.School, Color.Gray),
+        CategoryModel(Constants.WORK, Icons.Default.Work, Color.Gray),
+        CategoryModel(Constants.SPORTS, Icons.Default.Sports, Color.Gray),
+        CategoryModel(Constants.FUN, Icons.Default.Cyclone, Color.Gray),
+        CategoryModel(Constants.FRIENDS, Icons.Default.Person, Color.Gray),
+        CategoryModel(Constants.GROCERY, Icons.Default.LocalGroceryStore, Color.Gray),
+        CategoryModel(Constants.OTHER, Icons.Default.Clear, Color.Gray),
         )
 
 
@@ -89,7 +90,7 @@ fun CategorySection(
                         val iconColor = if (selectedChipIndex.value == it) Color.Blue else Color.Gray
                         Icon(
                             painter = rememberVectorPainter(image = categories[it].image),
-                            contentDescription = "Icon",
+                            contentDescription = Constants.ICON,
                             tint = iconColor,
                             modifier = Modifier.size(24.dp)
                         )
@@ -107,14 +108,8 @@ fun CategorySection(
                             )
                         }
                     }
-
                 }
             }
         }
     }
 }
-data class CategoryModel(
-    val title: String,
-    val image: ImageVector,
-    val color: Color
-)

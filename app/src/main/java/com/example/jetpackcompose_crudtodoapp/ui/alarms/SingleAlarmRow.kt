@@ -23,6 +23,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -32,10 +33,16 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.jetpackcompose_crudtodoapp.domain.model.TodoEntity
 import com.example.jetpackcompose_crudtodoapp.ui.theme.MainTextColor
 import com.example.jetpackcompose_crudtodoapp.ui.theme.WhiteBackground
+import com.example.jetpackcompose_crudtodoapp.ui.util.Constants
+import com.example.jetpackcompose_crudtodoapp.ui.util.ShowDatePicker
+import com.example.jetpackcompose_crudtodoapp.ui.util.ShowTimePicker
+import com.example.jetpackcompose_crudtodoapp.ui.util.isPastDate
 import com.vanpra.composematerialdialogs.MaterialDialogState
+import java.time.LocalDate
 import java.time.LocalTime
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -45,10 +52,23 @@ fun SingleAlarmRow(
     timeDialogState: MaterialDialogState,
     pickedTime: MutableState<LocalTime>,
     context: Context,
+    dateDialogState: MaterialDialogState,
+    pickedDate: MutableState<LocalDate>,
+    formattedDate: State<String>,
+    viewModel: AlarmViewModel = hiltViewModel(),
     onClick: () -> Unit
 )
 
 {
+
+    ShowDatePicker(
+        viewModel = viewModel,
+        dateDialogState = dateDialogState,
+        timeDialogState = timeDialogState,
+        formattedDate = formattedDate,
+        pickedDate = pickedDate
+    )
+
     ShowTimePicker(
         timeDialogState = timeDialogState,
         context = context,
@@ -94,12 +114,17 @@ fun SingleAlarmRow(
                 IconButton(
                     onClick = {
                         onClick()
-                        timeDialogState.show()
+                        if (isPastDate(todo.dueDate)){
+                            dateDialogState.show()
+                        }else{
+                            timeDialogState.show()
+                        }
+
                     }
                 ) {
                     Icon(
                         imageVector = Icons.Default.Add,
-                        contentDescription = "AddAlarmBox",
+                        contentDescription = Constants.ADD_ALARM_BOX,
                         modifier = Modifier.size(24.dp)
                     )
                 }
