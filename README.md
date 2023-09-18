@@ -10,6 +10,7 @@ In this project, I have used Jetpack Compose, Hilt for dependency injection, Roo
 - Local data storage
 
 ## Screenshots
-![main](https://github.com/orhanuckulac0/NootPad/assets/101017069/116338cd-34fa-40aa-92ba-7190506e45e3)
-![info](https://github.com/orhanuckulac0/NootPad/assets/101017069/9a28325b-88de-47b0-ae16-3ddc1e856e45)
-![alarm](https://github.com/orhanuckulac0/NootPad/assets/101017069/2deccc69-58e5-4611-b8f9-629c6123fa63)
+![main1](https://github.com/orhanuckulac0/NootPad/assets/101017069/6f66680b-42ed-413e-afee-9fab7a5f887c)
+![info2](https://github.com/orhanuckulac0/NootPad/assets/101017069/d2a51160-da98-4c60-9246-44c44e9d3d27)
+![alarm2](https://github.com/orhanuckulac0/NootPad/assets/101017069/f9f182a6-6bcf-4cb6-af24-5aacdc05408c)
+
